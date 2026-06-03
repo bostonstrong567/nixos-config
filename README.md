@@ -1,14 +1,21 @@
-# NixOS on an External SSD — RTX 4080 / Ryzen 7 3800XT
+# NixOS on an External SSD — RTX 4080 / Ryzen 7 3800X
 
 A complete, reproducible NixOS config for a **portable external-SSD install** that
 leaves your Windows machine **completely untouched**. Pull the SSD out and the PC
 boots Windows exactly as before — no boot entries, no NVRAM changes, nothing written
 to the internal disk.
 
+- **Base:** NixOS 26.05 "Yarara" (Linux 6.18, **KDE Plasma 6.6.5**)
 - **Desktop:** KDE Plasma 6 (Wayland) — mouse-native, riced into a blur/transparency showpiece
 - **GPU:** RTX 4080 (Ada) with the open kernel module, Wayland-safe
 - **Gaming:** Steam + Proton-GE + GameMode + MangoHud + Gamescope + Lutris + Heroic
 - **Safety:** every rebuild is a bootable "generation"; bad change → reboot → pick the last good one
+
+> **Why Plasma 6.6.5 (stable) and not 6.7 beta?** You wanted bleeding-edge *that
+> works*. On NVIDIA + Wayland, beta Plasma is exactly where flicker/crash
+> regressions live. 6.6.5 (in 26.05) is recent **and** tested against this stack.
+> Newest ≠ best for the OS you depend on daily. Want newer later? Pin Plasma from
+> `nixos-unstable` via an overlay — easy, and rollback-safe if it misbehaves.
 
 ---
 

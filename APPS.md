@@ -8,8 +8,18 @@ vesktop · firefox · steam¹ · prismlauncher · peazip · vscode · claude-cod
 ¹ system-level in `modules/gaming.nix`  ² always-fresh via `sadjow/claude-code-nix` overlay  ³ via `Gerg-L/spicetify-nix` fork
 
 ## 📦 Packaged from upstream (not in nixpkgs, pinned + hash-verified)
-- **cliamp** v1.56.0 — terminal music player ("Winamp for shell"); Go binary, SHA256-pinned in `modules/apps.nix`.
-- **opcode** v0.2.0 — Claude Code GUI; AppImage-wrapped (needs real hash — see manual steps).
+- **cliamp** v1.56.0 — terminal music player ("Winamp for shell"); Go binary, SHA256-pinned in `overlays/default.nix`.
+- **opcode** v0.2.0 — Claude Code GUI; AppImage-wrapped. Hash **verified** against upstream's published `.sha256` (`sha256-LsE9gweAOaru7J01r68V1aDblQ06t4qeCXp6mu1Ig3E=`). Builds clean, no manual step.
+
+## 🔊 Hardware / audio (modules/hardware.nix)
+Your devices, all driver-free on Linux:
+- **Focusrite Scarlett (USB)** → class-compliant USB audio, PipeWire, zero driver
+- **Fifine USB mic** → class-compliant, works out of box
+- **Realtek onboard** → snd_hda_intel, auto-loaded
+- **NVIDIA HDMI/DP audio** → ships with nvidia driver
+- Tools added: pavucontrol, pwvucontrol, helvum (patchbay), alsa-utils
+- Windows-only apps with no Linux port: NVIDIA Broadcast (→ use easyeffects RNNoise), FxSound (→ easyeffects EQ), AudioRelay
+- Also: all-firmware, bluetooth+blueman, fwupd, printing (CUPS+avahi), openrgb
 
 ## ⚖️ Decisions I made for you
 | Your "you pick" | Chosen | Reason |

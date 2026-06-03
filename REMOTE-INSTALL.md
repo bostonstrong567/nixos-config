@@ -37,6 +37,24 @@ nix run github:nix-community/nixos-anywhere -- \
 nixos-anywhere then: partitions the SanDisk (per disko) → installs the flake →
 reboots into your finished system. Everything from this repo lands in one go.
 
+### Tailscale auto-join during remote install
+To have the box join your tailnet automatically on first boot, place the auth key
+on the target during install with `--extra-files`:
+```bash
+# Generate a reusable key at https://login.tailscale.com/admin/settings/keys
+mkdir -p /tmp/extra/etc
+echo "tskey-auth-XXXXXXXX" > /tmp/extra/etc/tailscale-authkey
+chmod 600 /tmp/extra/etc/tailscale-authkey
+
+nix run github:nix-community/nixos-anywhere -- \
+  --flake /etc/nixos#nebula-ext \
+  --extra-files /tmp/extra \
+  --target-host root@192.168.1.50
+```
+The key lands at `/etc/tailscale-authkey` (where `modules/remote.nix` expects it)
+and the machine joins your tailnet the moment it boots — reachable from nebula
+immediately, no manual `tailscale up`.
+
 ### Why this needs a `disko` config first
 To partition declaratively + safely, we add `modules/disko.nix` describing the
 SanDisk layout (ESP + root, pinned by `/dev/disk/by-id/...` so it can't grab the
