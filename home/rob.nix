@@ -36,7 +36,11 @@
     fsearch              # instant file search (Everything-like; angrysearch not in nixpkgs)
     collector            # mijorus — file collection tray (also on Flathub)
     easyeffects          # PipeWire EQ + RNNoise mic denoise (> NoiseTorch on PipeWire)
-    stremio              # media streaming (glass theme applied manually — see note)
+    # stremio — plain `stremio` REMOVED from nixpkgs (qt5 webengine vuln) and the
+    # replacement `stremio-linux-shell` currently has build issues (#503024).
+    # Install via Flatpak instead (flatpak enabled in desktop.nix):
+    #   flatpak install flathub com.stremio.Stremio
+    # (Stremio-Glass-Theme applied manually after.)
     playerctl            # MPRIS control for media keys → cliamp/Spotify/browsers
 
     # --- Theming ---
