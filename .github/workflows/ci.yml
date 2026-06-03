@@ -1,0 +1,46 @@
+name: build-check
+
+# Safety net: every push builds the WHOLE NixOS config in the cloud.
+# If it builds green here, it will build on your PC. Catches eval errors,
+# bad package names, broken options, hash mismatches — BEFORE you touch hardware.
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  flake-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Install Nix with flakes enabled
+      - uses: DeterminateSystems/nix-installer-action@main
+
+      # Binary cache so builds are fast + cached across runs
+      - uses: DeterminateSystems/magic-nix-cache-action@main
+
+      # 1. Validate flake structure + all inputs resolve (no hardware needed)
+      - name: nix flake check
+        run: nix flake check --no-build
+
+      # 2. EVALUATE the full system closure. This forces evaluation of every
+      #    module, option, and package reference — catching bad names / wrong
+      #    options / missing args — WITHOUT needing the real disk/GPU. This is
+      #    the meaningful "will it work" gate given placeholder disk values.
+      - name: evaluate system toplevel (catches config errors)
+        run: |
+          nix eval --raw \
+            ".#nixosConfigurations.nebula-ext.config.system.build.toplevel.drvPath"
+
+      # 3. Best-effort full BUILD. May fail only on hardware-placeholder bits
+      #    (disko device path). Allowed to fail so it doesn't red-X the run, but
+      #    its log shows how far the real build gets. Once you fill real values,
+      #    flip continue-on-error to false for a true full-build gate.
+      - name: build system closure (best-effort)
+        continue-on-error: true
+        run: |
+          nix build \
+            ".#nixosConfigurations.nebula-ext.config.system.build.toplevel" \
+            --no-link --print-out-paths

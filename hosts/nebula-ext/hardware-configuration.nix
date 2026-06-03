@@ -22,10 +22,10 @@
     "nvme" "ahci" "sd_mod"                       # NVMe / SATA bridges
   ];
   boot.initrd.kernelModules = [ ];
-  boot.kernelModules = [ "kvm-amd" ];            # Ryzen
+  boot.kernelModules = [ "kvm-amd" ];            # Ryzen 7 3800X (Zen 2)
   boot.extraModulePackages = [ ];
 
-  # Ryzen 7 3800XT
+  # Ryzen 7 3800X (8c/16t, Zen 2)
   hardware.cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";

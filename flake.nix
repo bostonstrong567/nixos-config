@@ -66,6 +66,7 @@
           ./hosts/nebula-ext/configuration.nix
           ./hosts/nebula-ext/hardware-configuration.nix
           ./modules/nvidia.nix
+          ./modules/hardware.nix
           ./modules/gaming.nix
           ./modules/desktop.nix
           ./modules/external-ssd.nix

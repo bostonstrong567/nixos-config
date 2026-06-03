@@ -44,15 +44,27 @@
   ###########################################################################
   services.tailscale = {
     enable = true;
-    # 'both' = accept routes + act as exit-node-capable if you ever want it.
     useRoutingFeatures = "client";
+
+    # PRE-LOGIN to YOUR existing tailnet, no manual browser auth.
+    # Generate a reusable auth key (tied to your account) at:
+    #   https://login.tailscale.com/admin/settings/keys  → "Generate auth key"
+    #   (tick Reusable + Pre-approved; optionally Ephemeral=off so it persists)
+    # Put the key in a file ON THE MACHINE (NOT committed) at /etc/tailscale-authkey
+    # then this auto-joins the tailnet on first boot.
+    authKeyFile = "/etc/tailscale-authkey";
+
+    # Extra flags applied on auto-up. --ssh enables Tailscale SSH (ACL-gated,
+    # no key files needed → simplest way for nebula to reach this box).
+    extraUpFlags = [ "--ssh" ];
   };
 
-  # After first boot, authenticate the machine once:
-  #   sudo tailscale up
-  # ...then it's reachable at its 100.x.y.z tailnet IP (and MagicDNS name).
-  # Tailscale SSH (optional, even simpler — ACL-gated, no key files):
-  #   sudo tailscale up --ssh
+  # The auth-key file must exist before tailscaled starts. Two ways to place it:
+  #   * Manual (simplest): after first boot, `echo tskey-auth-XXXX | sudo tee \
+  #       /etc/tailscale-authkey` then `sudo systemctl restart tailscaled`.
+  #   * Remote install: nixos-anywhere can copy it via --extra-files. See
+  #     REMOTE-INSTALL.md.
+  # For a committed-secret workflow later, switch to agenix/sops-nix (encrypted).
 
   # Keep firewall on; Tailscale manages its own interface.
   networking.firewall.enable = true;
