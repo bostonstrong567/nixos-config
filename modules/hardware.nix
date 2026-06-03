@@ -38,7 +38,7 @@
   environment.systemPackages = with pkgs; [
     pavucontrol           # PulseAudio volume control (works w/ PipeWire)
     pwvucontrol           # native PipeWire mixer
-    helvum                # PipeWire patchbay (route Focusrite/mic visually)
+    qpwgraph              # PipeWire patchbay, Qt (helvum removed; matches KDE; route Focusrite/mic)
     alsa-utils            # alsamixer, aplay, etc.
   ];
 
