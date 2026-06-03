@@ -116,14 +116,15 @@
   ###########################################################################
   # Spicetify — patched/themed Spotify (replaces plain spotify pkg)
   ###########################################################################
+  # NOTE: theme + colorScheme are driven by Stylix (stylix.targets.spicetify),
+  # so we do NOT set them here — that caused a conflict (Stylix sets "stylix",
+  # we were setting "text"). Only add extensions.
   programs.spicetify =
     let
       spicePkgs = inputs.spicetify-nix.legacyPackages.${pkgs.system};
     in
     {
       enable = true;
-      theme = spicePkgs.themes.text;          # clean modern theme; swap as desired
-      colorScheme = "mocha";
       enabledExtensions = with spicePkgs.extensions; [
         adblock
         shuffle                                # true shuffle
