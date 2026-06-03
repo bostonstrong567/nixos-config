@@ -1,0 +1,10 @@
+{
+  "//": "MCP-NixOS server — gives Claude (claude-code / opcode / Claude Desktop) accurate, live NixOS package + option data (130K+ pkgs, 23K+ options, 4K+ home-manager, version history). No API key. Drop this into your Claude MCP config on the NixOS box.",
+  "//usage": "claude-code: `claude mcp add nixos -- nix run github:utensils/mcp-nixos --`   OR paste the mcpServers block into ~/.config/claude/claude_desktop_config.json (opcode/Claude Desktop).",
+  "mcpServers": {
+    "nixos": {
+      "command": "nix",
+      "args": ["run", "github:utensils/mcp-nixos", "--"]
+    }
+  }
+}
