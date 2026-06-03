@@ -15,11 +15,10 @@
       inputs.home-manager.follows = "home-manager";
     };
 
-    # Lix — modern Nix daemon reimplementation (replaces CppNix)
-    lix-module = {
-      url = "git+https://git.lix.systems/lix-project/nixos-module";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    # NOTE: Lix temporarily removed — its git.lix.systems input triggers a
+    # tarball url-normalization mismatch (?rev= suffix) under current Nix that
+    # fails `nix flake check`. Default CppNix works fine. Re-add later once the
+    # input issue is resolved (or via the lix-installer route). See VERIFY.md.
 
     # Always-fresh Claude Code (hourly updates from Anthropic releases)
     claude-code = {
@@ -52,7 +51,7 @@
     };
   };
 
-  outputs = { self, nixpkgs, home-manager, plasma-manager, lix-module, claude-code, spicetify-nix, stylix, nix-alien, disko, ... }@inputs:
+  outputs = { self, nixpkgs, home-manager, plasma-manager, claude-code, spicetify-nix, stylix, nix-alien, disko, ... }@inputs:
     let
       system = "x86_64-linux";
     in {
@@ -60,9 +59,6 @@
         inherit system;
         specialArgs = { inherit inputs; };
         modules = [
-          # Lix as the Nix implementation
-          lix-module.nixosModules.default
-
           ./hosts/nebula-ext/configuration.nix
           ./hosts/nebula-ext/hardware-configuration.nix
           ./modules/nvidia.nix
