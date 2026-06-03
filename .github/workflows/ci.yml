@@ -21,9 +21,12 @@ jobs:
       # Binary cache so builds are fast + cached across runs
       - uses: DeterminateSystems/magic-nix-cache-action@main
 
-      # 1. Validate flake structure + all inputs resolve (no hardware needed)
+      # 1. Validate flake structure + all inputs resolve.
+      #    NOTE: no --no-build — Stylix uses import-from-derivation (reads the
+      #    base16 palette yaml from a built derivation), which requires building
+      #    that small drv during eval. --no-build would break it.
       - name: nix flake check
-        run: nix flake check --no-build
+        run: nix flake check
 
       # 2. EVALUATE the full system closure. This forces evaluation of every
       #    module, option, and package reference — catching bad names / wrong
