@@ -30,7 +30,7 @@
     nvd                 # generation/version diff (also in apps.nix; harmless dup)
 
     # --- foreign binaries ---
-    inputs.nix-alien.packages.${pkgs.system}.nix-alien  # run unpatched bins
+    inputs.nix-alien.packages.${pkgs.stdenv.hostPlatform.system}.nix-alien  # run unpatched bins
   ];
 
   # direnv shell hook (system-wide). Per-user zsh hook also fine; this covers all.

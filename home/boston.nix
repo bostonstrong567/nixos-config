@@ -20,7 +20,7 @@
     # firefox configured below via programs.firefox
 
     # --- Dev ---
-    vscode
+    # vscode configured declaratively below via programs.vscode
 
     # --- Launchers / gaming side-tools (Steam/Heroic/Lutris are system-level) ---
     prismlauncher        # Minecraft launcher
@@ -54,6 +54,105 @@
   # Firefox
   ###########################################################################
   programs.firefox.enable = true;
+  # Stylix sets a Firefox profile name "default"; declare it so Stylix's firefox
+  # target applies cleanly (silences the profileNames warning).
+  stylix.targets.firefox.profileNames = [ "default" ];
+
+  ###########################################################################
+  # VSCode — declarative port of your customized Windows look
+  # (Dracula Soft + Material Icons + FiraCode + minimal chrome).
+  ###########################################################################
+  # Let the Dracula theme win — don't let Stylix recolor VSCode.
+  stylix.targets.vscode.enable = false;
+
+  programs.vscode = {
+    enable = true;
+    profiles.default = {
+      extensions =
+        let
+          ext = inputs.nix-vscode-extensions.extensions.${pkgs.stdenv.hostPlatform.system}.vscode-marketplace;
+        in
+        [
+          ext.dracula-theme.theme-dracula
+          ext.pkief.material-icon-theme
+          ext.gruntfuggly.activitusbar
+        ];
+
+      userSettings = {
+        "window.zoomLevel" = 2;
+
+        "workbench.colorTheme" = "Dracula Theme Soft";
+        "workbench.iconTheme" = "material-icon-theme";
+        "material-icon-theme.hidesExplorerArrows" = true;
+
+        "workbench.tree.renderIndentGuides" = "none";
+        "workbench.statusBar.visible" = true;
+        "workbench.editor.showTabs" = "none";
+        "workbench.startupEditor" = "none";
+        "workbench.tips.enabled" = false;
+        "workbench.layoutControl.enabled" = false;
+        "workbench.navigationControl.enabled" = false;
+        "workbench.editor.editorActionsLocation" = "hidden";
+        "workbench.sideBar.location" = "right";
+        "workbench.activityBar.location" = "top";
+
+        "workbench.colorCustomizations" = {
+          "editorSuggestWidget.selectedBackground" = "#231739";
+          "sideBar.background" = "#191521";
+          "list.activeSelectionBackground" = "#231739";
+          "list.inactiveSelectionBackground" = "#231739";
+          "list.focusBackground" = "#231739";
+          "list.hoverBackground" = "#231739";
+          "terminalCursor.foreground" = "#C45DFF";
+        };
+
+        "editor.fontFamily" = "FiraCode Nerd Font Mono";
+        "editor.fontLigatures" = true;
+        "editor.tabSize" = 4;
+        "editor.detectIndentation" = false;
+
+        "editor.minimap.enabled" = false;
+        "editor.guides.indentation" = false;
+        "editor.renderWhitespace" = "none";
+        "editor.renderLineHighlight" = "none";
+        "editor.matchBrackets" = "never";
+        "editor.lightbulb.enabled" = "off";
+        "editor.hover.enabled" = false;
+        "editor.showFoldingControls" = "never";
+        "editor.overviewRulerBorder" = false;
+        "editor.cursorBlinking" = "solid";
+        "editor.cursorSmoothCaretAnimation" = "off";
+        "editor.semanticHighlighting.enabled" = false;
+        "editor.stickyScroll.enabled" = false;
+        "editor.smoothScrolling" = false;
+        "editor.bracketPairColorization.enabled" = false;
+        "editor.guides.bracketPairs" = false;
+        "editor.wordWrap" = "on";
+
+        "breadcrumbs.enabled" = false;
+        "explorer.compactFolders" = false;
+
+        "git.decorations.enabled" = false;
+        "scm.diffDecorations" = "none";
+
+        "terminal.integrated.fontFamily" = "FiraCode Nerd Font Mono";
+        "terminal.integrated.lineHeight" = 1.5;
+        "terminal.integrated.fontSize" = 12;
+        "terminal.integrated.gpuAcceleration" = "on";
+        "terminal.integrated.stickyScroll.enabled" = false;
+
+        "window.titleBarStyle" = "custom";
+        "window.menuStyle" = "native";
+        "window.menuBarVisibility" = "compact";
+
+        "activitusbar.views" = [
+          { name = "command.workbench.action.files.openFolder"; codicon = "empty-window"; tooltip = "Open Project Folder"; }
+          { name = "extensions"; codicon = "extensions-view-icon"; }
+          { name = "explorer"; codicon = "layout-sidebar-right"; }
+        ];
+      };
+    };
+  };
 
   ###########################################################################
   # Ghostty — fast GPU terminal + animated custom cursor shaders
@@ -121,7 +220,7 @@
   # we were setting "text"). Only add extensions.
   programs.spicetify =
     let
-      spicePkgs = inputs.spicetify-nix.legacyPackages.${pkgs.system};
+      spicePkgs = inputs.spicetify-nix.legacyPackages.${pkgs.stdenv.hostPlatform.system};
     in
     {
       enable = true;

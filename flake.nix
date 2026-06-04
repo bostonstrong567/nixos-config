@@ -50,6 +50,13 @@
       url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    # nix-vscode-extensions — marketplace/OpenVSX extensions as Nix pkgs
+    # (material-icon-theme + activitusbar aren't in nixpkgs base).
+    nix-vscode-extensions = {
+      url = "github:nix-community/nix-vscode-extensions";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = { self, nixpkgs, home-manager, plasma-manager, claude-code, spicetify-nix, stylix, nix-alien, disko, ... }@inputs:

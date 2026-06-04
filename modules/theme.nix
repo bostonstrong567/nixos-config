@@ -58,10 +58,10 @@
       desktop = 1.0;
     };
 
-    # Cursor
+    # Cursor — your Windows_11_dark set converted to XCursor (overlay package).
     cursor = {
-      package = pkgs.bibata-cursors;
-      name = "Bibata-Modern-Ice";
+      package = pkgs.win11-dark-cursors;
+      name = "Windows-11-dark";
       size = 24;
     };
 
