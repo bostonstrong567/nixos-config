@@ -50,10 +50,19 @@ opcode (and **every** Claude Code GUI: Nimbalyst, OpenCovibe, Yume) is just a **
 | **ghostty cursor shaders** (sahaj-b) | Config files, not a pkg | One animated shader vendored at `~/.config/ghostty/shaders/`. Drop more `.glsl` from the repo for fancier effects. |
 
 ## 🧰 Nix stack upgrades applied
-- **Lix** → replaces CppNix as the daemon (`lix-module` in flake). Modern, faster, friendlier errors.
 - **nh** + **nom** + **nvd** → nicer rebuilds, pretty output, version diffs. Alias `rebuild` = `nh os switch`.
 - **flakes + home-manager** → already core to this repo.
-- **cachix** → binary cache (faster installs; add caches as needed).
+- **cachix** + nix-community cache → faster installs (prebuilt binaries).
+
+### Lix — deferred (upstream flake bug)
+Lix (modern Nix daemon) was tried but its `git.lix.systems` flake input triggers a
+known tarball URL-normalization mismatch ([lix issue #841](https://git.lix.systems/lix-project/lix/issues/841))
+that fails `nix flake check`. It's not load-bearing — stock Nix works perfectly.
+**To add Lix after install (sidesteps the flake bug):**
+```bash
+curl -sSf -L https://install.lix.systems/lix | sh -s -- install
+```
+Then rebuild. Revisit the flake-input method once upstream fixes #841.
 
 ## 🌐 These are websites, not installable apps (bookmark them)
 ProtonDB · Are We Anti-Cheat Yet · Linux Gaming Wiki · LVRA Wiki · Typewolf · Typ.io · DXVK/D7VK (ship inside Proton/Wine already) · winesapOS · UMU/Luxtorpeda/Boxtron (Steam compat tools, install per-game via STL if needed).
