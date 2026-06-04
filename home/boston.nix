@@ -65,6 +65,10 @@
   # Let the Dracula theme win — don't let Stylix recolor VSCode.
   stylix.targets.vscode.enable = false;
 
+  # On KDE, Plasma themes Qt itself; Stylix's qt target only supports 'qtct'
+  # and warns under KDE. Disable it (Plasma + Stylix's KDE target cover Qt).
+  stylix.targets.qt.enable = false;
+
   programs.vscode = {
     enable = true;
     profiles.default = {

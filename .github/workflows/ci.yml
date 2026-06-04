@@ -39,11 +39,13 @@ jobs:
           nix eval --raw \
             ".#nixosConfigurations.nebula-ext.config.system.build.toplevel.drvPath"
 
-      # 3. BUILD our custom-pinned packages — verifies opcode + cliamp hashes are
-      #    correct and actually fetch/build. These are the only non-nixpkgs bits,
-      #    so they're the real build risk; nixpkgs packages are already cached.
-      - name: build custom packages (opcode, cliamp)
+      # 3. BUILD our custom packages — verifies opcode + cliamp hashes fetch/build
+      #    AND that the win11-dark-cursors derivation (win2xcur conversion of the
+      #    uploaded .cur/.ani set) actually builds. These are the only non-nixpkgs
+      #    bits, so they're the real build risk; nixpkgs packages are cached.
+      - name: build custom packages (opcode, cliamp, cursor)
         run: |
           nix build --no-link --print-out-paths \
             ".#nixosConfigurations.nebula-ext.pkgs.cliamp" \
-            ".#nixosConfigurations.nebula-ext.pkgs.opcode"
+            ".#nixosConfigurations.nebula-ext.pkgs.opcode" \
+            ".#nixosConfigurations.nebula-ext.pkgs.win11-dark-cursors"
