@@ -33,7 +33,7 @@
     nerd-fonts.caskaydia-cove   # Cascadia Code (Nerd-patched)
     fira-code
     cascadia-code
-    maple-mono.TTF              # Maple Mono — modern, rounded coding font
+    maple-mono.truetype         # Maple Mono — modern, rounded coding font
     open-dyslexic               # OpenDyslexic
     inter
     noto-fonts
