@@ -15,10 +15,13 @@
       inputs.home-manager.follows = "home-manager";
     };
 
-    # NOTE: Lix temporarily removed — its git.lix.systems input triggers a
-    # tarball url-normalization mismatch (?rev= suffix) under current Nix that
-    # fails `nix flake check`. Default CppNix works fine. Re-add later once the
-    # input issue is resolved (or via the lix-installer route). See VERIFY.md.
+    # Lix — modern Nix daemon. Use the TARBALL-URL form (archive/<ver>.tar.gz)
+    # not git+https — the tarball form avoids the ?rev= url-normalization
+    # mismatch that broke `nix flake check` earlier.
+    lix-module = {
+      url = "https://git.lix.systems/lix-project/nixos-module/archive/2.93.3-2.tar.gz";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     # Always-fresh Claude Code (hourly updates from Anthropic releases)
     claude-code = {
@@ -59,7 +62,7 @@
     };
   };
 
-  outputs = { self, nixpkgs, home-manager, plasma-manager, claude-code, spicetify-nix, stylix, nix-alien, disko, ... }@inputs:
+  outputs = { self, nixpkgs, home-manager, plasma-manager, claude-code, spicetify-nix, stylix, nix-alien, disko, lix-module, ... }@inputs:
     let
       system = "x86_64-linux";
     in {
@@ -67,6 +70,9 @@
         inherit system;
         specialArgs = { inherit inputs; };
         modules = [
+          # Lix as the Nix implementation (lixFromNixpkgs = no source build).
+          lix-module.nixosModules.lixFromNixpkgs
+
           ./hosts/nebula-ext/configuration.nix
           ./hosts/nebula-ext/hardware-configuration.nix
           ./modules/nvidia.nix
