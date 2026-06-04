@@ -33,8 +33,9 @@
     };
 
     # Stylix — single-palette theming fanned out to GTK/Qt/terminal/VSCode/etc.
+    # Pinned to release-26.05 to match nixpkgs (avoids version-mismatch warnings).
     stylix = {
-      url = "github:nix-community/stylix";
+      url = "github:nix-community/stylix/release-26.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 

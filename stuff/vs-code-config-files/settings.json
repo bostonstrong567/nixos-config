@@ -1,0 +1,88 @@
+{
+  // ============================================================
+  //  VSCode LOOK / STYLE  —  Linux-clean (no Windows paths)
+  //  Theme: Dracula Soft + Material Icons + FiraCode Nerd Font
+  //  Drop this in: ~/.config/Code/User/settings.json
+  // ============================================================
+
+  "window.zoomLevel": 2,
+
+  // --- theme + icons (need the extensions, see install.sh) ---
+  "workbench.colorTheme": "Dracula Theme Soft",
+  "workbench.iconTheme": "material-icon-theme",
+  "material-icon-theme.hidesExplorerArrows": true,
+
+  // --- workbench chrome / layout ---
+  "workbench.tree.renderIndentGuides": "none",
+  "workbench.statusBar.visible": true,
+  "workbench.editor.showTabs": "none",
+  "workbench.startupEditor": "none",
+  "workbench.tips.enabled": false,
+  "workbench.layoutControl.enabled": false,
+  "workbench.navigationControl.enabled": false,
+  "workbench.editor.editorActionsLocation": "hidden",
+  "workbench.sideBar.location": "right",
+  "workbench.activityBar.location": "top",
+
+  // --- custom colors ---
+  "workbench.colorCustomizations": {
+    "editorSuggestWidget.selectedBackground": "#231739",
+    "sideBar.background": "#191521",
+    "list.activeSelectionBackground": "#231739",
+    "list.inactiveSelectionBackground": "#231739",
+    "list.focusBackground": "#231739",
+    "list.hoverBackground": "#231739",
+    "terminalCursor.foreground": "#C45DFF"
+  },
+
+  // --- fonts (install FiraCode Nerd Font, see README) ---
+  "editor.fontFamily": "FiraCode Nerd Font Mono",
+  "editor.fontLigatures": true,
+  "editor.tabSize": 4,
+  "editor.detectIndentation": false,
+
+  // --- editor minimalism ---
+  "editor.minimap.enabled": false,
+  "editor.guides.indentation": false,
+  "editor.renderWhitespace": "none",
+  "editor.renderLineHighlight": "none",
+  "editor.matchBrackets": "never",
+  "editor.lightbulb.enabled": "off",
+  "editor.hover.enabled": "off",
+  "editor.showFoldingControls": "never",
+  "editor.overviewRulerBorder": false,
+  "editor.cursorBlinking": "solid",
+  "editor.cursorSmoothCaretAnimation": "off",
+  "editor.semanticHighlighting.enabled": false,
+  "editor.stickyScroll.enabled": false,
+  "editor.smoothScrolling": false,
+  "editor.bracketPairColorization.enabled": false,
+  "editor.guides.bracketPairs": false,
+  "editor.wordWrap": "on",
+
+  "breadcrumbs.enabled": false,
+  "explorer.compactFolders": false,
+
+  // --- hide git/scm gutter noise ---
+  "git.decorations.enabled": false,
+  "scm.diffDecorations": "none",
+
+  // --- terminal look ---
+  "terminal.integrated.fontFamily": "FiraCode Nerd Font Mono",
+  "terminal.integrated.lineHeight": 1.5,
+  "terminal.integrated.fontSize": 12,
+  "terminal.integrated.gpuAcceleration": "on",
+  "terminal.integrated.stickyScroll.enabled": false,
+
+  // --- window chrome ---
+  "window.titleBarStyle": "custom",
+  "window.menuStyle": "native",
+  "window.menuBarVisibility": "compact",
+
+  // --- custom activity bar buttons (needs activitusbar ext) ---
+  "activitusbar.views": [
+    { "name": "command.workbench.action.files.openFolder", "codicon": "empty-window", "tooltip": "Open Project Folder" },
+    { "name": "extensions", "codicon": "extensions-view-icon" },
+    { "name": "explorer", "codicon": "layout-sidebar-right" }
+  ]
+}
