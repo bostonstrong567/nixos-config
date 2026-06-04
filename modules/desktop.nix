@@ -37,7 +37,7 @@
     open-dyslexic               # OpenDyslexic
     inter
     noto-fonts
-    noto-fonts-emoji
+    noto-fonts-color-emoji      # renamed from noto-fonts-emoji
   ];
 
   # XDG portals for screen-share / file dialogs under Wayland
