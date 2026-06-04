@@ -1,8 +1,9 @@
 name: build-check
 
-# Safety net: every push builds the WHOLE NixOS config in the cloud.
-# If it builds green here, it will build on your PC. Catches eval errors,
-# bad package names, broken options, hash mismatches — BEFORE you touch hardware.
+# Safety net: every push validates the WHOLE NixOS config in the cloud.
+# Green here => every package name, option, module, and custom-package hash is
+# valid and it will build on your PC. (A full 10GB+ closure build doesn't fit a
+# free runner, so the gate is: flake check + full EVAL + build our custom pkgs.)
 
 on:
   push:
@@ -10,40 +11,39 @@ on:
   workflow_dispatch:
 
 jobs:
-  flake-check:
+  check:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
-      # Install Nix with flakes enabled
-      - uses: DeterminateSystems/nix-installer-action@main
+      # Reclaim ~20GB on the runner (drop Android SDK, .NET, etc.) so Nix has room.
+      - name: Free disk space
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc \
+                      /usr/local/share/boost "$AGENT_TOOLSDIRECTORY" || true
+          df -h /
 
-      # Binary cache so builds are fast + cached across runs
+      - uses: DeterminateSystems/nix-installer-action@main
       - uses: DeterminateSystems/magic-nix-cache-action@main
 
-      # 1. Validate flake structure + all inputs resolve.
-      #    NOTE: no --no-build — Stylix uses import-from-derivation (reads the
-      #    base16 palette yaml from a built derivation), which requires building
-      #    that small drv during eval. --no-build would break it.
+      # 1. Flake structure + all inputs resolve. (No --no-build: Stylix uses IFD.)
       - name: nix flake check
         run: nix flake check
 
-      # 2. EVALUATE the full system closure. This forces evaluation of every
-      #    module, option, and package reference — catching bad names / wrong
-      #    options / missing args — WITHOUT needing the real disk/GPU. This is
-      #    the meaningful "will it work" gate given placeholder disk values.
-      - name: evaluate system toplevel (catches config errors)
+      # 2. FULL EVAL of the system closure — the real correctness gate. Forces
+      #    evaluation of every module/option/package reference. Catches removed/
+      #    renamed packages, bad options, conflicts, missing args. (This is what
+      #    caught plasma-manager rename, stremio/helvum removals, etc.)
+      - name: evaluate full system (the gate)
         run: |
           nix eval --raw \
             ".#nixosConfigurations.nebula-ext.config.system.build.toplevel.drvPath"
 
-      # 3. Best-effort full BUILD. May fail only on hardware-placeholder bits
-      #    (disko device path). Allowed to fail so it doesn't red-X the run, but
-      #    its log shows how far the real build gets. Once you fill real values,
-      #    flip continue-on-error to false for a true full-build gate.
-      - name: build system closure (best-effort)
-        continue-on-error: true
+      # 3. BUILD our custom-pinned packages — verifies opcode + cliamp hashes are
+      #    correct and actually fetch/build. These are the only non-nixpkgs bits,
+      #    so they're the real build risk; nixpkgs packages are already cached.
+      - name: build custom packages (opcode, cliamp)
         run: |
-          nix build \
-            ".#nixosConfigurations.nebula-ext.config.system.build.toplevel" \
-            --no-link --print-out-paths
+          nix build --no-link --print-out-paths \
+            ".#nixosConfigurations.nebula-ext.pkgs.cliamp" \
+            ".#nixosConfigurations.nebula-ext.pkgs.opcode"
