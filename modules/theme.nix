@@ -58,10 +58,7 @@
       desktop = 1.0;
     };
 
-    # Cursor — Bibata Modern Classic (your pick).
-    # Your uploaded Windows_11_dark set is also built + available as
-    # pkgs.win11-dark-cursors — to switch later:
-    #   package = pkgs.win11-dark-cursors; name = "Windows-11-dark";
+    # Cursor — Bibata Modern Classic.
     cursor = {
       package = pkgs.bibata-cursors;
       name = "Bibata-Modern-Classic";
