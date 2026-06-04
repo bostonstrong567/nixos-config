@@ -5,8 +5,8 @@
 ###############################################################################
 
 {
-  home.username = "rob";
-  home.homeDirectory = "/home/rob";
+  home.username = "boston";
+  home.homeDirectory = "/home/boston";
   home.stateVersion = "26.05";
 
   programs.home-manager.enable = true;

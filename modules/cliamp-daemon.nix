@@ -9,7 +9,7 @@
 #   * It exposes now-playing to the whole desktop
 #
 # This wires the *system* bits (playerctl available, MPRIS allowed). The actual
-# user service + a scratchpad launcher live under home-manager (home/rob.nix
+# user service + a scratchpad launcher live under home-manager (home/boston.nix
 # imports nothing extra — the systemd user service is defined here at system
 # level via `systemd.user.services` so it's available to every login).
 ###############################################################################

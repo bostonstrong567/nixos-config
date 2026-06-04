@@ -38,13 +38,20 @@
   ###########################################################################
   # User
   ###########################################################################
-  users.users.rob = {
+  users.users.boston = {
     isNormalUser = true;
-    description = "Rob";
-    extraGroups = [ "wheel" "networkmanager" "video" "audio" "gamemode" ];
+    description = "Boston";
+    extraGroups = [
+      "wheel" "networkmanager" "video" "audio" "gamemode"
+      "input"   # Wooting / HID device udev access
+      "i2c"     # OpenRGB / DDC monitor control
+      "dialout" # serial devices
+    ];
     shell = pkgs.zsh;
-    # Set a password after first boot with `passwd`, or use initialPassword below
-    initialPassword = "changeme"; # CHANGE IMMEDIATELY after first login
+    # Hashed password for "1005" (sha-512). Plaintext is NOT stored in the nix
+    # store this way. Change anytime with `passwd`. Regenerate with:
+    #   mkpasswd -m sha-512 'yourpassword'
+    initialHashedPassword = "$6$cZ3tAg6xOxBXnZvC$BR8PGygpCh9sOUz4earNyJH.NLGp6NCeUPb.6OpjNBX1pdYOd0F8y9lakOUCTkQgHEoI/zw83FbkLfQyEqDPF/";
   };
   programs.zsh.enable = true;
 
@@ -63,6 +70,34 @@
   };
   nixpkgs.config.allowUnfree = true; # NVIDIA, Steam, etc.
 
+  # Binary caches → fast installs (no compiling stylix/nix-community pkgs locally)
+  nix.settings = {
+    substituters = [
+      "https://cache.nixos.org"
+      "https://nix-community.cachix.org"
+    ];
+    trusted-public-keys = [
+      "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+    ];
+  };
+
+  ###########################################################################
+  # Performance — desktop/gaming tuned
+  ###########################################################################
+  # Zen kernel — lower latency, better gaming responsiveness.
+  boot.kernelPackages = pkgs.linuxPackages_zen;
+
+  # Max-performance CPU governor (desktop, always plugged in).
+  powerManagement.cpuFreqGovernor = "performance";
+
+  # zram — compressed RAM swap. With 32GB this keeps things snappy under load
+  # and avoids touching the (USB) disk for swap.
+  zramSwap = {
+    enable = true;
+    algorithm = "zstd";
+    memoryPercent = 50;
+  };
+
   ###########################################################################
   # Audio — PipeWire (modern, low-latency, gaming-friendly)
   ###########################################################################
@@ -76,7 +111,7 @@
   };
 
   ###########################################################################
-  # Core system packages (desktop apps live in home/rob.nix)
+  # Core system packages (desktop apps live in home/boston.nix)
   ###########################################################################
   environment.systemPackages = with pkgs; [
     git vim wget curl

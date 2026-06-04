@@ -26,17 +26,17 @@
     openFirewall = true; # ok: with Tailscale you can also set this false + rely on tailnet
   };
 
-  # Authorized keys for the `rob` user. ADD your + nebula's public keys here.
-  # Generate on nebula:  ssh-keygen -t ed25519 -C "nebula->nixos"
-  # Then paste the .pub contents below.
-  users.users.rob.openssh.authorizedKeys.keys = [
-    # "ssh-ed25519 AAAA... nebula->nixos"   # <-- nebula's pubkey
-    # "ssh-ed25519 AAAA... rob@phone"        # <-- any other client
+  # Authorized keys for the `boston` user.
+  # nebula's pubkey is pre-filled so Claude (on nebula) can SSH in after boot.
+  # Add your phone/laptop pubkeys to the list as needed.
+  users.users.boston.openssh.authorizedKeys.keys = [
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIN1sPBK8ygLP3AZc7LXhchpfPtm71syew1Yic/wbDpRI nebula->nixos-boston"
+    # "ssh-ed25519 AAAA... boston@phone"   # <-- add other clients here
   ];
 
-  # Root authorized keys (only needed for nixos-anywhere remote install).
+  # Root authorized keys (needed for nixos-anywhere remote install).
   users.users.root.openssh.authorizedKeys.keys = [
-    # "ssh-ed25519 AAAA... nebula->nixos"
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIN1sPBK8ygLP3AZc7LXhchpfPtm71syew1Yic/wbDpRI nebula->nixos-boston"
   ];
 
   ###########################################################################

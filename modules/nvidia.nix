@@ -33,6 +33,14 @@
     package = config.boot.kernelPackages.nvidiaPackages.production;
   };
 
+  # Coolbits — unlocks GPU fan curve + clock/power offset control so post-connect
+  # overclocking is possible (via nvidia-settings / lact). 28 = fan + overclock +
+  # overvolt bits. Tuning happens AFTER connect with real stability testing.
+  # (nvidiaSettings already enabled in hardware.nvidia above.)
+  services.xserver.deviceSection = ''
+    Option "Coolbits" "28"
+  '';
+
   # Explicit sync is the big Wayland-NVIDIA flicker/stutter fix (driver 555+).
   # It's on by default in current drivers; this env var is belt-and-suspenders
   # for apps that still misbehave.

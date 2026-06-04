@@ -100,7 +100,7 @@
               plasma-manager.homeModules.plasma-manager
               spicetify-nix.homeManagerModules.default
             ];
-            home-manager.users.rob = import ./home/rob.nix;
+            home-manager.users.boston = import ./home/boston.nix;
           }
         ];
       };

@@ -2,7 +2,7 @@
 
 ###############################################################################
 # System-level apps + tooling that aren't desktop/gaming/nvidia specific.
-# User-facing GUI apps mostly live in home/rob.nix; this is system glue +
+# User-facing GUI apps mostly live in home/boston.nix; this is system glue +
 # things that want to be system-wide.
 ###############################################################################
 
@@ -14,11 +14,10 @@
     nix-output-monitor  # pretty build output (nom)
     cachix              # binary cache client
 
-    # --- CLI power tools ---
+    # --- CLI power tools (git lives in configuration.nix base packages) ---
     zoxide              # smart cd (z)
     fastfetch           # system info (replaces archey4)
     ripgrep fd bat eza  # modern unix replacements
-    git
 
     # --- Claude Code (always-fresh via overlay) ---
     claude-code
@@ -35,7 +34,7 @@
     enable = true;
     flake = "/etc/nixos";
   };
-  # (zoxide shell integration is configured per-user in home/rob.nix)
+  # (zoxide shell integration is configured per-user in home/boston.nix)
 
   # Waydroid — run Android apps in a container. Enable the system service;
   # first run needs `sudo waydroid init` after boot.

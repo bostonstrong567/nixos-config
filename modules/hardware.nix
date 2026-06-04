@@ -40,6 +40,7 @@
     pwvucontrol           # native PipeWire mixer
     qpwgraph              # PipeWire patchbay, Qt (helvum removed; matches KDE; route Focusrite/mic)
     alsa-utils            # alsamixer, aplay, etc.
+    piper                 # GUI for libratbag (gaming mouse buttons/DPI/RGB)
   ];
 
   ###########################################################################
@@ -55,8 +56,25 @@
   };
 
   ###########################################################################
+  # Gaming peripherals — your actual devices
+  ###########################################################################
+
+  # Wooting keyboard — wootility GUI + udev rules (analog/rapid-trigger config).
+  # (boston is in the 'input' group, set in configuration.nix, for device access.)
+  hardware.wooting.enable = true;
+
+  # Logitech mice/keyboards/receivers — Solaar + udev (manage without root).
+  hardware.logitech.wireless.enable = true;
+  hardware.logitech.wireless.enableGraphical = true; # Solaar GUI
+
+  # libratbag/Piper — configure buttons/DPI/RGB on most gaming mice
+  # (covers non-Logitech mice; harmless if your mouse isn't supported).
+  # piper GUI is in the systemPackages list above.
+  services.ratbagd.enable = true;
+
+  ###########################################################################
   # Misc peripherals
   ###########################################################################
   hardware.keyboard.qmk.enable = true; # custom mech keyboards (harmless if none)
-  services.hardware.openrgb.enable = true; # RGB control (mobo/RAM/GPU) — your call
+  services.hardware.openrgb.enable = true; # RGB control (mobo/RAM/GPU)
 }

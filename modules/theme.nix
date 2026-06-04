@@ -7,7 +7,7 @@
 #   GTK apps · Qt/KDE apps · terminals (ghostty/kitty) · VSCode · Firefox ·
 #   console (TTY) · GRUB · cursors · fonts.
 #
-# plasma-manager (in home/rob.nix) handles LAYOUT/behavior; Stylix handles
+# plasma-manager (in home/boston.nix) handles LAYOUT/behavior; Stylix handles
 # COLOR. We deliberately don't set colors in both → no fighting.
 #
 # NOTE: Kvantum is intentionally NOT used — it breaks Stylix on Plasma 6
@@ -81,7 +81,7 @@
   ];
 
   # KWin: rounded corners on EVERYTHING (even apps that don't self-round),
-  # plus the blur already enabled in home/rob.nix kwin effects.
+  # plus the blur already enabled in home/boston.nix kwin effects.
   # (Plasma 6 rounds via the decoration + the 'Rounded corners' effect that
   # ships with recent KWin; Klassy gives finer control.)
 }
