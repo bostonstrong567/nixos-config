@@ -29,4 +29,47 @@ final: prev: {
       hash = "sha256-LsE9gweAOaru7J01r68V1aDblQ06t4qeCXp6mu1Ig3E=";
     };
   };
+
+  # Windows_11_dark cursor — user's uploaded .cur/.ani set converted to XCursor
+  # via win2xcur. CI builds this to verify the conversion works.
+  win11-dark-cursors = prev.stdenv.mkDerivation {
+    pname = "win11-dark-cursors";
+    version = "1";
+    src = ../stuff/Windows_11_dark.7z;
+    nativeBuildInputs = [ prev.p7zip prev.win2xcur ];
+    unpackPhase = ''
+      runHook preUnpack
+      7z x $src -o.
+      runHook postUnpack
+    '';
+    buildPhase = ''
+      runHook preBuild
+      mkdir -p out
+      win2xcur Windows_11_dark/*.cur Windows_11_dark/*.ani -o out/
+      runHook postBuild
+    '';
+    installPhase = ''
+      runHook preInstall
+      THEME="$out/share/icons/Windows-11-dark"
+      mkdir -p "$THEME/cursors"
+      cp out/* "$THEME/cursors/"
+      cat > "$THEME/index.theme" <<EOF
+      [Icon Theme]
+      Name=Windows-11-dark
+      Comment=Windows 11 dark cursors (converted via win2xcur)
+      EOF
+      cd "$THEME/cursors"
+      link() { [ -e "$2" ] && ln -sf "$2" "$1" || true; }
+      link left_ptr pointer; link default pointer
+      link text beam; link xterm beam
+      link watch busy; link progress working
+      link hand2 link; link pointer link
+      link help help; link move move
+      link size_ver vert; link size_hor horz
+      link crosshair precision
+      link not-allowed unavailable; link no-drop unavailable
+      runHook postInstall
+    '';
+    meta.description = "Windows 11 dark cursor theme (converted to XCursor)";
+  };
 }

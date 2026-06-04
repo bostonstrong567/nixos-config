@@ -42,8 +42,9 @@ jobs:
       # 3. BUILD our custom packages — verifies opcode + cliamp hashes fetch/build.
       #    These are the only non-nixpkgs bits, so they're the real build risk;
       #    nixpkgs packages are cached.
-      - name: build custom packages (opcode, cliamp)
+      - name: build custom packages (opcode, cliamp, cursor)
         run: |
           nix build --no-link --print-out-paths \
             ".#nixosConfigurations.nebula-ext.pkgs.cliamp" \
-            ".#nixosConfigurations.nebula-ext.pkgs.opcode"
+            ".#nixosConfigurations.nebula-ext.pkgs.opcode" \
+            ".#nixosConfigurations.nebula-ext.pkgs.win11-dark-cursors"

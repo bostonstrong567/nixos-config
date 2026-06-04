@@ -58,10 +58,12 @@
       desktop = 1.0;
     };
 
-    # Cursor — Bibata Modern Classic.
+    # Cursor — user's uploaded Windows_11_dark set, converted to XCursor
+    # (pkgs.win11-dark-cursors overlay; CI builds it). User explicitly requested
+    # this cursor. Prefer Bibata? package = pkgs.bibata-cursors; name = "Bibata-Modern-Classic";
     cursor = {
-      package = pkgs.bibata-cursors;
-      name = "Bibata-Modern-Classic";
+      package = pkgs.win11-dark-cursors;
+      name = "Windows-11-dark";
       size = 24;
     };
 
