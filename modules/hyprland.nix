@@ -40,7 +40,9 @@
     hyprpaper       # simple static wallpaper fallback
     hyprlock        # lockscreen (blurred, themed)
     hypridle        # idle daemon
-    hyprpicker      # color picker
+    hyprpicker      # color picker (mouse eyedropper)
+    hyprsunset      # blue-light / night-light filter (2026 Hypr-ecosystem tool)
+    hyprcursor      # modern scalable cursor format support
     wl-clipboard    # clipboard
     cliphist        # clipboard history (mouse-pick via wofi)
     grim slurp      # screenshots (region select w/ mouse)

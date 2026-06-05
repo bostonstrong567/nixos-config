@@ -376,7 +376,7 @@
         # animated gruvbox wallpaper (swap path to your own video/gif/image):
         # "mpvpaper -o 'no-audio --loop' '*' ~/Videos/wallpaper.mp4"
         "dunst"
-        "eww daemon"
+        "eww daemon && eww open hud"        # floating glass system-monitor HUD
         "wl-paste --watch cliphist store"  # clipboard history daemon
         "nm-applet --indicator"             # network tray icon
         "blueman-applet"                    # bluetooth tray icon
@@ -417,4 +417,63 @@
   };
 
   # Stylix themes waybar/wofi/dunst automatically (gruvbox) via its targets.
+
+  ###########################################################################
+  # eww — clean floating GLASS HUD widget (top-right): clock + system stats.
+  # Gruvbox orange/black, rounded, semi-transparent. Pure eye-candy, no clicks
+  # needed. Opened by `eww open hud` in exec-once below.
+  ###########################################################################
+  xdg.configFile."eww/eww.yuck".text = ''
+    ;; ---- data pollers ----
+    (defpoll TIME   :interval "5s"  "date '+%H:%M'")
+    (defpoll DATE   :interval "60s" "date '+%a %d %b'")
+    (defpoll CPU    :interval "2s"  "LC_ALL=C top -bn1 | awk '/Cpu/{printf \"%d\", 100-$8}'")
+    (defpoll MEM    :interval "3s"  "free | awk '/Mem/{printf \"%d\", $3/$2*100}'")
+    (defpoll DISK   :interval "30s" "df / | awk 'END{print $5}' | tr -d '%'")
+
+    ;; ---- the HUD window ----
+    (defwidget hud []
+      (box :class "hud" :orientation "v" :space-evenly false :spacing 8
+        (label :class "clock" :text TIME)
+        (label :class "date"  :text DATE)
+        (box :class "stats" :orientation "v" :space-evenly false :spacing 6
+          (metric :name "CPU" :val CPU)
+          (metric :name "RAM" :val MEM)
+          (metric :name "DISK" :val DISK))))
+
+    (defwidget metric [name val]
+      (box :class "metric" :orientation "h" :space-evenly false :spacing 8
+        (label :class "mname" :text name)
+        (progress :class "mbar" :value val :orientation "h")
+        (label :class "mval" :text "''${val}%")))
+
+    (defwindow hud
+      :monitor 0
+      :geometry (geometry :x "18px" :y "52px" :anchor "top right"
+                          :width "230px" :height "200px")
+      :stacking "bg" :exclusive false :focusable false
+      (hud))
+  '';
+
+  xdg.configFile."eww/eww.scss".text = ''
+    * { all: unset; font-family: "JetBrainsMono Nerd Font"; }
+    .hud {
+      background-color: rgba(29,32,33,0.78);
+      border: 2px solid #fe8019;
+      border-radius: 16px;
+      padding: 14px 16px;
+    }
+    .clock { color: #fe8019; font-size: 30px; font-weight: bold; }
+    .date  { color: #ebdbb2; font-size: 13px; margin-bottom: 6px; }
+    .metric { margin: 2px 0; }
+    .mname { color: #fabd2f; font-size: 11px; min-width: 38px; }
+    .mval  { color: #ebdbb2; font-size: 11px; min-width: 36px; }
+    .mbar trough {
+      background-color: rgba(60,56,54,0.8);
+      border-radius: 8px; min-height: 8px; min-width: 90px;
+    }
+    .mbar progress {
+      background-color: #fe8019; border-radius: 8px; min-height: 8px;
+    }
+  '';
 }

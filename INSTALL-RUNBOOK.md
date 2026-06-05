@@ -15,7 +15,8 @@ ssh -i ~/.ssh/nebula_nixos root@<USER_IP>
 lsblk -o NAME,SIZE,MODEL,TRAN,SERIAL
 ls -l /dev/disk/by-id/ | grep -i sandisk
 ```
-- The external SanDisk is `TRAN=usb`, size ~1.8–2.0T, MODEL contains `SanDisk`/`Extreme`.
+- The external SanDisk is `TRAN=usb`, size ~0.9–1.0T, MODEL `SanDisk Extreme` /
+  Model `SDSSDE61-1T00`, **SERIAL `25167F40S552`** (match this exact serial = 100% safe).
 - Windows drives (Seagate 2TB, 860 EVO) are `TRAN=sata`/`nvme` — **never** usb.
 - **STOP if:** zero SanDisk matches, OR more than one usb disk that size.
   Show the user `lsblk` output and confirm which `/dev/disk/by-id/...` is correct.

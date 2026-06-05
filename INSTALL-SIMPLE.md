@@ -12,7 +12,7 @@ Done. That's your whole job.
 
 ## What I do (after you give me the IP)
 1. Connect into your PC over SSH (I already have the key baked into the USB).
-2. Find your external SanDisk SSD — **I show you "this is the 2TB SanDisk, right?"
+2. Find your external SanDisk SSD — **I show you "this is the 1TB SanDisk, right?"
    and wait for your OK** before touching anything. Your Windows drives are never
    at risk (they're internal; I only ever target the USB SanDisk).
 3. Partition + install the whole system live while you watch:

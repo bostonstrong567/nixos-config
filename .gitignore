@@ -2,6 +2,10 @@
 result
 result-*
 .direnv/
+iso-out/
+
+# Scratch
+.tmp/
 
 # Editor
 .vscode/

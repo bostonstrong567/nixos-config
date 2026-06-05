@@ -24,8 +24,11 @@
       sandisk = {
         type = "disk";
 
-        # >>> REPLACE THIS with the real by-id path of the SanDisk <<<
-        device = "/dev/disk/by-id/usb-SanDisk_Extreme_REPLACE_ME";
+        # SanDisk Extreme Portable SSD 1TB — Model SDSSDE61-1T00, S/N 25167F40S552.
+        # USB by-id usually embeds the serial. Claude VERIFIES this live with
+        # `ls -l /dev/disk/by-id/ | grep -i sandisk` before any wipe (the real
+        # path may have a trailing -0:0 or differ slightly by enclosure).
+        device = "/dev/disk/by-id/usb-SanDisk_Extreme_25167F40S552-0:0";
 
         content = {
           type = "gpt";

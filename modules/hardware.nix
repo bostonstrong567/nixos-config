@@ -9,7 +9,7 @@
 #     (the WiFi/BT module is the same card). bluetooth.enable below is harmless
 #     if absent; add a USB BT dongle later if you want it.
 #   * Internal drives (Seagate 2TB + Samsung 860 EVO 1TB) belong to the WINDOWS
-#     machine — NixOS NEVER touches them. We install ONLY to the external 2TB
+#     machine — NixOS NEVER touches them. We install ONLY to the external 1TB
 #     SanDisk (pinned by-id in modules/disko.nix). Ethernet = online at boot.
 #   * No Antlion mic. Mics in use: Fifine USB + Focusrite inputs.
 #
