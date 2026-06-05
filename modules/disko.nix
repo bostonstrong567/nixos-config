@@ -24,11 +24,16 @@
       sandisk = {
         type = "disk";
 
-        # SanDisk Extreme Portable SSD 1TB → /dev/sda (TRAN usb, ~931.5G).
-        # Real by-id path confirmed live on the target machine 2026-06-05.
-        # Internal Windows drives = sdb (Seagate) + sdc (Samsung 860), both sata,
-        # NEVER targeted by this path.
-        device = "/dev/disk/by-id/usb-SanDisk_Extreme_55AE_323531363746343035355352-0:0";
+        # SanDisk Extreme Portable SSD 1TB → /dev/sda (TRAN usb, ~931.5G),
+        # confirmed live on the target 2026-06-05.
+        #
+        # NOTE: we use /dev/sda, NOT the by-id path. The USB enclosure's by-id
+        # name ends in "-0:0", and the COLON breaks sgdisk/parted (they treat ':'
+        # as a field separator) → "Problem opening ... Error is 2" even though the
+        # device exists. /dev/sda is unambiguous + deterministic on this machine
+        # (only USB SSD; sdb=Seagate + sdc=Samsung 860 are SATA Windows disks,
+        # sdd=the flash installer). Windows drives are never referenced here.
+        device = "/dev/sda";
 
         content = {
           type = "gpt";
