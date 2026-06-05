@@ -244,60 +244,9 @@
       ];
     };
 
-  ###########################################################################
-  # KDE Plasma 6 ricing via plasma-manager — blur/transparency showpiece
-  ###########################################################################
-  programs.plasma = {
-    enable = true;
-
-    # NOTE: colorScheme / lookAndFeel are driven by Stylix (modules/theme.nix).
-    # Here we only set icon theme + window-decoration + layout/behavior.
-    workspace = {
-      iconTheme = "Papirus-Dark";
-      windowDecorations = {
-        library = "org.kde.klassy";   # rounded, customizable (from theme.nix)
-        theme = "Klassy";
-      };
-    };
-
-    kwin = {
-      effects = {
-        blur.enable = true;
-        translucency.enable = true;
-        desktopSwitching.animation = "slide";
-        wobblyWindows.enable = false;
-      };
-      virtualDesktops = {
-        rows = 1;
-        number = 4;
-      };
-    };
-
-    panels = [
-      {
-        location = "bottom";
-        height = 48;
-        floating = true;
-        widgets = [
-          "org.kde.plasma.kickoff"
-          "org.kde.plasma.icontasks"
-          "org.kde.plasma.marginsseparator"
-          "org.kde.plasma.systemtray"
-          "org.kde.plasma.digitalclock"
-        ];
-      }
-    ];
-
-    configFile = {
-      "kdeglobals"."KDE"."SingleClick" = false; # double-click (Windows-like)
-      "kwinrc"."Windows"."FocusPolicy" = "ClickToFocus";
-    };
-  };
-
-  # Media keys: Plasma's global shortcuts target the active MPRIS player out of
-  # the box. cliamp publishes MPRIS, so once its daemon runs, Play/Pause/Next/
-  # Prev keys + the panel media widget control it (playerctl is installed above).
-  # Force-target cliamp with: playerctl --player=cliamp play-pause
+  # Media keys: Hyprland binds XF86Audio* keys to playerctl (see hyprland block).
+  # cliamp publishes MPRIS, so once its daemon runs, Play/Pause/Next/Prev keys
+  # control it. Force-target cliamp with: playerctl --player=cliamp play-pause
 
   ###########################################################################
   # Hyprland — mouse-first showpiece session (pick at login; Plasma stays default)

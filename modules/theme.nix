@@ -3,15 +3,12 @@
 ###############################################################################
 # Unified "sick dark futuristic" theme — single source of truth.
 #
-# Stylix takes ONE palette (Catppuccin Mocha) and fans it out to:
-#   GTK apps · Qt/KDE apps · terminals (ghostty/kitty) · VSCode · Firefox ·
-#   console (TTY) · GRUB · cursors · fonts.
+# Stylix takes ONE palette (gruvbox-dark-hard) and fans it out to:
+#   GTK apps · Qt apps · terminals (ghostty) · VSCode · Firefox · waybar · wofi ·
+#   dunst · console (TTY) · GRUB · cursors · fonts.
 #
-# plasma-manager (in home/boston.nix) handles LAYOUT/behavior; Stylix handles
-# COLOR. We deliberately don't set colors in both → no fighting.
-#
-# NOTE: Kvantum is intentionally NOT used — it breaks Stylix on Plasma 6
-# (stylix issue #835). Stylix's native KDE target themes Qt instead.
+# Hyprland (home/boston.nix) handles LAYOUT/behavior + window rounding/blur;
+# Stylix handles COLOR. We don't set colors in both → no fighting.
 ###############################################################################
 
 {
@@ -75,15 +72,6 @@
     '';
   };
 
-  # Klassy — rounded, highly-customizable Plasma 6 window decorations
-  # (rounded corners + custom titlebar). Available to select in
-  # System Settings → Window Decorations after first boot.
-  environment.systemPackages = with pkgs; [
-    klassy
-  ];
-
-  # KWin: rounded corners on EVERYTHING (even apps that don't self-round),
-  # plus the blur already enabled in home/boston.nix kwin effects.
-  # (Plasma 6 rounds via the decoration + the 'Rounded corners' effect that
-  # ships with recent KWin; Klassy gives finer control.)
+  # Rounded corners + blur are handled by Hyprland's `decoration` block
+  # (home/boston.nix): rounding=14, 3-pass blur w/ xray, shadows. No Plasma/KWin.
 }

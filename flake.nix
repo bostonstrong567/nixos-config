@@ -1,5 +1,5 @@
 {
-  description = "External-SSD NixOS — RTX 4080 / Ryzen 7 3800XT — KDE Plasma 6 showpiece (Windows-safe portable install)";
+  description = "External-SSD NixOS — RTX 4080 / Ryzen 7 3800X — Hyprland showpiece (Windows-safe portable install)";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
@@ -7,12 +7,6 @@
     home-manager = {
       url = "github:nix-community/home-manager/release-26.05";
       inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    plasma-manager = {
-      url = "github:nix-community/plasma-manager";
-      inputs.nixpkgs.follows = "nixpkgs";
-      inputs.home-manager.follows = "home-manager";
     };
 
     # Lix — DROPPED. Its nixos-module pins an internal `lix` sub-input using the
@@ -61,7 +55,7 @@
     };
   };
 
-  outputs = { self, nixpkgs, home-manager, plasma-manager, claude-code, spicetify-nix, stylix, nix-alien, disko, ... }@inputs:
+  outputs = { self, nixpkgs, home-manager, claude-code, spicetify-nix, stylix, nix-alien, disko, ... }@inputs:
     let
       system = "x86_64-linux";
     in {
@@ -107,7 +101,6 @@
             home-manager.useUserPackages = true;
             home-manager.extraSpecialArgs = { inherit inputs; };
             home-manager.sharedModules = [
-              plasma-manager.homeModules.plasma-manager
               spicetify-nix.homeManagerModules.default
             ];
             home-manager.users.boston = import ./home/boston.nix;
