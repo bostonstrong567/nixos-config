@@ -24,11 +24,11 @@
       sandisk = {
         type = "disk";
 
-        # SanDisk Extreme Portable SSD 1TB — Model SDSSDE61-1T00, S/N 25167F40S552.
-        # USB by-id usually embeds the serial. Claude VERIFIES this live with
-        # `ls -l /dev/disk/by-id/ | grep -i sandisk` before any wipe (the real
-        # path may have a trailing -0:0 or differ slightly by enclosure).
-        device = "/dev/disk/by-id/usb-SanDisk_Extreme_25167F40S552-0:0";
+        # SanDisk Extreme Portable SSD 1TB → /dev/sda (TRAN usb, ~931.5G).
+        # Real by-id path confirmed live on the target machine 2026-06-05.
+        # Internal Windows drives = sdb (Seagate) + sdc (Samsung 860), both sata,
+        # NEVER targeted by this path.
+        device = "/dev/disk/by-id/usb-SanDisk_Extreme_55AE_323531363746343035355352-0:0";
 
         content = {
           type = "gpt";
