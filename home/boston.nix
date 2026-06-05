@@ -174,6 +174,16 @@
       # Animated cursor shader (file installed below). 'always' = keep animating.
       custom-shader = "${config.home.homeDirectory}/.config/ghostty/shaders/cursor_smear.glsl";
       custom-shader-animation = "always";
+      # Windows/PowerShell-style clipboard: Ctrl+C copies, Ctrl+V pastes.
+      # (When text is selected, Ctrl+C copies; with nothing selected it still
+      #  sends SIGINT to cancel a command — best of both, like Windows Terminal.)
+      copy-on-select = true;
+      keybind = [
+        "ctrl+c=copy_to_clipboard"
+        "ctrl+v=paste_from_clipboard"
+        # Keep a way to send a real interrupt (Ctrl+C's old job):
+        "ctrl+shift+c=text:\\x03"
+      ];
     };
   };
 

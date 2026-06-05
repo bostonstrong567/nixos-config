@@ -3,7 +3,17 @@
 ###############################################################################
 # Full hardware enablement — firmware, bluetooth, audio devices, peripherals.
 #
-# Your audio devices (from Windows inventory) and how they map on Linux:
+# MACHINE FACTS (confirmed by user):
+#   * Mobo: X570 (no-WiFi variant) → WIRED Ethernet only. No wifi firmware
+#     needed. NOTE: no-WiFi X570 boards also usually have NO onboard Bluetooth
+#     (the WiFi/BT module is the same card). bluetooth.enable below is harmless
+#     if absent; add a USB BT dongle later if you want it.
+#   * Internal drives (Seagate 2TB + Samsung 860 EVO 1TB) belong to the WINDOWS
+#     machine — NixOS NEVER touches them. We install ONLY to the external 2TB
+#     SanDisk (pinned by-id in modules/disko.nix). Ethernet = online at boot.
+#   * No Antlion mic. Mics in use: Fifine USB + Focusrite inputs.
+#
+# Audio devices and how they map on Linux:
 #   * Focusrite Scarlett (USB)  → class-compliant USB audio, works on PipeWire,
 #                                  ZERO driver needed. Full I/O + low latency.
 #   * Fifine USB microphone     → class-compliant USB audio, works out of box.
