@@ -1,0 +1,72 @@
+========================================
+  NixOS APP LIST  —  boston @ nebula-ext
+========================================
+
+--- GAMING ---
+Steam              game store
+Heroic             epic/gog
+Lutris             game launcher
+Bottles            windows games
+PrismLauncher      minecraft launcher
+ProtonPlus         proton manager
+SteamTinkerLaunch  game tweaks
+GameMode           perf booster
+MangoHud           fps overlay
+Goverlay           overlay config
+vkBasalt           game sharpening
+Gamescope          game compositor
+
+--- WEB / CHAT ---
+Firefox            web browser
+Vesktop            discord client
+
+--- MEDIA ---
+Haruna             video player
+VLC                media player
+Oculante           image viewer
+CLIAMP             terminal music
+EasyEffects        audio eq
+Spicetify          themed spotify
+
+--- DEV ---
+VSCode             code editor
+Ghostty            gpu terminal
+claude-code        ai cli
+opcode             claude gui
+
+--- UTILITIES ---
+PeaZip             archive manager
+Flameshot          screenshot tool
+fsearch            file search
+Collector          file tray
+playerctl          media keys
+Waydroid           android apps
+
+--- HARDWARE / AUDIO ---
+Wootility          wooting config
+Solaar             logitech config
+Piper              mouse config
+qpwgraph           audio routing
+pavucontrol        volume mixer
+OpenRGB            rgb control
+CoreCtrl           gpu/cpu control
+
+--- CLI POWER TOOLS ---
+fastfetch          system info
+zoxide             smart cd
+ripgrep            fast grep
+fd                 fast find
+bat                better cat
+eza                better ls
+comma              run-anything
+nix-tree           dep browser
+nh                 rebuild helper
+nvd                version diff
+
+--- VISUALIZERS ---
+GLava              desktop spectrum
+cava               terminal bars
+
+========================================
+  ~45 apps total
+========================================

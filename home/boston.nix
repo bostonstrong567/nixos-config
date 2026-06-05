@@ -28,7 +28,6 @@
     # --- Media ---
     haruna               # Qt/KDE mpv video player (matches Plasma; > Celluloid here)
     oculante             # Rust GPU image viewer (> qimgv: modern, fast)
-    vlc
 
     # --- Utilities ---
     peazip               # archive manager

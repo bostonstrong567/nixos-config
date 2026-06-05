@@ -21,7 +21,7 @@
     # The palette. Swap this one file path to re-theme the ENTIRE system.
     # Other options: catppuccin-macchiato, tokyo-night-dark, gruvbox-dark-hard,
     # nord, rose-pine, dracula — all in pkgs.base16-schemes.
-    base16Scheme = "${pkgs.base16-schemes}/share/themes/catppuccin-mocha.yaml";
+    base16Scheme = "${pkgs.base16-schemes}/share/themes/gruvbox-dark-hard.yaml";
 
     # Auto-theme everything it can detect.
     autoEnable = true;
