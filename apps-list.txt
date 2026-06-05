@@ -67,6 +67,18 @@ nvd                version diff
 GLava              desktop spectrum
 cava               terminal bars
 
+--- HYPRLAND SHOWPIECE (2nd session, pick at login) ---
+Hyprland           tiling compositor
+Waybar             status bar
+eww                glass widgets
+wofi               app launcher
+swww               animated wallpaper
+mpvpaper           video wallpaper
+hyprlock           blur lockscreen
+dunst              notifications
+
 ========================================
-  ~45 apps total
+  THEME: gruvbox-dark-hard (orange/black)
+  one palette -> every app + future apps (Stylix)
+  ~55 apps total
 ========================================

@@ -35,7 +35,7 @@
     waybar          # status bar (CSS-styled, clickable)
     eww             # widgets (glass HUD tiles)
     wofi            # mouse-driven app launcher
-    rofi-wayland    # alt launcher (also mouse-driven)
+    rofi            # alt launcher (rofi-wayland merged into rofi)
     dunst           # notifications
     swww            # animated wallpaper daemon (GPU transitions)
     mpvpaper        # video wallpaper (galaxy/matrix loop behind desktop)
