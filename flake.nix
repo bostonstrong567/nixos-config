@@ -75,6 +75,7 @@
           ./modules/hardware.nix
           ./modules/gaming.nix
           ./modules/desktop.nix
+          ./modules/hyprland.nix
           ./modules/external-ssd.nix
           ./modules/apps.nix
           ./modules/theme.nix

@@ -288,4 +288,143 @@
   # the box. cliamp publishes MPRIS, so once its daemon runs, Play/Pause/Next/
   # Prev keys + the panel media widget control it (playerctl is installed above).
   # Force-target cliamp with: playerctl --player=cliamp play-pause
+
+  ###########################################################################
+  # Hyprland — mouse-first showpiece session (pick at login; Plasma stays default)
+  ###########################################################################
+  wayland.windowManager.hyprland = {
+    enable = true;
+    settings = {
+      # ---- monitors (auto; tweak refresh per your display) ----
+      monitor = ",preferred,auto,1";
+
+      # ---- MOUSE-FIRST window management ----
+      "$mod" = "SUPER";
+      bindm = [
+        "$mod, mouse:272, movewindow"   # Super + LMB drag = move
+        "$mod, mouse:273, resizewindow" # Super + RMB drag = resize
+      ];
+
+      # Minimal keybinds (the rest is clickable via waybar/wofi)
+      bind = [
+        "$mod, Return, exec, ghostty"
+        "$mod, Q, killactive"
+        "$mod, E, exec, dolphin"
+        "$mod, R, exec, wofi --show drun"   # app launcher (mouse-driven)
+        "$mod, F, fullscreen"
+        "$mod, Space, togglefloating"
+        "$mod, L, exec, hyprlock"
+        # workspace switch by number (also clickable on waybar)
+        "$mod, 1, workspace, 1"
+        "$mod, 2, workspace, 2"
+        "$mod, 3, workspace, 3"
+        "$mod, 4, workspace, 4"
+        ", Print, exec, grim -g \"$(slurp)\" - | wl-copy"  # region screenshot
+      ];
+      # scroll on workspaces with mouse over an empty area
+      bind_ = [ ];
+
+      # ---- THE SHOWPIECE LOOK ----
+      general = {
+        gaps_in = 6;
+        gaps_out = 14;
+        border_size = 2;
+        "col.active_border" = "rgba(fe8019ff) rgba(d65d0eff) 45deg"; # gruvbox orange gradient
+        "col.inactive_border" = "rgba(3c3836aa)";
+        layout = "dwindle";
+        resize_on_border = true;  # drag window edges with the mouse, no mod
+      };
+
+      decoration = {
+        rounding = 14;
+        blur = {
+          enabled = true;
+          size = 8;
+          passes = 3;
+          new_optimizations = true;
+          xray = true;          # blur sees through to wallpaper = glassy
+          ignore_opacity = true;
+        };
+        shadow = {
+          enabled = true;
+          range = 30;
+          render_power = 3;
+          color = "rgba(1d2021ee)";
+        };
+        active_opacity = 0.95;
+        inactive_opacity = 0.85;
+      };
+
+      animations = {
+        enabled = true;
+        bezier = [
+          "wind, 0.05, 0.9, 0.1, 1.05"
+          "overshot, 0.13, 0.99, 0.29, 1.1"
+          "smoothOut, 0.36, 0, 0.66, -0.56"
+        ];
+        animation = [
+          "windows, 1, 6, wind, slide"
+          "windowsIn, 1, 6, overshot, slide"
+          "windowsOut, 1, 5, smoothOut, slide"
+          "fade, 1, 10, default"
+          "workspaces, 1, 6, overshot, slidevert"
+          "border, 1, 10, default"
+        ];
+      };
+
+      dwindle = {
+        pseudotile = true;
+        preserve_split = true;
+      };
+
+      misc = {
+        disable_hyprland_logo = true;
+        disable_splash_rendering = true;
+      };
+
+      # ---- autostart: bar, widgets, animated wallpaper, notifications ----
+      exec-once = [
+        "waybar"
+        "swww-daemon"
+        # animated gruvbox wallpaper (swap path to your own video/gif/image):
+        # "mpvpaper -o 'no-audio --loop' '*' ~/Videos/wallpaper.mp4"
+        "dunst"
+        "eww daemon"
+      ];
+    };
+  };
+
+  # Waybar — clickable status bar (workspaces, clock, audio, net, tray).
+  # Stylix colors it gruvbox automatically. Click workspaces to switch; click
+  # modules for menus — no keybinds needed.
+  programs.waybar = {
+    enable = true;
+    settings.mainBar = {
+      layer = "top";
+      position = "top";
+      height = 34;
+      modules-left = [ "hyprland/workspaces" "hyprland/window" ];
+      modules-center = [ "clock" ];
+      modules-right = [ "pulseaudio" "network" "cpu" "memory" "tray" ];
+      "hyprland/workspaces" = {
+        on-click = "activate";   # click to switch workspace
+        format = "{icon}";
+      };
+      clock.format = "{:%a %d %b  %H:%M}";
+      pulseaudio = {
+        format = "{icon} {volume}%";
+        format-icons.default = [ "" "" "" ];
+        on-click = "pavucontrol";   # click opens mixer
+      };
+      network = {
+        format-wifi = "  {essid}";
+        format-ethernet = "  {ipaddr}";
+        on-click = "nm-connection-editor";
+      };
+      cpu.format = " {usage}%";
+      memory.format = " {}%";
+    };
+  };
+
+  # Stylix themes waybar/wofi/dunst automatically (gruvbox) via its targets.
 }
