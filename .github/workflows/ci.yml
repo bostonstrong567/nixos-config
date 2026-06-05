@@ -48,3 +48,44 @@ jobs:
             ".#nixosConfigurations.nebula-ext.pkgs.cliamp" \
             ".#nixosConfigurations.nebula-ext.pkgs.opcode" \
             ".#nixosConfigurations.nebula-ext.pkgs.win11-dark-cursors"
+
+      # 4. EVAL the installer ISO config too (catches installer.nix errors early).
+      - name: evaluate installer ISO config
+        run: |
+          nix eval --raw \
+            ".#nixosConfigurations.installer.config.system.build.isoImage.drvPath"
+
+  # ---------------------------------------------------------------------------
+  # Build the actual installer ISO and publish it as a downloadable artifact.
+  # Runs only on the main branch (it's heavier). Download from the run's
+  # Artifacts, then Rufus it to the USB.
+  # ---------------------------------------------------------------------------
+  build-iso:
+    if: github.ref == 'refs/heads/main'
+    needs: check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Free disk space
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc \
+                      /usr/local/share/boost "$AGENT_TOOLSDIRECTORY" || true
+          df -h /
+      - uses: DeterminateSystems/nix-installer-action@main
+      - uses: DeterminateSystems/magic-nix-cache-action@main
+
+      - name: Build installer ISO
+        run: |
+          nix build -L \
+            ".#nixosConfigurations.installer.config.system.build.isoImage" \
+            -o iso-out
+          echo "ISO_PATH=$(readlink -f iso-out/iso/*.iso)" >> "$GITHUB_ENV"
+          ls -lh iso-out/iso/
+
+      - name: Upload ISO artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: nixos-installer-iso
+          path: iso-out/iso/*.iso
+          retention-days: 14
+          compression-level: 0

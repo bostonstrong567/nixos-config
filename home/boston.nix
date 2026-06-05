@@ -248,8 +248,11 @@
   # cliamp publishes MPRIS, so once its daemon runs, Play/Pause/Next/Prev keys
   # control it. Force-target cliamp with: playerctl --player=cliamp play-pause
 
+  # Polkit agent (GUI privilege prompts) — ships its own user service.
+  services.hyprpolkitagent.enable = true;
+
   ###########################################################################
-  # Hyprland — mouse-first showpiece session (pick at login; Plasma stays default)
+  # Hyprland — THE desktop, mouse-first (Plasma removed)
   ###########################################################################
   wayland.windowManager.hyprland = {
     enable = true;
@@ -264,7 +267,7 @@
         "$mod, mouse:273, resizewindow" # Super + RMB drag = resize
       ];
 
-      # Minimal keybinds (the rest is clickable via waybar/wofi)
+      # Mouse-only workspace switching: scroll wheel over empty desktop area.
       bind = [
         "$mod, Return, exec, ghostty"
         "$mod, Q, killactive"
@@ -272,16 +275,39 @@
         "$mod, R, exec, wofi --show drun"   # app launcher (mouse-driven)
         "$mod, F, fullscreen"
         "$mod, Space, togglefloating"
+        "$mod, V, exec, cliphist list | wofi --dmenu | cliphist decode | wl-copy" # clipboard history (mouse-pick)
         "$mod, L, exec, hyprlock"
+        "$mod, X, exec, wlogout"            # power menu (mouse buttons)
         # workspace switch by number (also clickable on waybar)
         "$mod, 1, workspace, 1"
         "$mod, 2, workspace, 2"
         "$mod, 3, workspace, 3"
         "$mod, 4, workspace, 4"
-        ", Print, exec, grim -g \"$(slurp)\" - | wl-copy"  # region screenshot
+        ", Print, exec, grim -g \"$(slurp)\" - | swappy -f -"  # region screenshot + annotate (mouse)
+        # scroll wheel over desktop = switch workspace (pure mouse)
+        "$mod, mouse_down, workspace, e+1"
+        "$mod, mouse_up, workspace, e-1"
       ];
-      # scroll on workspaces with mouse over an empty area
-      bind_ = [ ];
+
+      # Media keys → playerctl (controls cliamp/Spotify/browsers via MPRIS)
+      bindl = [
+        ", XF86AudioPlay, exec, playerctl play-pause"
+        ", XF86AudioNext, exec, playerctl next"
+        ", XF86AudioPrev, exec, playerctl previous"
+        ", XF86AudioMute, exec, wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
+      ];
+      bindel = [
+        ", XF86AudioRaiseVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+"
+        ", XF86AudioLowerVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"
+        ", XF86MonBrightnessUp, exec, brightnessctl s 5%+"
+        ", XF86MonBrightnessDown, exec, brightnessctl s 5%-"
+      ];
+
+      # Touchpad/mouse gestures: 3-finger swipe to change workspace (if touchpad).
+      gestures = {
+        workspace_swipe = true;
+        workspace_swipe_fingers = 3;
+      };
 
       # ---- THE SHOWPIECE LOOK ----
       general = {
@@ -291,7 +317,9 @@
         "col.active_border" = "rgba(fe8019ff) rgba(d65d0eff) 45deg"; # gruvbox orange gradient
         "col.inactive_border" = "rgba(3c3836aa)";
         layout = "dwindle";
-        resize_on_border = true;  # drag window edges with the mouse, no mod
+        resize_on_border = true;        # drag window edges with the mouse, no mod
+        extend_border_grab_area = 15;   # fat invisible grab zone = easy edge-drag resize
+        hover_icon_on_border = true;    # show resize cursor on hover
       };
 
       decoration = {
@@ -349,6 +377,9 @@
         # "mpvpaper -o 'no-audio --loop' '*' ~/Videos/wallpaper.mp4"
         "dunst"
         "eww daemon"
+        "wl-paste --watch cliphist store"  # clipboard history daemon
+        "nm-applet --indicator"             # network tray icon
+        "blueman-applet"                    # bluetooth tray icon
       ];
     };
   };

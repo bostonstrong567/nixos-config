@@ -1,16 +1,14 @@
 { config, lib, pkgs, ... }:
 
 ###############################################################################
-# Hyprland — the "holy shit" showpiece session, ALONGSIDE Plasma.
-#
-# Pick it at the SDDM login screen (Plasma stays your default mouse-friendly
-# daily driver). Hyprland here is configured MOUSE-FIRST:
+# Hyprland — THE desktop (Plasma removed). Configured MOUSE-FIRST:
 #   * Super + left-drag  = move window
 #   * Super + right-drag = resize window
-#   * waybar / wofi / eww = clickable (no keybinds needed to launch/switch)
-# Your Wooting 65% only needs the Super key for drag — everything else clicks.
+#   * drag any window EDGE = resize (resize_on_border, no key)
+#   * waybar / wofi / wlogout = clickable (no keybinds to launch/switch/power)
+# Only daily key = SUPER (for drag). Everything else clicks.
 #
-# Visuals: full blur, rounded corners, animations, video/shader wallpaper, eww
+# Visuals: full blur, rounded corners, animations, animated wallpaper, eww
 # glass widgets. Colors come from Stylix (gruvbox) like everything else.
 ###############################################################################
 
@@ -44,10 +42,15 @@
     hypridle        # idle daemon
     hyprpicker      # color picker
     wl-clipboard    # clipboard
+    cliphist        # clipboard history (mouse-pick via wofi)
     grim slurp      # screenshots (region select w/ mouse)
+    swappy          # annotate screenshots (mouse)
     brightnessctl   # brightness keys
     pavucontrol     # click volume control
     networkmanagerapplet # click wifi menu
+    wlogout         # mouse-driven power menu (logout/reboot/shutdown buttons)
+    nwg-look        # GTK theme settings GUI (mouse)
+    nwg-displays    # monitor arrangement GUI (mouse drag displays)
   ];
 
   # XDG portal for screenshare/file dialogs under Hyprland.

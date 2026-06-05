@@ -107,5 +107,13 @@
           }
         ];
       };
+
+      # Installer ISO — the "doorway" USB. Boots, gets ethernet + SSH + my key,
+      # prints its IP. Build: nix build .#nixosConfigurations.installer.config.system.build.isoImage
+      nixosConfigurations.installer = nixpkgs.lib.nixosSystem {
+        inherit system;
+        specialArgs = { inherit inputs; };
+        modules = [ ./modules/installer.nix ];
+      };
     };
 }

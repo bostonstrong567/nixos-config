@@ -39,19 +39,10 @@
     noto-fonts-color-emoji      # renamed from noto-fonts-emoji
   ];
 
-  # Polkit authentication agent (Plasma used to provide one; Hyprland needs its
-  # own so GUI apps can request privileges, mount drives, etc.).
+  # Polkit (so GUI apps can request privileges, mount drives, etc.).
+  # The hyprpolkitagent USER SERVICE is enabled in home/boston.nix via
+  # `services.hyprpolkitagent.enable` (ships its own unit — no hand-rolled path).
   security.polkit.enable = true;
-  systemd.user.services.hyprpolkitagent = {
-    description = "Hyprland polkit authentication agent";
-    wantedBy = [ "graphical-session.target" ];
-    wants = [ "graphical-session.target" ];
-    after = [ "graphical-session.target" ];
-    serviceConfig = {
-      ExecStart = "${pkgs.hyprpolkitagent}/libexec/hyprpolkitagent";
-      Restart = "on-failure";
-    };
-  };
 
   # File manager + a few standalone KDE apps that are nice to keep (work fine
   # without full Plasma).
@@ -59,7 +50,6 @@
     kdePackages.dolphin       # file manager (mouse-driven, dark-themed)
     kdePackages.ark           # archive GUI (pairs with peazip)
     kdePackages.qtwayland     # Qt Wayland support for KDE apps under Hyprland
-    hyprpolkitagent
   ];
 
   # XDG portals — the Hyprland portal is added in modules/hyprland.nix.
