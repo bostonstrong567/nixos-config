@@ -157,10 +157,17 @@ hl.config({
     },
 })
 
--- Window buttons (right-aligned, added right-to-left): close, maximize, minimize
-hl.plugin.hyprbars.add_button({ bg_color = "rgb(fb4934)", fg_color = "rgb(1d2021)", size = 13, icon = "", action = "hyprctl dispatch killactive" })
-hl.plugin.hyprbars.add_button({ bg_color = "rgb(fabd2f)", fg_color = "rgb(1d2021)", size = 13, icon = "", action = "hyprctl dispatch fullscreen 1" })
-hl.plugin.hyprbars.add_button({ bg_color = "rgb(b8bb26)", fg_color = "rgb(1d2021)", size = 13, icon = "", action = "hyprctl dispatch movetoworkspacesilent special" })
+-- Window buttons (right-aligned, added right-to-left): close, fullscreen, float.
+-- Plain text icons (nerd-font glyphs were rendering as empty boxes).
+hl.plugin.hyprbars.add_button({ bg_color = "rgb(fb4934)", fg_color = "rgb(1d2021)", size = 12, icon = "x", action = "hyprctl dispatch killactive" })       -- red close
+hl.plugin.hyprbars.add_button({ bg_color = "rgb(fabd2f)", fg_color = "rgb(1d2021)", size = 12, icon = "+", action = "hyprctl dispatch fullscreen 1" })       -- yellow fullscreen
+hl.plugin.hyprbars.add_button({ bg_color = "rgb(b8bb26)", fg_color = "rgb(1d2021)", size = 12, icon = "-", action = "hyprctl dispatch togglefloating" })      -- green float
+
+-- Hide OUR titlebar on apps that draw their OWN (avoids the double-bar look).
+-- These use client-side decorations; let them keep theirs.
+hl.window_rule({ name = "hyprbars:no_bar", match = { class = "Opcode" } })
+hl.window_rule({ name = "hyprbars:no_bar", match = { class = "steam" } })
+hl.window_rule({ name = "hyprbars:no_bar", match = { class = "steamwebhelper" } })
 
 -- ---------------------------------------------------------------------------
 -- Autostart
