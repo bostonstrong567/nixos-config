@@ -27,6 +27,13 @@
       terminal = false;
       categories = [ "AudioVideo" "Audio" ];
     };
+    glava = {
+      name = "GLava";
+      comment = "OpenGL audio spectrum visualizer";
+      exec = "env DISPLAY=:0 glava";   # needs XWayland DISPLAY or it crashes
+      terminal = false;
+      categories = [ "AudioVideo" "Audio" ];
+    };
   };
 
   # Fix "gtk-xft-dpi has invalid value (-1)" spam from GTK apps (ghostty etc.).

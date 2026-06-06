@@ -35,7 +35,10 @@ hl.config({
         gaps_out = 6,
         layout = "dwindle",
         resize_on_border = true,
-        extend_border_grab_area = 15,
+        -- Small grab area (5px) so the resize zone is JUST the window edge and
+        -- doesn't overlap the hyprbars titlebar — grabbing the bar always DRAGS,
+        -- only the very edge resizes. (15px was eating into the bar = conflict.)
+        extend_border_grab_area = 5,
         hover_icon_on_border = true,
     },
     decoration = {
