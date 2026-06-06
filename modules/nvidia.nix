@@ -51,5 +51,10 @@
     NVD_BACKEND = "direct";       # VA-API via nvidia for video decode
     LIBVA_DRIVER_NAME = "nvidia";
     __GL_GSYNC_ALLOWED = "1";     # allow G-Sync/VRR
+
+    # WebKitGTK / Tauri apps (opcode, etc.) render laggy on NVIDIA Wayland because
+    # their DMABUF renderer path is broken on the proprietary driver. Forcing it
+    # off makes scroll/typing smooth again. Fixes opcode's input lag.
+    WEBKIT_DISABLE_DMABUF_RENDERER = "1";
   };
 }
