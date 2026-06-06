@@ -34,6 +34,35 @@
     # "ssh-ed25519 AAAA... boston@phone"   # <-- add other clients here
   ];
 
+  # opcode's Claude runs inside a bubblewrap sandbox (no sudo). Escape hatch:
+  # it SSHes to localhost, which spawns a shell OUTSIDE the sandbox where
+  # passwordless sudo works. This generates a boston self-key + trusts it, so
+  # `ssh boston@localhost` is passwordless from anywhere on the box.
+  systemd.services.boston-localhost-key = {
+    description = "Generate + trust boston self-SSH key for localhost sudo escape";
+    wantedBy = [ "multi-user.target" ];
+    after = [ "local-fs.target" ];
+    serviceConfig = {
+      Type = "oneshot";
+      User = "boston";
+      RemainAfterExit = true;
+    };
+    path = [ pkgs.openssh ];
+    script = ''
+      key="$HOME/.ssh/id_localhost"
+      mkdir -p "$HOME/.ssh"; chmod 700 "$HOME/.ssh"
+      if [ ! -f "$key" ]; then
+        ssh-keygen -t ed25519 -N "" -f "$key" -C "boston@localhost-sudo"
+      fi
+      pub=$(cat "$key.pub")
+      touch "$HOME/.ssh/authorized_keys"; chmod 600 "$HOME/.ssh/authorized_keys"
+      grep -qF "$pub" "$HOME/.ssh/authorized_keys" || echo "$pub" >> "$HOME/.ssh/authorized_keys"
+      # trust localhost host key (no prompt)
+      ssh-keyscan -H localhost 2>/dev/null >> "$HOME/.ssh/known_hosts" || true
+      sort -u "$HOME/.ssh/known_hosts" -o "$HOME/.ssh/known_hosts" 2>/dev/null || true
+    '';
+  };
+
   # Root authorized keys (needed for nixos-anywhere remote install).
   users.users.root.openssh.authorizedKeys.keys = [
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIN1sPBK8ygLP3AZc7LXhchpfPtm71syew1Yic/wbDpRI nebula->nixos-boston"

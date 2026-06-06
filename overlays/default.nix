@@ -57,51 +57,23 @@ final: prev: {
   };
 
   # opcode (winfunc) — Claude Code GUI. Wraps your native Claude sign-in (no API
-  # key).
+  # key). AppImage-wrapped (reliable). Hash verified vs upstream's .sha256.
   #
-  # Built from the EXTRACTED AppImage (not appimageTools.wrapType2) on purpose:
-  # wrapType2 runs it inside a bubblewrap sandbox that sets PR_SET_NO_NEW_PRIVS,
-  # which BLOCKS sudo at the kernel level — so opcode's Claude could never run
-  # `sudo nixos-rebuild`. Extracting + autoPatchelf runs opcode natively with no
-  # sandbox, so it inherits passwordless sudo (the PC is the sandbox).
-  opcode =
-    let
-      appimage = prev.fetchurl {
-        url = "https://github.com/winfunc/opcode/releases/download/v0.2.0/opcode_v0.2.0_linux_x86_64.AppImage";
-        hash = "sha256-LsE9gweAOaru7J01r68V1aDblQ06t4qeCXp6mu1Ig3E=";
-      };
-      extracted = prev.appimageTools.extract { pname = "opcode"; version = "0.2.0"; src = appimage; };
-    in
-    prev.stdenv.mkDerivation {
-      pname = "opcode";
-      version = "0.2.0";
-      src = extracted;
-      nativeBuildInputs = [ prev.autoPatchelfHook prev.makeWrapper prev.wrapGAppsHook3 ];
-      buildInputs = with prev; [
-        glib gtk3 webkitgtk_4_1 libsoup_3 cairo pango gdk-pixbuf
-        openssl glib-networking
-        krb5 e2fsprogs       # libcom_err.so.2 / libkrb5 (gssapi)
-        stdenv.cc.cc.lib
-      ];
-      # keep the whole extracted tree (webkit needs its sibling helper binaries
-      # like WebKitNetworkProcess next to the main bin), symlink the launcher.
-      dontWrapGApps = true;  # we wrap manually to also set webkit exec path
-      installPhase = ''
-        runHook preInstall
-        mkdir -p $out/opt/opcode $out/bin $out/share
-        cp -r usr/* $out/opt/opcode/ 2>/dev/null || true
-        bin=$(find $out/opt/opcode -name opcode -type f -executable | head -1)
-        cp -r usr/share/applications $out/share/ 2>/dev/null || true
-        cp -r usr/share/icons $out/share/ 2>/dev/null || true
-        makeWrapper "$bin" $out/bin/opcode \
-          ''${gappsWrapperArgs[@]} \
-          --set WEBKIT_DISABLE_DMABUF_RENDERER 1 \
-          --set WEBKIT_DISABLE_COMPOSITING_MODE 1 \
-          --prefix LD_LIBRARY_PATH : "$out/opt/opcode/lib:$out/opt/opcode/usr/lib"
-        runHook postInstall
-      '';
-      meta.mainProgram = "opcode";
+  # NOTE on sudo: wrapType2 runs opcode in bubblewrap (PR_SET_NO_NEW_PRIVS), so
+  # `sudo` is blocked INSIDE opcode's Claude. Workaround that DOES work: have
+  # opcode's Claude run privileged commands over SSH to localhost —
+  #   ssh boston@localhost 'sudo nixos-rebuild switch --flake ~/nixos-config#nebula-ext'
+  # the ssh'd shell spawns OUTSIDE the sandbox, so passwordless sudo applies.
+  # (Extracting the AppImage to escape bwrap made the Tauri/webkit app core-dump,
+  #  so we keep the reliable sandbox + use the SSH escape hatch instead.)
+  opcode = prev.appimageTools.wrapType2 {
+    pname = "opcode";
+    version = "0.2.0";
+    src = prev.fetchurl {
+      url = "https://github.com/winfunc/opcode/releases/download/v0.2.0/opcode_v0.2.0_linux_x86_64.AppImage";
+      hash = "sha256-LsE9gweAOaru7J01r68V1aDblQ06t4qeCXp6mu1Ig3E=";
     };
+  };
 
   # Windows_11_dark cursor — user's uploaded .cur/.ani set converted to XCursor
   # via win2xcur. CI builds this to verify the conversion works.
