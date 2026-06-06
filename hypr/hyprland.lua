@@ -14,10 +14,10 @@ hl.config({
     general = {
         -- Soft translucent luminescent glow border (not solid bright orange) —
         -- semi-transparent gruvbox gradient. The colored shadow below adds the glow.
-        border_size = 2,
+        border_size = 1,
         col = {
-            active_border   = { colors = { "rgba(fe8019bb)", "rgba(d65d0e99)" }, angle = 45 },
-            inactive_border = "rgba(3c383655)",
+            active_border   = { colors = { "rgba(fe8019aa)", "rgba(d65d0e88)" }, angle = 45 },
+            inactive_border = "rgba(3c383644)",
         },
         gaps_in = 4,
         gaps_out = 6,
@@ -38,13 +38,12 @@ hl.config({
             xray = true,
             ignore_opacity = true,
         },
-        -- Orange-tinted translucent shadow = the soft luminescent glow around the
-        -- active window (the cool effect you liked, not a hard bright border).
+        -- Tiny subtle glow — small range so it doesn't overlap neighbor windows.
         shadow = {
             enabled = true,
-            range = 25,
-            render_power = 3,
-            color = "rgba(fe801944)",          -- translucent gruvbox-orange glow
+            range = 6,
+            render_power = 2,
+            color = "rgba(fe801933)",          -- faint translucent orange
             color_inactive = "rgba(1d202100)", -- no glow on inactive
         },
     },
