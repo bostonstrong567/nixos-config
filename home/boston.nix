@@ -498,9 +498,18 @@
       # module's click ("activate") sends legacy IPC dispatch, which Hyprland's
       # Lua-config mode REJECTS (waybar #5008) → clicks did nothing. These custom
       # buttons call the working `hl.dispatch(hl.dsp.focus{...})` eval instead.
-      modules-left = [ "custom/ws1" "custom/ws2" "custom/ws3" ];
+      modules-left = [ "custom/ws1" "custom/ws2" "custom/ws3" "cava" ];
       modules-center = [ "clock" ];
       modules-right = [ "pulseaudio" "network" "cpu" "memory" "tray" ];
+      # Sound-wave spectrum in the bar (Sly-Harvey look), gruvbox via stylix.
+      cava = {
+        framerate = 30;
+        bars = 12;
+        method = "pulse";
+        bar_delimiter = 0;
+        format-icons = [ "▁" "▂" "▃" "▄" "▅" "▆" "▇" "█" ];
+        actions.on-click-right = "mode";
+      };
       "custom/ws1" = {
         format = "Home";
         on-click = "hyprctl eval 'hl.dispatch(hl.dsp.focus({workspace=1}))'";
@@ -539,5 +548,23 @@
   };
 
   # Stylix themes waybar/wofi/dunst automatically (gruvbox) via its targets.
+
+  # fsearch DB builder — fsearch 0.2.3's CLI --update-database fails headless;
+  # it needs a running GTK/graphical session. This user service builds the index
+  # shortly after graphical login (where it works), so search has data on first
+  # open. fsearch GUI also re-indexes on launch (update_database_on_launch=true).
+  systemd.user.services.fsearch-index = {
+    Unit = {
+      Description = "Build fsearch database after login";
+      After = [ "graphical-session.target" ];
+      PartOf = [ "graphical-session.target" ];
+    };
+    Service = {
+      Type = "oneshot";
+      # Small delay so the session/dbus is fully up, then build the DB.
+      ExecStart = "${pkgs.bash}/bin/bash -lc 'sleep 8; ${pkgs.fsearch}/bin/fsearch --update-database || true'";
+    };
+    Install.WantedBy = [ "graphical-session.target" ];
+  };
 
 }
