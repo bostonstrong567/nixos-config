@@ -8,6 +8,18 @@
 local mainMod = "SUPER"
 
 -- ---------------------------------------------------------------------------
+-- Environment — set IN the Hyprland session (environment.sessionVariables in
+-- NixOS does NOT reach the UWSM-launched session, which is why opcode kept
+-- lagging). hl.env sets these before any app launches → actually applies.
+-- ---------------------------------------------------------------------------
+hl.env("WEBKIT_DISABLE_DMABUF_RENDERER", "1")  -- fixes opcode/Tauri WebKit lag on NVIDIA
+hl.env("WEBKIT_DISABLE_COMPOSITING_MODE", "1") -- extra: force-disable broken GPU compositing
+hl.env("NIXOS_OZONE_WL", "1")                  -- Electron/Chromium → Wayland
+hl.env("__GL_GSYNC_ALLOWED", "1")
+hl.env("GDK_BACKEND", "wayland,x11")
+hl.env("MOZ_ENABLE_WAYLAND", "1")
+
+-- ---------------------------------------------------------------------------
 -- General + decoration + layout (single hl.config call per official API)
 -- ---------------------------------------------------------------------------
 hl.config({
@@ -157,6 +169,10 @@ hl.config({
             bar_precedence_over_border = true,
             bar_padding = 12,
         },
+        hyprwinwrap = {
+            -- Window class to pin as the desktop background (glava's class).
+            class = "GLava",
+        },
     },
 })
 
@@ -180,9 +196,9 @@ hl.on("hyprland.start", function()
     hl.exec_cmd("nm-applet --indicator")
     hl.exec_cmd("blueman-applet")
     -- Wallpaper: start daemon, then set the gruvbox wallpaper with a fade.
-    -- Drop your own image at ~/.config/wallpaper.jpg and it'll use that.
-    hl.exec_cmd("awww-daemon; sleep 1; awww img ~/.config/wallpaper.png --transition-type grow --transition-fps 60")
-    -- GLava — OpenGL audio spectrum on the desktop background (the audio waves).
-    -- First run copies default config; --desktop pins it as a background layer.
-    hl.exec_cmd("sleep 2; [ -d ~/.config/glava ] || glava --copy-config; glava --desktop &")
+    hl.exec_cmd("awww-daemon & sleep 1.5; awww img ~/.config/wallpaper.png --transition-type grow --transition-fps 60")
+    -- GLava audio waves AS the desktop background via hyprwinwrap.
+    -- hyprwinwrap pins any window with the configured class onto the bg layer.
+    -- We launch glava in X11/window mode (no --desktop); hyprwinwrap does the bg.
+    hl.exec_cmd("sleep 2; [ -d ~/.config/glava ] || glava --copy-config; glava &")
 end)

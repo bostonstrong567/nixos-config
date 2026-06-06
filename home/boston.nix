@@ -295,7 +295,10 @@
     # hyprbars — clickable titlebars on every window. Grab the bar with the mouse
     # to MOVE (no Super needed), buttons to close/maximize. Keeps tiling.
     # nixpkgs build = ABI-matched to our Hyprland 0.55, no source flake.
-    plugins = [ pkgs.hyprlandPlugins.hyprbars ];
+    plugins = [
+      pkgs.hyprlandPlugins.hyprbars
+      pkgs.hyprlandPlugins.hyprwinwrap  # pin glava as the desktop background
+    ];
   };
 
   # Waybar — clickable status bar (workspaces, clock, audio, net, tray).

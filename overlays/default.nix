@@ -4,6 +4,25 @@ final: prev: {
   # (hyprbars fork removed — using stock nixpkgs hyprbars. Grabbing the bar
   #  drags from the window middle, which is the behavior the user wants back.)
 
+  # hyprwinwrap — pin any window (e.g. glava) as the desktop background.
+  # Not in nixpkgs 26.05, so build it with mkHyprlandPlugin (ABI-matched to our
+  # Hyprland) from the official hyprland-plugins source.
+  hyprlandPlugins = prev.hyprlandPlugins // {
+    hyprwinwrap = prev.hyprlandPlugins.mkHyprlandPlugin prev.hyprland {
+      pluginName = "hyprwinwrap";
+      version = "0.55.0";
+      # Same source + hash nixpkgs uses for hyprbars → ABI-matches our Hyprland.
+      src = prev.fetchFromGitHub {
+        owner = "hyprwm";
+        repo = "hyprland-plugins";
+        rev = "v0.55.0";
+        hash = "sha256-WMUJ7tyw/9QbKUyRzLndEQSqX05fQLmFlRdMAmPD7tI=";
+      };
+      sourceRoot = "source/hyprwinwrap";
+      meta.description = "Pin a window as the desktop background";
+    };
+  };
+
   # CLIAMP — terminal music player ("Winamp for shell"). Single Go binary.
   # Update: bump version + sha256 from https://github.com/bjarneo/cliamp/releases
   cliamp = prev.stdenv.mkDerivation rec {
