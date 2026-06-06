@@ -99,6 +99,9 @@
           {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
+            # If an app already wrote a config file HM also manages (e.g. flameshot
+            # regenerating flameshot.ini), back it up instead of failing the switch.
+            home-manager.backupFileExtension = "hm-bak";
             home-manager.extraSpecialArgs = { inherit inputs; };
             home-manager.sharedModules = [
               spicetify-nix.homeManagerModules.default
