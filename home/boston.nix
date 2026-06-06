@@ -371,7 +371,7 @@
       # ---- autostart: bar, widgets, animated wallpaper, notifications ----
       exec-once = [
         "waybar"
-        "swww-daemon"
+        "awww-daemon"
         # animated gruvbox wallpaper (swap path to your own video/gif/image):
         # "mpvpaper -o 'no-audio --loop' '*' ~/Videos/wallpaper.mp4"
         "dunst"

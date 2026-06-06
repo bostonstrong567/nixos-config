@@ -35,7 +35,7 @@
     wofi            # mouse-driven app launcher
     rofi            # alt launcher (rofi-wayland merged into rofi)
     dunst           # notifications
-    swww            # animated wallpaper daemon (GPU transitions)
+    awww            # animated wallpaper daemon (swww renamed → awww)
     mpvpaper        # video wallpaper (galaxy/matrix loop behind desktop)
     hyprpaper       # simple static wallpaper fallback
     hyprlock        # lockscreen (blurred, themed)
