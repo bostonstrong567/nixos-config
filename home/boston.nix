@@ -155,7 +155,10 @@
 
   # On KDE, Plasma themes Qt itself; Stylix's qt target only supports 'qtct'
   # and warns under KDE. Disable it (Plasma + Stylix's KDE target cover Qt).
-  stylix.targets.qt.enable = false;
+  # Qt theming RE-ENABLED — Plasma is gone, so Stylix's qt target now drives
+  # Qt/KDE apps (dolphin, ark, haruna) to gruvbox via qtct. Was disabled only
+  # because Plasma used to own Qt; nothing owns it now → let Stylix theme it.
+  stylix.targets.qt.enable = true;
 
   # Our Hyprland block owns its own colors (gruvbox hardcoded). Stylix's hyprland
   # target ALSO writes decoration.shadow.color etc. → "defined multiple times".
