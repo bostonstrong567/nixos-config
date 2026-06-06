@@ -10,7 +10,13 @@
     enable = true;
     remotePlay.openFirewall = true;
     dedicatedServer.openFirewall = false;
-    gamescopeSession.enable = true; # boot straight into a gamescope Steam session if wanted
+    # Disabled: when combined with programs.gamescope.capSysNice, the steam module
+    # forces Steam's FHS env to use a *setuid* bwrap wrapper. This nixpkgs builds
+    # bubblewrap without setuid support, so it aborts with
+    # "setuid use of bubblewrap is not supported in this build" and Steam won't launch.
+    # Unprivileged user namespaces are enabled on this host, so the normal (non-setuid)
+    # bwrap works fine. Per-game gamescope still works via `gamescope -- %command%`.
+    gamescopeSession.enable = false;
 
     # Proton-GE via Steam's compatibilitytools dir is easiest; or use proton-ge here:
     extraCompatPackages = with pkgs; [ proton-ge-bin ];
