@@ -15,22 +15,35 @@
   services.xserver.enable = true;
 
   # greetd + tuigreet — minimal Wayland greeter.
-  # The Hyprland package ships TWO session files (hyprland + hyprland-uwsm),
-  # and tuigreet scans the sessions dir → shows a "which Hyprland?" picker.
-  # We point --sessions at a dir containing ONLY the uwsm session, so there's
-  # nothing to pick — just the password prompt → straight into Hyprland.
+  # The Hyprland package ships TWO session files (hyprland + hyprland-uwsm).
+  # tuigreet scans BOTH the --sessions dir AND XDG_DATA_DIRS/wayland-sessions,
+  # so just passing --sessions wasn't enough → still showed a picker.
+  #
+  # Fix: a wrapper that BLANKS XDG_DATA_DIRS before launching tuigreet, and
+  # points --sessions at a dir with ONLY the uwsm session. Now the single
+  # session is all it can see → no "which Hyprland?" prompt, just the password.
   services.greetd =
     let
-      onlyHyprland = pkgs.runCommand "tuigreet-sessions" { } ''
-        mkdir -p $out
-        cp ${pkgs.hyprland}/share/wayland-sessions/hyprland-uwsm.desktop $out/
+      # A data dir whose share/wayland-sessions has ONLY the uwsm session.
+      sessionData = pkgs.runCommand "single-session-data" { } ''
+        mkdir -p $out/share/wayland-sessions
+        cp ${pkgs.hyprland}/share/wayland-sessions/hyprland-uwsm.desktop \
+           $out/share/wayland-sessions/
+      '';
+      greeterCmd = pkgs.writeShellScript "tuigreet-launch" ''
+        # Make tuigreet see ONLY our single session (it scans XDG_DATA_DIRS too).
+        export XDG_DATA_DIRS="${sessionData}/share"
+        exec ${pkgs.tuigreet}/bin/tuigreet \
+          --time --remember --asterisks \
+          --sessions ${sessionData}/share/wayland-sessions \
+          --cmd start-hyprland
       '';
     in
     {
       enable = true;
       settings = {
         default_session = {
-          command = "${pkgs.tuigreet}/bin/tuigreet --time --remember --asterisks --sessions ${onlyHyprland} --cmd start-hyprland";
+          command = "${greeterCmd}";
           user = "greeter";
         };
       };
