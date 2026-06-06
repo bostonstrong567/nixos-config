@@ -118,29 +118,28 @@
         "browser.newtabpage.activity-stream.feeds.topsites" = true;
         "browser.compactmode.show" = true;
       };
-      # Gruvbox userChrome — minimal Zabooby-style chrome in OUR colors (not blue).
+      # Gruvbox userChrome — colors only, minimal. Don't fight the native layout
+      # (the aggressive version jammed tabs to the edge + doubled the titlebar).
       userChrome = ''
         :root {
           --gb-bg: #1d2021; --gb-bg2: #282828; --gb-fg: #ebdbb2;
           --gb-accent: #fe8019; --gb-dim: #3c3836;
         }
-        /* toolbar + tabs gruvbox */
-        #navigator-toolbox { background: var(--gb-bg) !important; border: none !important; }
-        #nav-bar, #PersonalToolbar { background: var(--gb-bg) !important; box-shadow: none !important; }
-        .tabbrowser-tab .tab-background { border-radius: 8px !important; }
+        /* gruvbox colors on toolbar/tabs — keep default spacing/layout */
+        #navigator-toolbox { background: var(--gb-bg) !important; }
+        #nav-bar, #PersonalToolbar { background: var(--gb-bg) !important; }
+        #TabsToolbar { background: var(--gb-bg) !important; }
+        /* breathing room: tabs start with a left gap, not jammed to the edge */
+        #tabbrowser-tabs { padding-inline-start: 8px !important; }
         .tabbrowser-tab[selected] .tab-background {
           background: var(--gb-dim) !important;
           box-shadow: inset 0 -2px 0 var(--gb-accent) !important;
         }
         .tab-label { color: var(--gb-fg) !important; }
-        /* URL bar */
-        #urlbar { background: var(--gb-bg2) !important; border: 1px solid var(--gb-dim) !important; border-radius: 10px !important; }
+        #urlbar { background: var(--gb-bg2) !important; border: 1px solid var(--gb-dim) !important; }
         #urlbar[focused] { border-color: var(--gb-accent) !important; }
         #urlbar-input { color: var(--gb-fg) !important; }
-        /* toolbar buttons */
         toolbarbutton { color: var(--gb-fg) !important; }
-        /* trim window controls clutter */
-        .titlebar-spacer { display: none !important; }
       '';
       userContent = ''
         /* gruvbox the new-tab + about: pages background */
