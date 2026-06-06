@@ -1,6 +1,16 @@
 # Custom packages not in nixpkgs, exposed as pkgs.<name> everywhere.
 final: prev: {
 
+  # hyprlandPlugins with a patched hyprbars — grab-point drag.
+  # Stock hyprbars snaps a tiled window to the cursor centre when you grab the
+  # bar. The patch floats the window first (no resize) so it follows the cursor
+  # from where you grabbed, like Windows. Patch: overlays/hyprbars-grabpoint.patch
+  hyprlandPlugins = prev.hyprlandPlugins // {
+    hyprbars = prev.hyprlandPlugins.hyprbars.overrideAttrs (old: {
+      patches = (old.patches or [ ]) ++ [ ./hyprbars-grabpoint.patch ];
+    });
+  };
+
   # CLIAMP — terminal music player ("Winamp for shell"). Single Go binary.
   # Update: bump version + sha256 from https://github.com/bjarneo/cliamp/releases
   cliamp = prev.stdenv.mkDerivation rec {

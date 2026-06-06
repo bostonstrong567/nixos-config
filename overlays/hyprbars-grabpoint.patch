@@ -1,0 +1,13 @@
+--- a/hyprbars/barDeco.cpp
++++ b/hyprbars/barDeco.cpp
+@@ -260,6 +260,11 @@ void CHyprBar::handleMovement() {
+ void CHyprBar::handleMovement() {
++    // Grab-point drag: if the window is tiled, float it first (no resize) so the
++    // following MBIND_MOVE follows the cursor from where you grabbed the bar,
++    // instead of snapping the tiled window to the cursor centre.
++    if (m_pWindow.lock() && !m_pWindow.lock()->m_isFloating)
++        g_pKeybindManager->m_dispatchers["togglefloating"]("activewindow");
++
+     g_pKeybindManager->changeMouseBindMode(MBIND_MOVE);
+     m_bDraggingThis = true;
+     Log::logger->log(Log::DEBUG, "[hyprbars] Dragging initiated on {:x}", (uintptr_t)m_pWindow.lock().get());
