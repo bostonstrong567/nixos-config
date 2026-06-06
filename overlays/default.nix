@@ -14,7 +14,7 @@ final: prev: {
     # The release is a generic-linux dynamically-linked binary. NixOS can't run
     # those as-is → autoPatchelfHook rewrites its interpreter/RPATH to the nix store.
     nativeBuildInputs = [ prev.autoPatchelfHook ];
-    buildInputs = [ prev.stdenv.cc.cc.lib prev.zlib ];
+    buildInputs = [ prev.stdenv.cc.cc.lib prev.zlib prev.alsa-lib ];
     installPhase = ''
       runHook preInstall
       install -Dm755 $src $out/bin/cliamp
