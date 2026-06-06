@@ -318,28 +318,27 @@
       layer = "top";
       position = "top";
       height = 34;
-      # Workspace pills, top-left. Named/icon'd presets: code, web, game, music,
-      # chat, misc. Click to switch. Always shown (persistent) so they're labels.
-      modules-left = [ "hyprland/workspaces" ];
+      # Workspace pills as CUSTOM clickable buttons. The normal hyprland/workspaces
+      # module's click ("activate") sends legacy IPC dispatch, which Hyprland's
+      # Lua-config mode REJECTS (waybar #5008) → clicks did nothing. These custom
+      # buttons call the working `hl.dispatch(hl.dsp.focus{...})` eval instead.
+      modules-left = [ "custom/ws1" "custom/ws2" "custom/ws3" ];
       modules-center = [ "clock" ];
       modules-right = [ "pulseaudio" "network" "cpu" "memory" "tray" ];
-      "hyprland/workspaces" = {
-        # waybar's "activate" calls hyprland over IPC directly. In Lua-config mode
-        # the IPC activate still works, but to be bulletproof we also bind scroll.
-        on-click = "activate";
-        on-scroll-up = "hyprctl eval 'hl.dispatch(hl.dsp.focus({workspace=\"e+1\"}))'";
-        on-scroll-down = "hyprctl eval 'hl.dispatch(hl.dsp.focus({workspace=\"e-1\"}))'";
-        format = "{icon}";
-        format-icons = {
-          "1" = "Home";
-          "2" = "Music";
-          "3" = "Chat";
-          "active" = "{name}";
-          "default" = "{name}";
-        };
-        persistent-workspaces = {
-          "*" = 3;   # exactly 3 pills: Home, Music, Chat
-        };
+      "custom/ws1" = {
+        format = "Home";
+        on-click = "hyprctl eval 'hl.dispatch(hl.dsp.focus({workspace=1}))'";
+        tooltip = false;
+      };
+      "custom/ws2" = {
+        format = "Music";
+        on-click = "hyprctl eval 'hl.dispatch(hl.dsp.focus({workspace=2}))'";
+        tooltip = false;
+      };
+      "custom/ws3" = {
+        format = "Chat";
+        on-click = "hyprctl eval 'hl.dispatch(hl.dsp.focus({workspace=3}))'";
+        tooltip = false;
       };
       clock = {
         # 12-hour clock, Boston time (America/New_York = EST/EDT).
