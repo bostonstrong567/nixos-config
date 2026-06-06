@@ -284,151 +284,18 @@
   ###########################################################################
   # Hyprland — THE desktop, mouse-first (Plasma removed)
   ###########################################################################
+  # Hyprland — NATIVE LUA config (Hyprland 0.55's modern format).
+  #
+  # We do NOT use HM's `settings` (its settings->Lua translator is broken,
+  # issue #9341 — emits non-existent hl.animations()/hl.exec-once() calls).
+  # Instead we hand-author correct Lua in hypr/hyprland.lua, validated against
+  # this exact Hyprland's API stub (share/hypr/stubs/hl.meta.lua), and inject it
+  # verbatim via configType=lua + extraConfig. settings left empty so HM writes
+  # nothing broken; our extraConfig is appended raw to ~/.config/hypr/hyprland.lua.
   wayland.windowManager.hyprland = {
     enable = true;
-    # Hyprland 0.55 + HM stateVersion 26.05 defaults to a Lua config backend whose
-    # translator mis-handles values like `e-1`, `5%-`, `mouse:272` (syntax errors).
-    # Pin the stable native hyprlang (conf) backend — our settings translate cleanly.
-    # NOTE: configType "lua" is BROKEN in home-manager (issue #9341, closed
-    # not-planned): its settings→Lua translator emits non-existent API calls
-    # like hl.animations()/hl.exec-once() instead of the real hl.config(...).
-    # hyprlang works flawlessly + identical result. Revisit Lua if HM fixes it.
-    configType = "hyprlang";
-    settings = {
-      # ---- monitors (auto; tweak refresh per your display) ----
-      # Samsung LC32G7xT (Odyssey G7) on DP-1: native 2560x1440, max 239.96Hz.
-      # Explicit mode — "highrr" wasn't picking the high-Hz mode reliably.
-      monitor = "DP-1,2560x1440@239.96,0x0,1";
-
-      # ---- MOUSE-FIRST window management ----
-      bindm = [
-        "SUPER, mouse:272, movewindow"   # Super + LMB drag = move
-        "SUPER, mouse:273, resizewindow" # Super + RMB drag = resize
-      ];
-
-      # Mouse-only workspace switching: scroll wheel over empty desktop area.
-      bind = [
-        "SUPER, Return, exec, ghostty"
-        "SUPER, Q, killactive"
-        "SUPER, E, exec, dolphin"
-        "SUPER, R, exec, wofi --show drun"   # app launcher (mouse-driven)
-        "SUPER, F, fullscreen"
-        "SUPER, Space, togglefloating"
-        "SUPER, P, pseudo"                   # pseudotile (moved to dispatcher in 0.55)
-        "SUPER, V, exec, cliphist list | wofi --dmenu | cliphist decode | wl-copy" # clipboard history (mouse-pick)
-        "SUPER, L, exec, hyprlock"
-        "SUPER, X, exec, wlogout"            # power menu (mouse buttons)
-        # workspace switch by number (also clickable on waybar)
-        "SUPER, 1, workspace, 1"
-        "SUPER, 2, workspace, 2"
-        "SUPER, 3, workspace, 3"
-        "SUPER, 4, workspace, 4"
-        ", Print, exec, grim -g \"$(slurp)\" - | swappy -f -"  # region screenshot + annotate (mouse)
-        # scroll wheel over desktop = switch workspace (pure mouse)
-        "SUPER, mouse_down, workspace, e+1"
-        "SUPER, mouse_up, workspace, e-1"
-      ];
-
-      # Media keys → playerctl (controls cliamp/Spotify/browsers via MPRIS)
-      bindl = [
-        ", XF86AudioPlay, exec, playerctl play-pause"
-        ", XF86AudioNext, exec, playerctl next"
-        ", XF86AudioPrev, exec, playerctl previous"
-        ", XF86AudioMute, exec, wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
-      ];
-      bindel = [
-        ", XF86AudioRaiseVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+"
-        ", XF86AudioLowerVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"
-        ", XF86MonBrightnessUp, exec, brightnessctl s 5%+"
-        ", XF86MonBrightnessDown, exec, brightnessctl s 5%-"
-      ];
-
-      # Gestures — Hyprland 0.51+ reworked syntax (`gesture = fingers, dir, action`).
-      # Touchscreen + touchpad ready (works if you ever move to a touch device):
-      #   3-finger horizontal swipe = switch workspace
-      #   4-finger pinch            = toggle floating
-      #   3-finger swipe up         = fullscreen
-      gestures = {
-        gesture = [
-          "3, horizontal, workspace"
-          "4, pinch, float"
-          "3, up, fullscreen"
-        ];
-      };
-
-      # ---- THE SHOWPIECE LOOK ----
-      general = {
-        gaps_in = 6;
-        gaps_out = 14;
-        border_size = 2;
-        "col.active_border" = "rgba(fe8019ff) rgba(d65d0eff) 45deg"; # gruvbox orange gradient
-        "col.inactive_border" = "rgba(3c3836aa)";
-        layout = "dwindle";
-        resize_on_border = true;        # drag window edges with the mouse, no mod
-        extend_border_grab_area = 15;   # fat invisible grab zone = easy edge-drag resize
-        hover_icon_on_border = true;    # show resize cursor on hover
-      };
-
-      decoration = {
-        rounding = 14;
-        blur = {
-          enabled = true;
-          size = 8;
-          passes = 3;
-          new_optimizations = true;
-          xray = true;          # blur sees through to wallpaper = glassy
-          ignore_opacity = true;
-        };
-        shadow = {
-          enabled = true;
-          range = 30;
-          render_power = 3;
-          color = lib.mkForce "rgba(1d2021ee)"; # override HM module's default shadow color
-        };
-        active_opacity = 0.95;
-        inactive_opacity = 0.85;
-      };
-
-      animations = {
-        enabled = true;
-        bezier = [
-          "wind, 0.05, 0.9, 0.1, 1.05"
-          "overshot, 0.13, 0.99, 0.29, 1.1"
-          "smoothOut, 0.36, 0, 0.66, -0.56"
-        ];
-        animation = [
-          "windows, 1, 6, wind, slide"
-          "windowsIn, 1, 6, overshot, slide"
-          "windowsOut, 1, 5, smoothOut, slide"
-          "fade, 1, 10, default"
-          "workspaces, 1, 6, overshot, slidevert"
-          "border, 1, 10, default"
-        ];
-      };
-
-      dwindle = {
-        # pseudotile is now a dispatcher (bound to SUPER+P above), not a config key.
-        preserve_split = true;
-      };
-
-      misc = {
-        disable_hyprland_logo = true;
-        disable_splash_rendering = true;
-      };
-
-      # ---- autostart: bar, widgets, animated wallpaper, notifications ----
-      exec-once = [
-        "waybar"
-        "awww-daemon"
-        # animated gruvbox wallpaper (swap path to your own video/gif/image):
-        # "mpvpaper -o 'no-audio --loop' '*' ~/Videos/wallpaper.mp4"
-        "dunst"
-        "eww daemon && eww open hud"        # floating glass system-monitor HUD
-        "wl-paste --watch cliphist store"  # clipboard history daemon
-        "nm-applet --indicator"             # network tray icon
-        "blueman-applet"                    # bluetooth tray icon
-      ];
-    };
+    configType = "lua";
+    extraConfig = builtins.readFile ../hypr/hyprland.lua;
   };
 
   # Waybar — clickable status bar (workspaces, clock, audio, net, tray).
