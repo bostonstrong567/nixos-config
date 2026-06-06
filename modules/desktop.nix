@@ -33,8 +33,11 @@
       greeterCmd = pkgs.writeShellScript "tuigreet-launch" ''
         # Make tuigreet see ONLY our single session (it scans XDG_DATA_DIRS too).
         export XDG_DATA_DIRS="${sessionData}/share"
+        # New York time, 12-hour clock on the login screen.
+        export TZ="America/New_York"
         exec ${pkgs.tuigreet}/bin/tuigreet \
-          --time --remember --asterisks \
+          --time --time-format '%a %b %d   %I:%M %p' \
+          --remember --asterisks \
           --sessions ${sessionData}/share/wayland-sessions \
           --cmd start-hyprland
       '';

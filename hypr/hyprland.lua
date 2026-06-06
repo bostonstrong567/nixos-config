@@ -81,6 +81,8 @@ hl.bind(mainMod .. " + R",      hl.dsp.exec_cmd("wofi --show drun"))            
 hl.bind(mainMod .. " + E",      hl.dsp.exec_cmd("dolphin"))                       -- file manager
 hl.bind(mainMod .. " + B",      hl.dsp.exec_cmd("firefox"))                       -- browser
 hl.bind(mainMod .. " + C",      hl.dsp.exec_cmd("code"))                          -- vscode
+hl.bind(mainMod .. " + A",      hl.dsp.exec_cmd("ghostty --class=claude-term -e claude")) -- Claude AI terminal
+hl.bind(mainMod .. " + O",      hl.dsp.exec_cmd("opcode"))                        -- opcode Claude GUI
 
 -- Window control
 hl.bind(mainMod .. " + Q",      hl.dsp.window.close())                            -- close window
@@ -162,15 +164,25 @@ hl.config({
 -- SUPER+Q close, SUPER+F fullscreen, SUPER+T float.)
 -- ALL apps get the bar now (no per-app no_bar rules) — you like it everywhere.
 
+-- Claude terminal (SUPER+A) opens as a floating centered window.
+hl.window_rule({ name = "float",        match = { class = "claude-term" } })
+hl.window_rule({ name = "size 1100 700", match = { class = "claude-term" } })
+hl.window_rule({ name = "center",       match = { class = "claude-term" } })
+
 -- ---------------------------------------------------------------------------
 -- Autostart
 -- ---------------------------------------------------------------------------
 hl.on("hyprland.start", function()
     hl.exec_cmd("waybar")
-    hl.exec_cmd("awww-daemon")
     hl.exec_cmd("dunst")
     hl.exec_cmd("eww daemon && eww open hud")
     hl.exec_cmd("wl-paste --watch cliphist store")
     hl.exec_cmd("nm-applet --indicator")
     hl.exec_cmd("blueman-applet")
+    -- Wallpaper: start daemon, then set the gruvbox wallpaper with a fade.
+    -- Drop your own image at ~/.config/wallpaper.jpg and it'll use that.
+    hl.exec_cmd("awww-daemon; sleep 1; awww img ~/.config/wallpaper.png --transition-type grow --transition-fps 60")
+    -- GLava — OpenGL audio spectrum on the desktop background (the audio waves).
+    -- First run copies default config; --desktop pins it as a background layer.
+    hl.exec_cmd("sleep 2; [ -d ~/.config/glava ] || glava --copy-config; glava --desktop &")
 end)
