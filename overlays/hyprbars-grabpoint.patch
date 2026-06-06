@@ -1,6 +1,6 @@
---- a/hyprbars/barDeco.cpp
-+++ b/hyprbars/barDeco.cpp
-@@ -260,6 +260,11 @@ void CHyprBar::handleMovement() {
+--- a/barDeco.cpp
++++ b/barDeco.cpp
+@@ -260,6 +260,11 @@
  void CHyprBar::handleMovement() {
 +    // Grab-point drag: if the window is tiled, float it first (no resize) so the
 +    // following MBIND_MOVE follows the cursor from where you grabbed the bar,
