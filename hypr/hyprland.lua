@@ -188,12 +188,14 @@ hl.window_rule({ name = "float",        match = { class = "claude-term" } })
 hl.window_rule({ name = "size 1100 700", match = { class = "claude-term" } })
 hl.window_rule({ name = "center",       match = { class = "claude-term" } })
 
--- Preset workspaces: 1 Home · 2 Music · 3 Chat.
--- Music apps → ws2, chat apps → ws3. Everything else stays on Home (ws1).
+-- Preset workspaces: 1 Home · 2 Music · 3 Chat · 4 Coding.
 hl.window_rule({ name = "workspace 2 silent", match = { class = "Spotify" } })   -- music
 hl.window_rule({ name = "workspace 2 silent", match = { class = "spotify" } })
-hl.window_rule({ name = "workspace 3 silent", match = { class = "vesktop" } })   -- discord/chat
+hl.window_rule({ name = "workspace 3 silent", match = { class = "vesktop" } })   -- chat
 hl.window_rule({ name = "workspace 3 silent", match = { class = "discord" } })
+hl.window_rule({ name = "workspace 4 silent", match = { class = "code" } })      -- coding
+hl.window_rule({ name = "workspace 4 silent", match = { class = "Code" } })
+hl.window_rule({ name = "workspace 4 silent", match = { class = "code-url-handler" } })
 
 -- ---------------------------------------------------------------------------
 -- Autostart
@@ -206,7 +208,13 @@ hl.on("hyprland.start", function()
     hl.exec_cmd("blueman-applet")
     -- Wallpaper (static gruvbox image, safe + Wayland-native via awww).
     hl.exec_cmd("awww-daemon & sleep 1.5; awww img ~/.config/wallpaper.png --transition-type grow --transition-fps 60")
-    -- (glava-as-background removed — the hyprwinwrap plugin crashed Hyprland at
-    --  boot. Audio waves can run as a normal window via cava in a terminal, or
-    --  we add mpvpaper video wallpaper later — neither risks the session.)
+
+    -- Persistent workspace layout: pre-open apps on their areas so Music/Chat/
+    -- Coding are ready at boot. Window rules (above) route them silently to the
+    -- right workspace. Home (ws1) stays empty + focused.
+    hl.exec_cmd("sleep 2; vesktop")     -- Chat  (ws3) — Discord
+    hl.exec_cmd("sleep 2; spotify")     -- Music (ws2) — if installed; harmless if not
+    hl.exec_cmd("sleep 2; code")        -- Coding (ws4) — VSCode
+    -- after the apps settle, snap focus back to Home so you start there.
+    hl.exec_cmd("sleep 5; hyprctl eval 'hl.dispatch(hl.dsp.focus({workspace=1}))'")
 end)

@@ -503,31 +503,62 @@
       # module's click ("activate") sends legacy IPC dispatch, which Hyprland's
       # Lua-config mode REJECTS (waybar #5008) → clicks did nothing. These custom
       # buttons call the working `hl.dispatch(hl.dsp.focus{...})` eval instead.
-      modules-left = [ "custom/ws1" "custom/ws2" "custom/ws3" "cava" ];
+      modules-left = [ "custom/ws1" "custom/ws2" "custom/ws3" "custom/ws4" "cava" ];
       modules-center = [ "clock" ];
       modules-right = [ "pulseaudio" "network" "cpu" "memory" "tray" ];
       # Sound-wave spectrum in the bar (Sly-Harvey look), gruvbox via stylix.
+      # Higher sensitivity + more bars + faster frames = more reactive to sound.
       cava = {
-        framerate = 30;
-        bars = 12;
+        framerate = 60;
+        bars = 16;
+        sensitivity = 130;     # higher = more reactive to quiet sound
+        lower_cutoff_freq = 30;
+        higher_cutoff_freq = 18000;
         method = "pulse";
         bar_delimiter = 0;
         format-icons = [ "▁" "▂" "▃" "▄" "▅" "▆" "▇" "█" ];
         actions.on-click-right = "mode";
       };
+      # Each pill = a script that prints {text,class}. class="active" when you're
+      # on that workspace → CSS fills it in to show the toggled area. Home=ws1.
       "custom/ws1" = {
-        format = "Home";
+        exec = "${pkgs.writeShellScript "ws1" ''
+          a=$(hyprctl activeworkspace -j | ${pkgs.jq}/bin/jq -r .id)
+          if [ "$a" = "1" ]; then echo '{"text":"Home","class":"active"}'; else echo '{"text":"Home","class":"inactive"}'; fi
+        ''}";
+        return-type = "json";
+        interval = 1;
         on-click = "hyprctl eval 'hl.dispatch(hl.dsp.focus({workspace=1}))'";
         tooltip = false;
       };
       "custom/ws2" = {
-        format = "Music";
+        exec = "${pkgs.writeShellScript "ws2" ''
+          a=$(hyprctl activeworkspace -j | ${pkgs.jq}/bin/jq -r .id)
+          if [ "$a" = "2" ]; then echo '{"text":"Music","class":"active"}'; else echo '{"text":"Music","class":"inactive"}'; fi
+        ''}";
+        return-type = "json";
+        interval = 1;
         on-click = "hyprctl eval 'hl.dispatch(hl.dsp.focus({workspace=2}))'";
         tooltip = false;
       };
       "custom/ws3" = {
-        format = "Chat";
+        exec = "${pkgs.writeShellScript "ws3" ''
+          a=$(hyprctl activeworkspace -j | ${pkgs.jq}/bin/jq -r .id)
+          if [ "$a" = "3" ]; then echo '{"text":"Chat","class":"active"}'; else echo '{"text":"Chat","class":"inactive"}'; fi
+        ''}";
+        return-type = "json";
+        interval = 1;
         on-click = "hyprctl eval 'hl.dispatch(hl.dsp.focus({workspace=3}))'";
+        tooltip = false;
+      };
+      "custom/ws4" = {
+        exec = "${pkgs.writeShellScript "ws4" ''
+          a=$(hyprctl activeworkspace -j | ${pkgs.jq}/bin/jq -r .id)
+          if [ "$a" = "4" ]; then echo '{"text":"Coding","class":"active"}'; else echo '{"text":"Coding","class":"inactive"}'; fi
+        ''}";
+        return-type = "json";
+        interval = 1;
+        on-click = "hyprctl eval 'hl.dispatch(hl.dsp.focus({workspace=4}))'";
         tooltip = false;
       };
       clock = {
@@ -569,14 +600,22 @@
         margin: 6px 8px;
         padding: 2px 8px;
       }
-      #custom-ws1, #custom-ws2, #custom-ws3 {
-        padding: 0 12px; margin: 3px 2px;
+      #custom-ws1, #custom-ws2, #custom-ws3, #custom-ws4 {
+        padding: 0 14px; margin: 3px 2px;
         border-radius: 10px;
         color: #a89984;
-        background: alpha(#3c3836, 0.0);
+        background: transparent;
+        transition: all 0.25s ease;
       }
-      #custom-ws1:hover, #custom-ws2:hover, #custom-ws3:hover {
+      #custom-ws1:hover, #custom-ws2:hover, #custom-ws3:hover, #custom-ws4:hover {
         background: alpha(#fe8019, 0.18); color: #fe8019;
+      }
+      /* ACTIVE pill = filled gruvbox-orange, dark text — shows the toggled area */
+      #custom-ws1.active, #custom-ws2.active, #custom-ws3.active, #custom-ws4.active {
+        background: #fe8019;
+        color: #1d2021;
+        font-weight: bold;
+        box-shadow: 0 0 10px alpha(#fe8019, 0.5);
       }
       #clock { color: #fe8019; font-weight: bold; padding: 0 10px; }
       #cava  { color: #b8bb26; padding: 0 8px; }
