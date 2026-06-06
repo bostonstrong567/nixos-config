@@ -339,7 +339,7 @@
           enabled = true;
           range = 30;
           render_power = 3;
-          color = "rgba(1d2021ee)";
+          color = lib.mkForce "rgba(1d2021ee)"; # override HM module's default shadow color
         };
         active_opacity = 0.95;
         inactive_opacity = 0.85;
