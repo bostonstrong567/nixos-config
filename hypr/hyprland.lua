@@ -12,12 +12,12 @@ local mainMod = "SUPER"
 -- ---------------------------------------------------------------------------
 hl.config({
     general = {
-        -- Soft translucent luminescent glow border (not solid bright orange) —
-        -- semi-transparent gruvbox gradient. The colored shadow below adds the glow.
-        border_size = 1,
+        -- ONE clean thin orange outline on the active window. No gradient, no
+        -- glow stacking — just a single crisp gruvbox border.
+        border_size = 2,
         col = {
-            active_border   = { colors = { "rgba(fe8019aa)", "rgba(d65d0e88)" }, angle = 45 },
-            inactive_border = "rgba(3c383644)",
+            active_border   = "rgba(fe8019cc)",  -- single gruvbox orange
+            inactive_border = "rgba(3c383655)",
         },
         gaps_in = 4,
         gaps_out = 6,
@@ -38,13 +38,9 @@ hl.config({
             xray = true,
             ignore_opacity = true,
         },
-        -- Tiny subtle glow — small range so it doesn't overlap neighbor windows.
+        -- Shadow OFF — was stacking with the border into a messy multi-layer glow.
         shadow = {
-            enabled = true,
-            range = 6,
-            render_power = 2,
-            color = "rgba(fe801933)",          -- faint translucent orange
-            color_inactive = "rgba(1d202100)", -- no glow on inactive
+            enabled = false,
         },
     },
     dwindle = {
