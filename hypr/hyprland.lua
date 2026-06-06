@@ -103,8 +103,11 @@ hl.bind(mainMod .. " + T",      hl.dsp.window.float())                          
 hl.bind(mainMod .. " + P",      hl.dsp.window.pseudo())                           -- pseudotile
 
 -- Screenshots (NO Print key on 60% → use SUPER+S region, SUPER+SHIFT+S full)
-hl.bind(mainMod .. " + S",          hl.dsp.exec_cmd("grim -g \"$(slurp)\" - | swappy -f -"))   -- region → annotate
-hl.bind(mainMod .. " + SHIFT + S",  hl.dsp.exec_cmd("grim - | swappy -f -"))                   -- whole screen
+-- Screenshots auto-copy to clipboard + save a dated file in ~/Pictures.
+-- SUPER+S = region (drag), SUPER+SHIFT+S = whole screen, SUPER+CTRL+S = annotate.
+hl.bind(mainMod .. " + S",          hl.dsp.exec_cmd("mkdir -p ~/Pictures/Screenshots; f=~/Pictures/Screenshots/$(date +%Y%m%d-%H%M%S).png; grim -g \"$(slurp)\" \"$f\" && wl-copy < \"$f\" && notify-send 'Screenshot' 'Region copied to clipboard'"))
+hl.bind(mainMod .. " + SHIFT + S",  hl.dsp.exec_cmd("mkdir -p ~/Pictures/Screenshots; f=~/Pictures/Screenshots/$(date +%Y%m%d-%H%M%S).png; grim \"$f\" && wl-copy < \"$f\" && notify-send 'Screenshot' 'Full screen copied to clipboard'"))
+hl.bind(mainMod .. " + CTRL + S",   hl.dsp.exec_cmd("grim -g \"$(slurp)\" - | swappy -f -"))  -- region → annotate editor
 
 -- Utilities
 hl.bind(mainMod .. " + V",          hl.dsp.exec_cmd("cliphist list | wofi --dmenu | cliphist decode | wl-copy")) -- clipboard history

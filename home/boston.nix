@@ -111,13 +111,26 @@
           ext.gruntfuggly.activitusbar
         ];
 
-      userSettings = {
-        "window.zoomLevel" = 2;
+      # NOTE: userSettings intentionally NOT set here — HM writes it as a
+      # READ-ONLY store symlink, so VSCode's GUI "Save settings" fails with EROFS.
+      # We seed the same settings as a WRITABLE file via home.activation below,
+      # so you can edit settings in the VSCode UI freely.
+    };
+  };
 
+  # Seed VSCode settings.json as a writable file (only if missing), so the GUI
+  # can edit it. Mirrors the old declarative defaults. Delete the file + rebuild
+  # to reset to these defaults.
+  home.activation.seedVscodeSettings = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    vsdir="${config.home.homeDirectory}/.config/Code/User"
+    vsfile="$vsdir/settings.json"
+    if [ ! -e "$vsfile" ]; then
+      run mkdir -p "$vsdir"
+      run cp ${pkgs.writeText "vscode-settings.json" (builtins.toJSON {
+        "window.zoomLevel" = 2;
         "workbench.colorTheme" = "Dracula Theme Soft";
         "workbench.iconTheme" = "material-icon-theme";
         "material-icon-theme.hidesExplorerArrows" = true;
-
         "workbench.tree.renderIndentGuides" = "none";
         "workbench.statusBar.visible" = true;
         "workbench.editor.showTabs" = "none";
@@ -128,7 +141,6 @@
         "workbench.editor.editorActionsLocation" = "hidden";
         "workbench.sideBar.location" = "right";
         "workbench.activityBar.location" = "top";
-
         "workbench.colorCustomizations" = {
           "editorSuggestWidget.selectedBackground" = "#231739";
           "sideBar.background" = "#191521";
@@ -138,12 +150,10 @@
           "list.hoverBackground" = "#231739";
           "terminalCursor.foreground" = "#C45DFF";
         };
-
         "editor.fontFamily" = "FiraCode Nerd Font Mono";
         "editor.fontLigatures" = true;
         "editor.tabSize" = 4;
         "editor.detectIndentation" = false;
-
         "editor.minimap.enabled" = false;
         "editor.guides.indentation" = false;
         "editor.renderWhitespace" = "none";
@@ -161,31 +171,27 @@
         "editor.bracketPairColorization.enabled" = false;
         "editor.guides.bracketPairs" = false;
         "editor.wordWrap" = "on";
-
         "breadcrumbs.enabled" = false;
         "explorer.compactFolders" = false;
-
         "git.decorations.enabled" = false;
         "scm.diffDecorations" = "none";
-
         "terminal.integrated.fontFamily" = "FiraCode Nerd Font Mono";
         "terminal.integrated.lineHeight" = 1.5;
         "terminal.integrated.fontSize" = 12;
         "terminal.integrated.gpuAcceleration" = "on";
         "terminal.integrated.stickyScroll.enabled" = false;
-
         "window.titleBarStyle" = "custom";
         "window.menuStyle" = "native";
         "window.menuBarVisibility" = "compact";
-
         "activitusbar.views" = [
           { name = "command.workbench.action.files.openFolder"; codicon = "empty-window"; tooltip = "Open Project Folder"; }
           { name = "extensions"; codicon = "extensions-view-icon"; }
           { name = "explorer"; codicon = "layout-sidebar-right"; }
         ];
-      };
-    };
-  };
+      })} "$vsfile"
+      run chmod u+w "$vsfile"
+    fi
+  '';
 
   ###########################################################################
   # Ghostty — fast GPU terminal + animated custom cursor shaders
