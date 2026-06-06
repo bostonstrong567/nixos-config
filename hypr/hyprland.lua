@@ -117,6 +117,29 @@ hl.gesture({ fingers = 4, direction = "pinch",      action = "float" })
 hl.gesture({ fingers = 3, direction = "up",         action = "fullscreen" })
 
 -- ---------------------------------------------------------------------------
+-- hyprbars — clickable titlebars (grab bar with mouse to MOVE, no Super needed)
+-- ---------------------------------------------------------------------------
+hl.config({
+    plugin = {
+        hyprbars = {
+            bar_height = 26,
+            bar_color = "rgb(1d2021)",          -- gruvbox dark bg
+            ["col.text"] = "rgb(ebdbb2)",       -- gruvbox fg
+            bar_text_size = 11,
+            bar_text_font = "JetBrainsMono Nerd Font",
+            bar_part_of_window = true,
+            bar_precedence_over_border = true,
+            hyprbars_button_border_size = 0,
+        },
+    },
+})
+
+-- Window buttons (right-aligned, added right-to-left): close, maximize, minimize
+hl.plugin.hyprbars.add_button({ bg_color = "rgb(fb4934)", fg_color = "rgb(1d2021)", size = 13, icon = "", action = "hyprctl dispatch killactive" })
+hl.plugin.hyprbars.add_button({ bg_color = "rgb(fabd2f)", fg_color = "rgb(1d2021)", size = 13, icon = "", action = "hyprctl dispatch fullscreen 1" })
+hl.plugin.hyprbars.add_button({ bg_color = "rgb(b8bb26)", fg_color = "rgb(1d2021)", size = 13, icon = "", action = "hyprctl dispatch movetoworkspacesilent special" })
+
+-- ---------------------------------------------------------------------------
 -- Autostart
 -- ---------------------------------------------------------------------------
 hl.on("hyprland.start", function()

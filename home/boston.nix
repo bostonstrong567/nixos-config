@@ -308,6 +308,10 @@
     enable = true;
     configType = "lua";
     extraConfig = builtins.readFile ../hypr/hyprland.lua;
+    # hyprbars — clickable titlebars on every window. Grab the bar with the mouse
+    # to MOVE (no Super needed), buttons to close/maximize. Keeps tiling.
+    # nixpkgs build = ABI-matched to our Hyprland 0.55, no source flake.
+    plugins = [ pkgs.hyprlandPlugins.hyprbars ];
   };
 
   # Waybar — clickable status bar (workspaces, clock, audio, net, tray).
