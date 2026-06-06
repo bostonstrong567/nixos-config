@@ -11,6 +11,24 @@
 
   programs.home-manager.enable = true;
 
+  # Launcher (wofi) entries for apps that ship no .desktop file.
+  xdg.desktopEntries = {
+    opcode = {
+      name = "opcode";
+      comment = "Claude Code GUI (native sign-in, no API key)";
+      exec = "opcode";
+      terminal = false;
+      categories = [ "Development" ];
+    };
+    cliamp = {
+      name = "CLIAMP";
+      comment = "Terminal music player";
+      exec = "ghostty -e cliamp";
+      terminal = false;
+      categories = [ "AudioVideo" "Audio" ];
+    };
+  };
+
   # Fix "gtk-xft-dpi has invalid value (-1)" spam from GTK apps (ghostty etc.).
   # Set a real Xft DPI. 96 = standard 1x. Bump to 144 for 1.5x or 192 for 2x
   # scaling on the 4K panel if everything looks too small.
