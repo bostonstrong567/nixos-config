@@ -679,11 +679,10 @@
       modules-center = [ "clock" ];
       modules-right = [ "pulseaudio" "network" "cpu" "memory" "tray" ];
       # Sound-wave spectrum in the bar (Sly-Harvey look), gruvbox via stylix.
-      # Higher sensitivity + more bars + faster frames = more reactive to sound.
       cava = {
         framerate = 60;
         bars = 16;
-        sensitivity = 130;     # higher = more reactive to quiet sound
+        sensitivity = 80;      # calmer (was 130 = too jumpy)
         lower_cutoff_freq = 30;
         higher_cutoff_freq = 18000;
         method = "pulse";
