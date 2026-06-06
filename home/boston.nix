@@ -41,10 +41,12 @@
   # Hide junk .desktop entries from walker (apps you'll never click; shipped by
   # transitively-pulled packages). NoDisplay hides them from the launcher.
   xdg.dataFile = lib.genAttrs [
+    # editors / dev cruft
     "applications/gvim.desktop"
     "applications/vim.desktop"
     "applications/nvim.desktop"
     "applications/cmake-gui.desktop"
+    # system/CLI tools that shouldn't be in an app launcher
     "applications/avahi-discover.desktop"
     "applications/bssh.desktop"
     "applications/bvnc.desktop"
@@ -52,6 +54,29 @@
     "applications/qvidcap.desktop"
     "applications/nixos-manual.desktop"
     "applications/org.freedesktop.IBus.Setup.desktop"
+    "applications/org.freedesktop.Xwayland.desktop"
+    "applications/btop.desktop"
+    "applications/htop.desktop"
+    "applications/cups.desktop"
+    "applications/qt5ct.desktop"
+    "applications/qt6ct.desktop"
+    "applications/xdg-desktop-portal-gtk.desktop"
+    "applications/uuctl.desktop"
+    "applications/nm-applet.desktop"
+    # tray/applet config dialogs (use waybar/tray instead)
+    "applications/blueman-adapters.desktop"
+    "applications/nm-connection-editor.desktop"
+    "applications/org.pulseaudio.pavucontrol.desktop"
+    "applications/com.saivert.pwvucontrol.desktop"
+    "applications/org.rncbc.qpwgraph.desktop"
+    # gaming/hardware tools rarely opened directly
+    "applications/io.github.benjamimgois.goverlay.desktop"
+    "applications/org.corectrl.CoreCtrl.desktop"
+    "applications/nvidia-settings.desktop"
+    # waydroid (android) — not used
+    "applications/Waydroid.desktop"
+    "applications/waydroid.app.install.desktop"
+    "applications/waydroid.market.desktop"
   ] (_: { text = ''
     [Desktop Entry]
     Type=Application
@@ -136,9 +161,19 @@
           box-shadow: inset 0 -2px 0 var(--gb-accent) !important;
         }
         .tab-label { color: var(--gb-fg) !important; }
-        #urlbar { background: var(--gb-bg2) !important; border: 1px solid var(--gb-dim) !important; }
-        #urlbar[focused] { border-color: var(--gb-accent) !important; }
-        #urlbar-input { color: var(--gb-fg) !important; }
+        /* Rounded pill search/URL bar */
+        #urlbar, #searchbar {
+          background: var(--gb-bg2) !important;
+          border: 1px solid var(--gb-dim) !important;
+          border-radius: 14px !important;
+        }
+        #urlbar[focused] {
+          border-color: var(--gb-accent) !important;
+          box-shadow: 0 0 8px rgba(254,128,25,0.35) !important;
+        }
+        #urlbar-input, #searchbar { color: var(--gb-fg) !important; }
+        /* round the urlbar results dropdown too */
+        .urlbarView { border-radius: 0 0 14px 14px !important; }
         toolbarbutton { color: var(--gb-fg) !important; }
         /* hide Firefox's own window-control buttons (min/max/X) — hyprbars
            provides the window controls, so Firefox's are redundant. */
@@ -148,9 +183,60 @@
         }
       '';
       userContent = ''
+        :root {
+          --gb-bg: #1d2021; --gb-bg2: #282828; --gb-fg: #ebdbb2;
+          --gb-accent: #fe8019; --gb-dim: #3c3836; --gb-yellow: #fabd2f;
+        }
         /* gruvbox the new-tab + about: pages background */
         @-moz-document url("about:home"), url("about:newtab"), url("about:blank") {
           body, html { background: #1d2021 !important; }
+        }
+
+        /* ---- about:addons (Extensions) — gruvbox + rounded cards + search ---- */
+        @-moz-document url-prefix("about:addons") {
+          :root, body { background: var(--gb-bg) !important; color: var(--gb-fg) !important; }
+          #sidebar, .main-search { background: var(--gb-bg2) !important; }
+          /* rounded search box at the top */
+          search-textbox, .main-search input {
+            background: var(--gb-bg2) !important;
+            border: 1px solid var(--gb-dim) !important;
+            border-radius: 12px !important;
+            color: var(--gb-fg) !important;
+          }
+          /* extension cards: rounded, gruvbox, orange hover */
+          addon-card {
+            background: var(--gb-bg2) !important;
+            border: 1px solid var(--gb-dim) !important;
+            border-radius: 14px !important;
+            margin: 8px 0 !important;
+          }
+          addon-card:hover { border-color: var(--gb-accent) !important; }
+          .addon-name, .addon-description { color: var(--gb-fg) !important; }
+          /* debloat: hide recommendation/discover spam */
+          .discopane-notice, recommended-addon-card, taar-notice,
+          .discopane-intro, [config*="discovery"] { display: none !important; }
+        }
+
+        /* ---- about:preferences (Settings) — gruvbox + debloat ---- */
+        @-moz-document url-prefix("about:preferences") {
+          :root, body { background: var(--gb-bg) !important; color: var(--gb-fg) !important; }
+          #categories { background: var(--gb-bg2) !important; }
+          .category[selected], .category:hover {
+            background: rgba(254,128,25,0.15) !important;
+            border-radius: 10px !important;
+          }
+          /* rounded search */
+          #searchInput {
+            background: var(--gb-bg2) !important;
+            border: 1px solid var(--gb-dim) !important;
+            border-radius: 12px !important;
+            color: var(--gb-fg) !important;
+          }
+          /* debloat: hide Mozilla account ads, Pocket, sponsored, telemetry promos */
+          #firefoxAccountCategory, #category-sync,
+          [data-category="paneSync"], #pocketLearnMore,
+          #dataCollectionGroup .sponsored, .sponsoredStories,
+          #showSponsoredCheckbox, #showRecommendations { display: none !important; }
         }
       '';
     };
@@ -219,39 +305,60 @@
   # Vesktop (Discord) — gruvbox QuickCSS. Enables custom CSS + writes a gruvbox
   # palette that recolors the whole client to match the system.
   ###########################################################################
-  # Import a maintained gruvbox Discord theme (covers modern Discord's full var
-  # set, which hand-rolled :root overrides miss), then force OUR orange accent.
-  xdg.configFile."vesktop/settings/quickCss.css".text = ''
-    @import url("https://raw.githubusercontent.com/shvedes/discord-gruvbox/main/gruvbox-dark.theme.css");
-
-    /* Override the theme's accent with gruvbox-dark-hard + our orange */
-    :root, .theme-dark, .theme-light {
+  # Vesktop gruvbox as a real LOCAL THEME FILE (not QuickCSS). Vesktop only loads
+  # files in themes/ that have a /**@name */ header AND are listed in
+  # settings.json "enabledThemes". We write both.
+  xdg.configFile."vesktop/themes/BostonGruvbox.theme.css".text = ''
+    /**
+     * @name BostonGruvbox
+     * @description Gruvbox dark-hard + orange accent for Discord/Vesktop
+     * @author boston
+     * @version 1.0.0
+     */
+    :root,
+    .theme-dark,
+    .theme-light,
+    .visual-refresh {
       --background-primary: #1d2021 !important;
       --background-secondary: #282828 !important;
       --background-secondary-alt: #32302f !important;
       --background-tertiary: #1b1b1b !important;
       --background-floating: #1d2021 !important;
       --background-accent: #3c3836 !important;
+      --background-message-hover: #282828 !important;
       --channeltextarea-background: #282828 !important;
       --text-normal: #ebdbb2 !important;
       --text-muted: #a89984 !important;
       --header-primary: #fbf1c7 !important;
+      --header-secondary: #d5c4a1 !important;
+      --interactive-normal: #d5c4a1 !important;
       --interactive-hover: #fe8019 !important;
       --interactive-active: #fe8019 !important;
       --brand-experiment: #fe8019 !important;
       --brand-500: #fe8019 !important;
+      --brand-560: #d65d0e !important;
       --button-filled-brand-background: #fe8019 !important;
       --mention-foreground: #fe8019 !important;
       --link: #83a598 !important;
+      /* visual-refresh (new Discord) token names too */
+      --bg-base-primary: #1d2021 !important;
+      --bg-base-secondary: #282828 !important;
+      --bg-base-tertiary: #1b1b1b !important;
+      --bg-surface-overlay: #1d2021 !important;
     }
+    /* selected channel + send button accent */
+    [class*="selected_"] { background: rgba(254,128,25,0.15) !important; }
   '';
 
-  # Enable QuickCSS in vesktop's settings WITHOUT clobbering the rest (account,
-  # prefs live there too). Flip useQuickCss=true in place via jq, only if needed.
-  home.activation.vesktopQuickCss = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+  # Enable our theme + turn QuickCSS off (theme file is the source). Merge into
+  # settings.json without clobbering account/prefs.
+  home.activation.vesktopTheme = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
     vf="${config.home.homeDirectory}/.config/vesktop/settings/settings.json"
     if [ -f "$vf" ]; then
-      run ${pkgs.jq}/bin/jq '.useQuickCss = true' "$vf" > "$vf.tmp" && run mv "$vf.tmp" "$vf"
+      run ${pkgs.jq}/bin/jq '.enabledThemes = ["BostonGruvbox.theme.css"] | .useQuickCss = false' "$vf" > "$vf.tmp" && run mv "$vf.tmp" "$vf"
+    else
+      run mkdir -p "$(dirname "$vf")"
+      run ${pkgs.jq}/bin/jq -n '{enabledThemes:["BostonGruvbox.theme.css"], useQuickCss:false}' > "$vf"
     fi
   '';
 
