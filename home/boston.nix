@@ -312,11 +312,28 @@
       layer = "top";
       position = "top";
       height = 34;
-      # Clean minimal bar — no workspace pills/"1" container on the left (you
-      # switch workspaces by mouse scroll over the desktop + gestures anyway).
-      modules-left = [ ];
+      # Workspace pills, top-left. Named/icon'd presets: code, web, game, music,
+      # chat, misc. Click to switch. Always shown (persistent) so they're labels.
+      modules-left = [ "hyprland/workspaces" ];
       modules-center = [ "clock" ];
       modules-right = [ "pulseaudio" "network" "cpu" "memory" "tray" ];
+      "hyprland/workspaces" = {
+        on-click = "activate";          # click a pill = go to that workspace
+        format = "{icon}";
+        format-icons = {
+          "1" = "󰨞 code";   # VSCode-ish
+          "2" = "󰖟 web";    # browser
+          "3" = "󰊴 game";   # gaming
+          "4" = "󰝚 music";  # music
+          "5" = "󰭹 chat";   # discord/chat
+          "6" = "󰋜 misc";   # everything else
+          "default" = "";
+          "active" = "";
+        };
+        persistent-workspaces = {
+          "*" = 6;   # always show 6 pills on every monitor
+        };
+      };
       clock = {
         # 12-hour clock, Boston time (America/New_York = EST/EDT).
         timezone = "America/New_York";

@@ -181,6 +181,18 @@ hl.window_rule({ name = "float",        match = { class = "claude-term" } })
 hl.window_rule({ name = "size 1100 700", match = { class = "claude-term" } })
 hl.window_rule({ name = "center",       match = { class = "claude-term" } })
 
+-- Preset workspaces — apps auto-open on their themed workspace:
+--   1 code · 2 web · 3 game · 4 music · 5 chat · 6 misc
+hl.window_rule({ name = "workspace 1 silent", match = { class = "code" } })          -- VSCode
+hl.window_rule({ name = "workspace 1 silent", match = { class = "Code" } })
+hl.window_rule({ name = "workspace 2 silent", match = { class = "firefox" } })       -- browser
+hl.window_rule({ name = "workspace 3 silent", match = { class = "steam" } })         -- gaming
+hl.window_rule({ name = "workspace 3 silent", match = { class = "gamescope" } })
+hl.window_rule({ name = "workspace 4 silent", match = { class = "Spotify" } })       -- music
+hl.window_rule({ name = "workspace 4 silent", match = { class = "spotify" } })
+hl.window_rule({ name = "workspace 5 silent", match = { class = "vesktop" } })       -- discord/chat
+hl.window_rule({ name = "workspace 5 silent", match = { class = "discord" } })
+
 -- ---------------------------------------------------------------------------
 -- Autostart
 -- ---------------------------------------------------------------------------
