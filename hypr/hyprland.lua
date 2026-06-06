@@ -146,25 +146,22 @@ hl.gesture({ fingers = 3, direction = "up",         action = "fullscreen" })
 hl.config({
     plugin = {
         hyprbars = {
-            bar_height = 26,
+            bar_height = 32,                    -- taller, easier to grab
             bar_color = "rgb(1d2021)",          -- gruvbox dark bg
-            ["col.text"] = "rgb(ebdbb2)",       -- gruvbox fg
-            bar_text_size = 11,
-            bar_text_font = "JetBrainsMono Nerd Font",
+            ["col.text"] = "rgb(fe8019)",       -- gruvbox ORANGE title (pops)
+            bar_text_size = 15,                 -- bigger
+            bar_text_font = "CaskaydiaCove Nerd Font Bold",  -- bold, cleaner
+            bar_title_enabled = true,
             bar_part_of_window = true,
             bar_precedence_over_border = true,
+            bar_padding = 12,
         },
     },
 })
 
 -- No buttons — just a clean draggable bar. (Window control is on keybinds:
 -- SUPER+Q close, SUPER+F fullscreen, SUPER+T float.)
-
--- Hide OUR titlebar on apps that draw their OWN (avoids the double-bar look).
--- These use client-side decorations; let them keep theirs.
-hl.window_rule({ name = "hyprbars:no_bar", match = { class = "Opcode" } })
-hl.window_rule({ name = "hyprbars:no_bar", match = { class = "steam" } })
-hl.window_rule({ name = "hyprbars:no_bar", match = { class = "steamwebhelper" } })
+-- ALL apps get the bar now (no per-app no_bar rules) — you like it everywhere.
 
 -- ---------------------------------------------------------------------------
 -- Autostart

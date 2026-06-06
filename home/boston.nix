@@ -323,14 +323,18 @@
       layer = "top";
       position = "top";
       height = 34;
-      modules-left = [ "hyprland/workspaces" "hyprland/window" ];
+      # Clean minimal bar — no workspace pills/"1" container on the left (you
+      # switch workspaces by mouse scroll over the desktop + gestures anyway).
+      modules-left = [ ];
       modules-center = [ "clock" ];
       modules-right = [ "pulseaudio" "network" "cpu" "memory" "tray" ];
-      "hyprland/workspaces" = {
-        on-click = "activate";   # click to switch workspace
-        format = "{icon}";
+      clock = {
+        # 12-hour clock, Boston time (America/New_York = EST/EDT).
+        timezone = "America/New_York";
+        format = "{:%a %b %d  %I:%M %p}";       # e.g. "Fri Jun 06  11:42 PM"
+        format-alt = "{:%I:%M %p}";
+        tooltip-format = "<big>{:%B %Y}</big>\n<tt><small>{calendar}</small></tt>";
       };
-      clock.format = "{:%a %d %b  %H:%M}";
       pulseaudio = {
         format = "{icon} {volume}%";
         format-icons.default = [ "" "" "" ];
@@ -355,8 +359,8 @@
   ###########################################################################
   xdg.configFile."eww/eww.yuck".text = ''
     ;; ---- data pollers ----
-    (defpoll TIME   :interval "5s"  "date '+%H:%M'")
-    (defpoll DATE   :interval "60s" "date '+%a %d %b'")
+    (defpoll TIME   :interval "5s"  "TZ='America/New_York' date '+%I:%M %p'")
+    (defpoll DATE   :interval "60s" "TZ='America/New_York' date '+%a %d %b'")
     (defpoll CPU    :interval "2s"  "LC_ALL=C top -bn1 | awk '/Cpu/{printf \"%d\", 100-$8}'")
     (defpoll MEM    :interval "3s"  "free | awk '/Mem/{printf \"%d\", $3/$2*100}'")
     (defpoll DISK   :interval "30s" "df / | awk 'END{print $5}' | tr -d '%'")
