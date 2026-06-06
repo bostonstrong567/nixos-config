@@ -12,12 +12,12 @@ local mainMod = "SUPER"
 -- ---------------------------------------------------------------------------
 hl.config({
     general = {
-        -- Glowing gruvbox-orange gradient border on the active window (the cool
-        -- themed outline). Small gaps so you can grab the edge to resize.
-        border_size = 3,
+        -- Soft translucent luminescent glow border (not solid bright orange) —
+        -- semi-transparent gruvbox gradient. The colored shadow below adds the glow.
+        border_size = 2,
         col = {
-            active_border   = { colors = { "rgba(fe8019ff)", "rgba(d65d0eff)", "rgba(fabd2fff)" }, angle = 45 },
-            inactive_border = "rgba(3c3836aa)",
+            active_border   = { colors = { "rgba(fe8019bb)", "rgba(d65d0e99)" }, angle = 45 },
+            inactive_border = "rgba(3c383655)",
         },
         gaps_in = 4,
         gaps_out = 6,
@@ -38,11 +38,14 @@ hl.config({
             xray = true,
             ignore_opacity = true,
         },
+        -- Orange-tinted translucent shadow = the soft luminescent glow around the
+        -- active window (the cool effect you liked, not a hard bright border).
         shadow = {
             enabled = true,
-            range = 30,
+            range = 25,
             render_power = 3,
-            color = "rgba(1d2021ee)",
+            color = "rgba(fe801944)",          -- translucent gruvbox-orange glow
+            color_inactive = "rgba(1d202100)", -- no glow on inactive
         },
     },
     dwindle = {
