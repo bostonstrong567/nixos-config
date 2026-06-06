@@ -320,18 +320,14 @@
       "hyprland/workspaces" = {
         on-click = "activate";          # click a pill = go to that workspace
         format = "{icon}";
+        # Plain-text labels (nerd-font glyphs were rendering as empty boxes).
         format-icons = {
-          "1" = "󰨞 code";   # VSCode-ish
-          "2" = "󰖟 web";    # browser
-          "3" = "󰊴 game";   # gaming
-          "4" = "󰝚 music";  # music
-          "5" = "󰭹 chat";   # discord/chat
-          "6" = "󰋜 misc";   # everything else
-          "default" = "";
-          "active" = "";
+          "1" = "Home";
+          "2" = "Music";
+          "3" = "Chat";
         };
         persistent-workspaces = {
-          "*" = 6;   # always show 6 pills on every monitor
+          "*" = 3;   # exactly 3 pills: Home, Music, Chat
         };
       };
       clock = {
