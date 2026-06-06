@@ -33,7 +33,6 @@
   # Showpiece toolset (system-wide so the session always has them).
   environment.systemPackages = with pkgs; [
     waybar          # status bar (CSS-styled, clickable)
-    eww             # widgets (glass HUD tiles)
     wofi            # mouse-driven app launcher
     dunst           # notifications
     awww            # animated wallpaper daemon (swww renamed → awww)

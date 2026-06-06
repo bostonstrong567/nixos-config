@@ -95,6 +95,7 @@ hl.bind(mainMod .. " + B",      hl.dsp.exec_cmd("firefox"))                     
 hl.bind(mainMod .. " + C",      hl.dsp.exec_cmd("code"))                          -- vscode
 hl.bind(mainMod .. " + A",      hl.dsp.exec_cmd("ghostty --class=claude-term -e claude")) -- Claude AI terminal
 hl.bind(mainMod .. " + O",      hl.dsp.exec_cmd("opcode"))                        -- opcode Claude GUI
+hl.bind(mainMod .. " + G",      hl.dsp.exec_cmd("env DISPLAY=:0 glava"))          -- glava audio visualizer (needs XWayland DISPLAY)
 
 -- Window control
 hl.bind(mainMod .. " + Q",      hl.dsp.window.close())                            -- close window
@@ -197,7 +198,6 @@ hl.window_rule({ name = "workspace 3 silent", match = { class = "discord" } })
 hl.on("hyprland.start", function()
     hl.exec_cmd("waybar")
     hl.exec_cmd("dunst")
-    hl.exec_cmd("eww daemon && eww open hud")
     hl.exec_cmd("wl-paste --watch cliphist store")
     hl.exec_cmd("nm-applet --indicator")
     hl.exec_cmd("blueman-applet")
