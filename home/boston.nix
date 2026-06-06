@@ -68,6 +68,11 @@
   # and warns under KDE. Disable it (Plasma + Stylix's KDE target cover Qt).
   stylix.targets.qt.enable = false;
 
+  # Our Hyprland block owns its own colors (gruvbox hardcoded). Stylix's hyprland
+  # target ALSO writes decoration.shadow.color etc. → "defined multiple times".
+  # Disable it so our config is the single source for Hyprland styling.
+  stylix.targets.hyprland.enable = false;
+
   programs.vscode = {
     enable = true;
     profiles.default = {
