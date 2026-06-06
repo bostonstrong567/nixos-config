@@ -45,7 +45,7 @@
     sqlite              # inspect opcode's agents.db etc.
     fzf                 # fuzzy finder
     tldr                # concise man pages
-    du-dust             # better du (disk usage)
+    dust                # better du (disk usage)
     duf                 # better df
     procs               # better ps
     sd                  # better sed
