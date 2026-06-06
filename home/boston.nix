@@ -219,36 +219,31 @@
   # Vesktop (Discord) — gruvbox QuickCSS. Enables custom CSS + writes a gruvbox
   # palette that recolors the whole client to match the system.
   ###########################################################################
+  # Import a maintained gruvbox Discord theme (covers modern Discord's full var
+  # set, which hand-rolled :root overrides miss), then force OUR orange accent.
   xdg.configFile."vesktop/settings/quickCss.css".text = ''
-    /* Gruvbox dark-hard for Discord/Vesktop */
-    :root {
-      --background-primary: #1d2021;
-      --background-secondary: #282828;
-      --background-secondary-alt: #32302f;
-      --background-tertiary: #1b1b1b;
-      --background-accent: #3c3836;
-      --background-floating: #1d2021;
-      --channeltextarea-background: #282828;
-      --text-normal: #ebdbb2;
-      --text-muted: #a89984;
-      --header-primary: #fbf1c7;
-      --header-secondary: #d5c4a1;
-      --interactive-normal: #d5c4a1;
-      --interactive-hover: #fe8019;
-      --interactive-active: #fe8019;
-      --brand-experiment: #fe8019;
-      --brand-experiment-560: #d65d0e;
-      --button-background: #fe8019;
-      --link: #83a598;
-      --mention-foreground: #fe8019;
+    @import url("https://raw.githubusercontent.com/shvedes/discord-gruvbox/main/gruvbox-dark.theme.css");
+
+    /* Override the theme's accent with gruvbox-dark-hard + our orange */
+    :root, .theme-dark, .theme-light {
+      --background-primary: #1d2021 !important;
+      --background-secondary: #282828 !important;
+      --background-secondary-alt: #32302f !important;
+      --background-tertiary: #1b1b1b !important;
+      --background-floating: #1d2021 !important;
+      --background-accent: #3c3836 !important;
+      --channeltextarea-background: #282828 !important;
+      --text-normal: #ebdbb2 !important;
+      --text-muted: #a89984 !important;
+      --header-primary: #fbf1c7 !important;
+      --interactive-hover: #fe8019 !important;
+      --interactive-active: #fe8019 !important;
+      --brand-experiment: #fe8019 !important;
+      --brand-500: #fe8019 !important;
+      --button-filled-brand-background: #fe8019 !important;
+      --mention-foreground: #fe8019 !important;
+      --link: #83a598 !important;
     }
-    .theme-dark {
-      --background-primary: #1d2021;
-      --background-secondary: #282828;
-      --background-tertiary: #1b1b1b;
-    }
-    /* accent the selected channel + send button gruvbox-orange */
-    [class*="selected"] [class*="link"] { background: alpha(#fe8019, 0.15) !important; }
   '';
 
   # Enable QuickCSS in vesktop's settings WITHOUT clobbering the rest (account,

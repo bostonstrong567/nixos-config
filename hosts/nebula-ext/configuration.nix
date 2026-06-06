@@ -56,8 +56,9 @@
   };
   programs.zsh.enable = true;
 
-  # Passwordless-ish sudo for wheel (still prompts for password by default)
-  security.sudo.wheelNeedsPassword = true;
+  # Passwordless sudo for wheel — boston owns this machine; the PC IS the sandbox.
+  # Lets opcode/claude (and you) run sudo without a password prompt.
+  security.sudo.wheelNeedsPassword = false;
 
   ###########################################################################
   # Nix settings — flakes + helpful defaults

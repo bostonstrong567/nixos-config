@@ -57,15 +57,46 @@ final: prev: {
   };
 
   # opcode (winfunc) — Claude Code GUI. Wraps your native Claude sign-in (no API
-  # key). AppImage-wrapped. Hash verified against upstream's published .sha256.
-  opcode = prev.appimageTools.wrapType2 {
-    pname = "opcode";
-    version = "0.2.0";
-    src = prev.fetchurl {
-      url = "https://github.com/winfunc/opcode/releases/download/v0.2.0/opcode_v0.2.0_linux_x86_64.AppImage";
-      hash = "sha256-LsE9gweAOaru7J01r68V1aDblQ06t4qeCXp6mu1Ig3E=";
+  # key).
+  #
+  # Built from the EXTRACTED AppImage (not appimageTools.wrapType2) on purpose:
+  # wrapType2 runs it inside a bubblewrap sandbox that sets PR_SET_NO_NEW_PRIVS,
+  # which BLOCKS sudo at the kernel level — so opcode's Claude could never run
+  # `sudo nixos-rebuild`. Extracting + autoPatchelf runs opcode natively with no
+  # sandbox, so it inherits passwordless sudo (the PC is the sandbox).
+  opcode =
+    let
+      appimage = prev.fetchurl {
+        url = "https://github.com/winfunc/opcode/releases/download/v0.2.0/opcode_v0.2.0_linux_x86_64.AppImage";
+        hash = "sha256-LsE9gweAOaru7J01r68V1aDblQ06t4qeCXp6mu1Ig3E=";
+      };
+      extracted = prev.appimageTools.extract { pname = "opcode"; version = "0.2.0"; src = appimage; };
+    in
+    prev.stdenv.mkDerivation {
+      pname = "opcode";
+      version = "0.2.0";
+      src = extracted;
+      nativeBuildInputs = [ prev.autoPatchelfHook prev.makeWrapper prev.wrapGAppsHook3 ];
+      buildInputs = with prev; [
+        glib gtk3 webkitgtk_4_1 libsoup_3 cairo pango gdk-pixbuf
+        openssl glib-networking
+        stdenv.cc.cc.lib
+      ];
+      installPhase = ''
+        runHook preInstall
+        mkdir -p $out/bin $out/share
+        cp -r usr/* $out/ 2>/dev/null || true
+        # find the real binary in the extracted tree
+        bin=$(find . -name opcode -type f -executable | head -1)
+        install -Dm755 "$bin" $out/bin/opcode
+        # desktop file + icon if present
+        cp -r usr/share/applications $out/share/ 2>/dev/null || true
+        cp -r usr/share/icons $out/share/ 2>/dev/null || true
+        runHook postInstall
+      '';
+      # opcode is Electron-ish; needs Wayland flags passed through.
+      meta.mainProgram = "opcode";
     };
-  };
 
   # Windows_11_dark cursor — user's uploaded .cur/.ani set converted to XCursor
   # via win2xcur. CI builds this to verify the conversion works.
