@@ -198,7 +198,7 @@ hl.on("hyprland.start", function()
     -- Wallpaper: start daemon, then set the gruvbox wallpaper with a fade.
     hl.exec_cmd("awww-daemon & sleep 1.5; awww img ~/.config/wallpaper.png --transition-type grow --transition-fps 60")
     -- GLava audio waves AS the desktop background via hyprwinwrap.
-    -- hyprwinwrap pins any window with the configured class onto the bg layer.
-    -- We launch glava in X11/window mode (no --desktop); hyprwinwrap does the bg.
-    hl.exec_cmd("sleep 2; [ -d ~/.config/glava ] || glava --copy-config; glava &")
+    -- glava is an X11/GLX app → needs DISPLAY=:0 (XWayland) or it core-dumps.
+    -- hyprwinwrap (class=GLava) then pins glava's window onto the bg layer.
+    hl.exec_cmd("sleep 2; [ -d ~/.config/glava ] || glava --copy-config; DISPLAY=:0 glava &")
 end)
