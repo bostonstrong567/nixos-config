@@ -46,6 +46,7 @@
       "input"   # Wooting / HID device udev access
       "i2c"     # OpenRGB / DDC monitor control
       "dialout" # serial devices
+      "plugdev" # Solaar/Logitech hidraw read-write (fixes "can't read/write")
     ];
     shell = pkgs.zsh;
     # Hashed password for "1005" (sha-512). Plaintext is NOT stored in the nix

@@ -72,9 +72,21 @@
   # without full Plasma).
   environment.systemPackages = with pkgs; [
     kdePackages.dolphin       # file manager (mouse-driven, dark-themed)
-    kdePackages.ark           # archive GUI (pairs with peazip)
     kdePackages.qtwayland     # Qt Wayland support for KDE apps under Hyprland
+    # (ark removed — peazip covers archives. yazi removed — dolphin covers files.)
   ];
+
+  # Flameshot — Wayland/Hyprland needs the grim adapter + wlr support, else it
+  # screenshots a blank/black image. This wires both (was a bare pkg before).
+  services.flameshot = {
+    enable = true;
+    package = pkgs.flameshot.override { enableWlrSupport = true; };
+    settings.General = {
+      useGrimAdapter = true;
+      disabledGrimWarning = true;
+      showStartupLaunchMessage = false;
+    };
+  };
 
   # XDG portals — the Hyprland portal is added in modules/hyprland.nix.
   xdg.portal.enable = true;

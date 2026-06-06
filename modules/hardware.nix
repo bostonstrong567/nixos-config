@@ -50,7 +50,8 @@
     pwvucontrol           # native PipeWire mixer
     qpwgraph              # PipeWire patchbay, Qt (helvum removed; matches KDE; route Focusrite/mic)
     alsa-utils            # alsamixer, aplay, etc.
-    piper                 # GUI for libratbag (gaming mouse buttons/DPI/RGB)
+    # (piper removed — it's for non-Logitech mice via ratbagd; your Logitech
+    #  mouse is handled by Solaar, so piper found no device → "uh oh" error.)
   ];
 
   ###########################################################################
@@ -77,10 +78,9 @@
   hardware.logitech.wireless.enable = true;
   hardware.logitech.wireless.enableGraphical = true; # Solaar GUI
 
-  # libratbag/Piper — configure buttons/DPI/RGB on most gaming mice
-  # (covers non-Logitech mice; harmless if your mouse isn't supported).
-  # piper GUI is in the systemPackages list above.
-  services.ratbagd.enable = true;
+  # ratbagd/piper removed — your Logitech mouse uses Solaar (above). ratbagd is
+  # for non-Logitech gaming mice; with none present, piper just errored. Re-enable
+  # services.ratbagd.enable + add piper if you ever get a Razer/SteelSeries/etc.
 
   ###########################################################################
   # Misc peripherals

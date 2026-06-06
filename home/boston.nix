@@ -56,7 +56,8 @@
 
     # --- Utilities ---
     peazip               # archive manager
-    flameshot            # screenshot tool
+    # flameshot — configured as a system service (services.flameshot) in
+    # desktop.nix with grim adapter for Wayland, NOT as a bare package.
     fsearch              # instant file search (Everything-like; angrysearch not in nixpkgs)
     collector            # mijorus — file collection tray (also on Flathub)
     easyeffects          # PipeWire EQ + RNNoise mic denoise (> NoiseTorch on PipeWire)

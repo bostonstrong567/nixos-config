@@ -52,7 +52,6 @@
     delta               # better git diff
     lazygit             # git TUI
     gh                  # GitHub CLI (not elsewhere)
-    yazi                # terminal file manager
     tokei               # code stats
     hyperfine           # benchmark tool
     unzip p7zip         # archives

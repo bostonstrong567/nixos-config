@@ -11,6 +11,10 @@ final: prev: {
       sha256 = "3a3478b4cdae649cfb2b0de00ad20a5099a1c9c0d94062782e8f3e951572a01d";
     };
     dontUnpack = true;
+    # The release is a generic-linux dynamically-linked binary. NixOS can't run
+    # those as-is → autoPatchelfHook rewrites its interpreter/RPATH to the nix store.
+    nativeBuildInputs = [ prev.autoPatchelfHook ];
+    buildInputs = [ prev.stdenv.cc.cc.lib prev.zlib ];
     installPhase = ''
       runHook preInstall
       install -Dm755 $src $out/bin/cliamp
