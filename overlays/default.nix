@@ -13,7 +13,7 @@ final: prev: {
         pluginSrc = prev.fetchFromGitHub {
           owner = "hyprwm";
           repo = "hyprland-plugins";
-          rev = "v0.55.0";
+          tag = "v0.55.0";
           hash = "sha256-WMUJ7tyw/9QbKUyRzLndEQSqX05fQLmFlRdMAmPD7tI=";
         };
       in
@@ -23,6 +23,14 @@ final: prev: {
         # Mirror nixpkgs exactly: point src straight at the subdir, add cmake.
         src = "${pluginSrc}/hyprwinwrap";
         nativeBuildInputs = [ prev.cmake ];
+        # src is a plain directory, not an archive — copy it in ourselves.
+        unpackPhase = ''
+          runHook preUnpack
+          cp -r ${pluginSrc}/hyprwinwrap ./source
+          chmod -R u+w ./source
+          cd ./source
+          runHook postUnpack
+        '';
         meta.description = "Pin a window as the desktop background";
       };
   };
