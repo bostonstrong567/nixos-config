@@ -544,16 +544,6 @@
       };
       cpu.format = " {usage}%";
       memory.format = " {}%";
-      # cava audio-wave bars in the bar (the Sly-Harvey sound-wave look).
-      cava = {
-        framerate = 30;
-        bars = 12;
-        method = "pipewire";
-        source = "auto";
-        bar_delimiter = 0;
-        format-icons = [ "▁" "▂" "▃" "▄" "▅" "▆" "▇" "█" ];
-        actions.on-click-right = "mode";
-      };
     };
 
     # Modern Sly-Harvey-style waybar — floating gruvbox pills, glow, rounded.
