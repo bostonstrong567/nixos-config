@@ -12,6 +12,59 @@
   programs.home-manager.enable = true;
 
   # Launcher (wofi) entries for apps that ship no .desktop file.
+  # Session save/restore — remembers which apps were open (by class) and reopens
+  # them on next boot, each routed to its themed workspace by the window rules.
+  # save-session runs every 30s (timer below) + restore-session runs at startup.
+  # Maps window class -> launch command. Home (ws1) apps are NOT saved so Home
+  # always starts empty.
+  xdg.configFile."hypr/save-session.sh" = {
+    executable = true;
+    text = ''
+      #!/usr/bin/env bash
+      # Record classes of windows that are NOT on Home (ws1). One per line.
+      ${pkgs.hyprland}/bin/hyprctl clients -j 2>/dev/null \
+        | ${pkgs.jq}/bin/jq -r '.[] | select(.workspace.id != 1) | .class' \
+        | sort -u > ~/.config/hypr/.session
+    '';
+  };
+  xdg.configFile."hypr/restore-session.sh" = {
+    executable = true;
+    text = ''
+      #!/usr/bin/env bash
+      f=~/.config/hypr/.session
+      [ -f "$f" ] || exit 0
+      # class -> command map. Add apps here as needed.
+      launch() {
+        case "$1" in
+          Spotify|spotify)               spotify & ;;
+          vesktop|discord)               vesktop & ;;
+          Code|code|code-url-handler)    code & ;;
+          Opcode|opcode)                 opcode & ;;
+          firefox)                       firefox & ;;
+          *) : ;;   # unknown class: skip (avoid relaunching random stuff)
+        esac
+      }
+      while read -r cls; do
+        [ -n "$cls" ] && launch "$cls"
+        sleep 0.5
+      done < "$f"
+    '';
+  };
+
+  # Save the session every 30s so a sudden shutdown still has a recent snapshot.
+  systemd.user.services.hypr-session-save = {
+    Unit.Description = "Snapshot open apps for next-boot restore";
+    Service = {
+      Type = "oneshot";
+      ExecStart = "${config.home.homeDirectory}/.config/hypr/save-session.sh";
+    };
+  };
+  systemd.user.timers.hypr-session-save = {
+    Unit.Description = "Periodic session snapshot";
+    Timer = { OnBootSec = "1min"; OnUnitActiveSec = "30s"; };
+    Install.WantedBy = [ "timers.target" ];
+  };
+
   xdg.desktopEntries = {
     opcode = {
       name = "opcode";
@@ -142,6 +195,19 @@
         "svg.context-properties.content.enabled" = true;
         "browser.newtabpage.activity-stream.feeds.topsites" = true;
         "browser.compactmode.show" = true;
+        # Force dark in-content (about:* pages) so the gruvbox userContent sticks
+        # instead of fighting a light default. 2 = dark, 0 = light, 1 = auto.
+        "layout.css.prefers-color-scheme.content-override" = 0;  # dark UI everywhere
+        "browser.theme.dark-private-windows" = true;
+        "ui.systemUsesDarkTheme" = 1;
+        # Kill the bloat in settings/newtab proactively (so CSS doesn't have to)
+        "extensions.pocket.enabled" = false;
+        "browser.newtabpage.activity-stream.feeds.section.topstories" = false;
+        "browser.newtabpage.activity-stream.showSponsored" = false;
+        "browser.newtabpage.activity-stream.showSponsoredTopSites" = false;
+        "browser.discovery.enabled" = false;
+        "datareporting.policy.dataSubmissionEnabled" = false;
+        "browser.aboutConfig.showWarning" = false;
       };
       # Gruvbox userChrome — colors only, minimal. Don't fight the native layout
       # (the aggressive version jammed tabs to the edge + doubled the titlebar).
@@ -605,7 +671,7 @@
       # module's click ("activate") sends legacy IPC dispatch, which Hyprland's
       # Lua-config mode REJECTS (waybar #5008) → clicks did nothing. These custom
       # buttons call the working `hl.dispatch(hl.dsp.focus{...})` eval instead.
-      modules-left = [ "custom/ws1" "custom/ws2" "custom/ws3" "custom/ws4" "cava" ];
+      modules-left = [ "custom/ws1" "custom/ws2" "custom/ws3" "custom/ws4" "custom/ws5" "cava" ];
       modules-center = [ "clock" ];
       modules-right = [ "pulseaudio" "network" "cpu" "memory" "tray" ];
       # Sound-wave spectrum in the bar (Sly-Harvey look), gruvbox via stylix.
@@ -663,6 +729,16 @@
         on-click = "hyprctl eval 'hl.dispatch(hl.dsp.focus({workspace=4}))'";
         tooltip = false;
       };
+      "custom/ws5" = {
+        exec = "${pkgs.writeShellScript "ws5" ''
+          a=$(hyprctl activeworkspace -j | ${pkgs.jq}/bin/jq -r .id)
+          if [ "$a" = "5" ]; then echo '{"text":"AI","class":"active"}'; else echo '{"text":"AI","class":"inactive"}'; fi
+        ''}";
+        return-type = "json";
+        interval = 1;
+        on-click = "hyprctl eval 'hl.dispatch(hl.dsp.focus({workspace=5}))'";
+        tooltip = false;
+      };
       clock = {
         # 12-hour clock, Boston time (America/New_York = EST/EDT).
         timezone = "America/New_York";
@@ -702,18 +778,18 @@
         margin: 6px 8px;
         padding: 2px 8px;
       }
-      #custom-ws1, #custom-ws2, #custom-ws3, #custom-ws4 {
+      #custom-ws1, #custom-ws2, #custom-ws3, #custom-ws4, #custom-ws5 {
         padding: 0 14px; margin: 3px 2px;
         border-radius: 10px;
         color: #a89984;
         background: transparent;
         transition: all 0.25s ease;
       }
-      #custom-ws1:hover, #custom-ws2:hover, #custom-ws3:hover, #custom-ws4:hover {
+      #custom-ws1:hover, #custom-ws2:hover, #custom-ws3:hover, #custom-ws4:hover, #custom-ws5:hover {
         background: alpha(#fe8019, 0.18); color: #fe8019;
       }
       /* ACTIVE pill = filled gruvbox-orange, dark text — shows the toggled area */
-      #custom-ws1.active, #custom-ws2.active, #custom-ws3.active, #custom-ws4.active {
+      #custom-ws1.active, #custom-ws2.active, #custom-ws3.active, #custom-ws4.active, #custom-ws5.active {
         background: #fe8019;
         color: #1d2021;
         font-weight: bold;
