@@ -15,10 +15,9 @@
   services.xserver.enable = true;
 
   # greetd + tuigreet — minimal Wayland greeter.
-  # Launch Hyprland via UWSM (hyprland.nix sets withUWSM = true). Launching the
-  # bare `Hyprland` binary triggers the "started without start-hyprland" warning
-  # and skips proper session/dbus/systemd integration. `uwsm start hyprland`
-  # (or `start-hyprland`) is the correct entrypoint.
+  # `--cmd start-hyprland` is the ONLY session (start-hyprland is the proper
+  # UWSM-aware entrypoint). We do NOT pass --sessions, so tuigreet shows no
+  # session picker at all — just the password prompt → straight into Hyprland.
   services.greetd = {
     enable = true;
     settings = {
