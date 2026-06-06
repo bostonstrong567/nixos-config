@@ -8,7 +8,7 @@ final: prev: {
   # Not in nixpkgs 26.05, so build it with mkHyprlandPlugin (ABI-matched to our
   # Hyprland) from the official hyprland-plugins source.
   hyprlandPlugins = prev.hyprlandPlugins // {
-    hyprwinwrap = prev.hyprlandPlugins.mkHyprlandPlugin prev.hyprland {
+    hyprwinwrap = prev.hyprlandPlugins.mkHyprlandPlugin {
       pluginName = "hyprwinwrap";
       version = "0.55.0";
       # Same source + hash nixpkgs uses for hyprbars → ABI-matches our Hyprland.
