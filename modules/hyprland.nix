@@ -15,7 +15,7 @@
 {
   programs.hyprland = {
     enable = true;
-    withUWSM = false;      # UWSM off — bare Hyprland launch is simpler + well-tested
+    withUWSM = true;       # modern session manager (recommended)
     xwayland.enable = true; # run X11 apps (Steam games etc.) under Hyprland
   };
 
