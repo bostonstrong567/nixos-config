@@ -323,7 +323,6 @@
           "4, pinch, float"
           "3, up, fullscreen"
         ];
-        workspace_swipe_invert = false;
       };
 
       # ---- THE SHOWPIECE LOOK ----
