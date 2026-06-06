@@ -129,7 +129,6 @@ hl.config({
             bar_text_font = "JetBrainsMono Nerd Font",
             bar_part_of_window = true,
             bar_precedence_over_border = true,
-            hyprbars_button_border_size = 0,
         },
     },
 })
