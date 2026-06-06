@@ -83,19 +83,23 @@ final: prev: {
         krb5 e2fsprogs       # libcom_err.so.2 / libkrb5 (gssapi)
         stdenv.cc.cc.lib
       ];
+      # keep the whole extracted tree (webkit needs its sibling helper binaries
+      # like WebKitNetworkProcess next to the main bin), symlink the launcher.
+      dontWrapGApps = true;  # we wrap manually to also set webkit exec path
       installPhase = ''
         runHook preInstall
-        mkdir -p $out/bin $out/share
-        cp -r usr/* $out/ 2>/dev/null || true
-        # find the real binary in the extracted tree
-        bin=$(find . -name opcode -type f -executable | head -1)
-        install -Dm755 "$bin" $out/bin/opcode
-        # desktop file + icon if present
+        mkdir -p $out/opt/opcode $out/bin $out/share
+        cp -r usr/* $out/opt/opcode/ 2>/dev/null || true
+        bin=$(find $out/opt/opcode -name opcode -type f -executable | head -1)
         cp -r usr/share/applications $out/share/ 2>/dev/null || true
         cp -r usr/share/icons $out/share/ 2>/dev/null || true
+        makeWrapper "$bin" $out/bin/opcode \
+          ''${gappsWrapperArgs[@]} \
+          --set WEBKIT_DISABLE_DMABUF_RENDERER 1 \
+          --set WEBKIT_DISABLE_COMPOSITING_MODE 1 \
+          --prefix LD_LIBRARY_PATH : "$out/opt/opcode/lib:$out/opt/opcode/usr/lib"
         runHook postInstall
       '';
-      # opcode is Electron-ish; needs Wayland flags passed through.
       meta.mainProgram = "opcode";
     };
 
