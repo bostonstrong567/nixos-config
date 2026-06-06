@@ -15,18 +15,26 @@
   services.xserver.enable = true;
 
   # greetd + tuigreet — minimal Wayland greeter.
-  # `--cmd start-hyprland` is the ONLY session (start-hyprland is the proper
-  # UWSM-aware entrypoint). We do NOT pass --sessions, so tuigreet shows no
-  # session picker at all — just the password prompt → straight into Hyprland.
-  services.greetd = {
-    enable = true;
-    settings = {
-      default_session = {
-        command = "${pkgs.tuigreet}/bin/tuigreet --time --remember --asterisks --cmd start-hyprland";
-        user = "greeter";
+  # The Hyprland package ships TWO session files (hyprland + hyprland-uwsm),
+  # and tuigreet scans the sessions dir → shows a "which Hyprland?" picker.
+  # We point --sessions at a dir containing ONLY the uwsm session, so there's
+  # nothing to pick — just the password prompt → straight into Hyprland.
+  services.greetd =
+    let
+      onlyHyprland = pkgs.runCommand "tuigreet-sessions" { } ''
+        mkdir -p $out
+        cp ${pkgs.hyprland}/share/wayland-sessions/hyprland-uwsm.desktop $out/
+      '';
+    in
+    {
+      enable = true;
+      settings = {
+        default_session = {
+          command = "${pkgs.tuigreet}/bin/tuigreet --time --remember --asterisks --sessions ${onlyHyprland} --cmd start-hyprland";
+          user = "greeter";
+        };
       };
     };
-  };
 
   # Fonts for a modern look + ricing
   fonts.packages = with pkgs; [
