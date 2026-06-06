@@ -21,7 +21,10 @@ final: prev: {
         pluginName = "hyprwinwrap";
         version = "0.55.0";
         src = pluginSrc;
-        sourceRoot = "${pluginSrc.name}/hyprwinwrap";
+        # fetchFromGitHub unpacks to a dir named "source"; the plugin lives in
+        # source/hyprwinwrap. setSourceRoot picks it explicitly (sourceRoot alone
+        # was relative-resolving wrong).
+        setSourceRoot = "sourceRoot=$(echo */hyprwinwrap)";
         meta.description = "Pin a window as the desktop background";
       };
   };
