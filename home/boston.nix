@@ -11,6 +11,13 @@
 
   programs.home-manager.enable = true;
 
+  # Fix "gtk-xft-dpi has invalid value (-1)" spam from GTK apps (ghostty etc.).
+  # Set a real Xft DPI. 96 = standard 1x. Bump to 144 for 1.5x or 192 for 2x
+  # scaling on the 4K panel if everything looks too small.
+  xresources.properties = {
+    "Xft.dpi" = 96;
+  };
+
   ###########################################################################
   # User apps (mouse-driven, modern). Native nixpkgs unless noted.
   ###########################################################################
