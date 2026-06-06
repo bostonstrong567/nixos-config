@@ -21,9 +21,13 @@
     executable = true;
     text = ''
       #!/usr/bin/env bash
-      # Record classes of windows that are NOT on Home (ws1). One per line.
+      # Find Hyprland's socket signature (systemd service has no env for it).
+      export XDG_RUNTIME_DIR=''${XDG_RUNTIME_DIR:-/run/user/$(id -u)}
+      export HYPRLAND_INSTANCE_SIGNATURE=$(ls -t "$XDG_RUNTIME_DIR/hypr" 2>/dev/null | head -1)
+      [ -z "$HYPRLAND_INSTANCE_SIGNATURE" ] && exit 0
+      # Record classes of windows NOT on Home (ws1). One per line.
       ${pkgs.hyprland}/bin/hyprctl clients -j 2>/dev/null \
-        | ${pkgs.jq}/bin/jq -r '.[] | select(.workspace.id != 1) | .class' \
+        | ${pkgs.jq}/bin/jq -r '.[] | select(.workspace.id != 1) | .class' 2>/dev/null \
         | sort -u > ~/.config/hypr/.session
     '';
   };
