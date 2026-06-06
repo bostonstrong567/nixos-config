@@ -256,6 +256,10 @@
   ###########################################################################
   wayland.windowManager.hyprland = {
     enable = true;
+    # Hyprland 0.55 + HM stateVersion 26.05 defaults to a Lua config backend whose
+    # translator mis-handles values like `e-1`, `5%-`, `mouse:272` (syntax errors).
+    # Pin the stable native hyprlang (conf) backend — our settings translate cleanly.
+    configType = "hyprlang";
     settings = {
       # ---- monitors (auto; tweak refresh per your display) ----
       monitor = ",preferred,auto,1";
