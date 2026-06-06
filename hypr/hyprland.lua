@@ -12,14 +12,11 @@ local mainMod = "SUPER"
 -- ---------------------------------------------------------------------------
 hl.config({
     general = {
-        border_size = 2,
-        -- gruvbox orange gradient active border + dim inactive
-        col = {
-            active_border   = { colors = { "rgba(fe8019ff)", "rgba(d65d0eff)" }, angle = 45 },
-            inactive_border = "rgba(3c3836aa)",
-        },
-        gaps_in = 6,
-        gaps_out = 14,
+        -- No "container" look: no gaps between windows, no border boxes.
+        -- Windows sit flush/seamless; the hyprbars titlebar is the only chrome.
+        border_size = 0,
+        gaps_in = 0,
+        gaps_out = 0,
         layout = "dwindle",
         resize_on_border = true,
         extend_border_grab_area = 15,
@@ -150,7 +147,7 @@ hl.config({
             bar_color = "rgb(1d2021)",          -- gruvbox dark bg
             ["col.text"] = "rgb(fe8019)",       -- gruvbox ORANGE title (pops)
             bar_text_size = 15,                 -- bigger
-            bar_text_font = "CaskaydiaCove Nerd Font Bold",  -- bold, cleaner
+            bar_text_font = "CaskaydiaCove Nerd Font",  -- family name (bold via weight)
             bar_title_enabled = true,
             bar_part_of_window = true,
             bar_precedence_over_border = true,
