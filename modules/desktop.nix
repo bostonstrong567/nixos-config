@@ -76,17 +76,8 @@
     # (ark removed — peazip covers archives. yazi removed — dolphin covers files.)
   ];
 
-  # Flameshot — Wayland/Hyprland needs the grim adapter + wlr support, else it
-  # screenshots a blank/black image. This wires both (was a bare pkg before).
-  services.flameshot = {
-    enable = true;
-    package = pkgs.flameshot.override { enableWlrSupport = true; };
-    settings.General = {
-      useGrimAdapter = true;
-      disabledGrimWarning = true;
-      showStartupLaunchMessage = false;
-    };
-  };
+  # Flameshot — configured as a home-manager service in home/boston.nix
+  # (services.flameshot is a home-manager option, not a NixOS one).
 
   # XDG portals — the Hyprland portal is added in modules/hyprland.nix.
   xdg.portal.enable = true;

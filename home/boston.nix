@@ -56,8 +56,7 @@
 
     # --- Utilities ---
     peazip               # archive manager
-    # flameshot — configured as a system service (services.flameshot) in
-    # desktop.nix with grim adapter for Wayland, NOT as a bare package.
+    # flameshot — home-manager service below (programs.flameshot), grim adapter.
     fsearch              # instant file search (Everything-like; angrysearch not in nixpkgs)
     collector            # mijorus — file collection tray (also on Flathub)
     easyeffects          # PipeWire EQ + RNNoise mic denoise (> NoiseTorch on PipeWire)
@@ -281,6 +280,18 @@
 
   # Polkit agent (GUI privilege prompts) — ships its own user service.
   services.hyprpolkitagent.enable = true;
+
+  # Flameshot — Wayland/Hyprland needs grim adapter + wlr support, else black
+  # screenshot. enableWlrSupport builds it with the wlroots grabber.
+  services.flameshot = {
+    enable = true;
+    package = pkgs.flameshot.override { enableWlrSupport = true; };
+    settings.General = {
+      useGrimAdapter = true;
+      disabledGrimWarning = true;
+      showStartupLaunchMessage = false;
+    };
+  };
 
   ###########################################################################
   # Hyprland — THE desktop, mouse-first (Plasma removed)
