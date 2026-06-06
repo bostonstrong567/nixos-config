@@ -45,18 +45,12 @@
   services.tailscale = {
     enable = true;
     useRoutingFeatures = "client";
-
-    # PRE-LOGIN to YOUR existing tailnet, no manual browser auth.
-    # Generate a reusable auth key (tied to your account) at:
-    #   https://login.tailscale.com/admin/settings/keys  → "Generate auth key"
-    #   (tick Reusable + Pre-approved; optionally Ephemeral=off so it persists)
-    # Put the key in a file ON THE MACHINE (NOT committed) at /etc/tailscale-authkey
-    # then this auto-joins the tailnet on first boot.
-    authKeyFile = "/etc/tailscale-authkey";
-
-    # Extra flags applied on auto-up. --ssh enables Tailscale SSH (ACL-gated,
-    # no key files needed → simplest way for nebula to reach this box).
-    extraUpFlags = [ "--ssh" ];
+    # NOTE: no authKeyFile / autoconnect. The tailscaled-autoconnect service
+    # was timing out (no key file) and failing the whole rebuild. Instead,
+    # authenticate ONCE manually after boot:
+    #     sudo tailscale up --ssh
+    # That opens a login URL, joins your tailnet, and enables Tailscale SSH.
+    # No file needed, rebuild never blocks on it.
   };
 
   # The auth-key file must exist before tailscaled starts. Two ways to place it:

@@ -267,7 +267,10 @@
     configType = "hyprlang";
     settings = {
       # ---- monitors (auto; tweak refresh per your display) ----
-      monitor = ",preferred,auto,1";
+      # 4K @ 244Hz. "highrr" = highest refresh rate at native res. If a specific
+      # output name is needed, run `hyprctl monitors` and replace "" with it, e.g.
+      # "DP-1,3840x2160@244,auto,1". highres/highrr auto-pick the best mode.
+      monitor = ",highrr,auto,1";
 
       # ---- MOUSE-FIRST window management ----
       bindm = [

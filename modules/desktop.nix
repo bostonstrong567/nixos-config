@@ -14,12 +14,16 @@
   # XWayland glue + driver plumbing (Steam games, X11 apps under Hyprland).
   services.xserver.enable = true;
 
-  # greetd + tuigreet — minimal Wayland greeter. Launches Hyprland directly.
+  # greetd + tuigreet — minimal Wayland greeter.
+  # Launch Hyprland via UWSM (hyprland.nix sets withUWSM = true). Launching the
+  # bare `Hyprland` binary triggers the "started without start-hyprland" warning
+  # and skips proper session/dbus/systemd integration. `uwsm start hyprland`
+  # (or `start-hyprland`) is the correct entrypoint.
   services.greetd = {
     enable = true;
     settings = {
       default_session = {
-        command = "${pkgs.tuigreet}/bin/tuigreet --time --remember --asterisks --cmd Hyprland";
+        command = "${pkgs.tuigreet}/bin/tuigreet --time --remember --asterisks --cmd 'uwsm start hyprland-uwsm.desktop'";
         user = "greeter";
       };
     };
