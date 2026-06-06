@@ -80,6 +80,7 @@ final: prev: {
       buildInputs = with prev; [
         glib gtk3 webkitgtk_4_1 libsoup_3 cairo pango gdk-pixbuf
         openssl glib-networking
+        krb5 e2fsprogs       # libcom_err.so.2 / libkrb5 (gssapi)
         stdenv.cc.cc.lib
       ];
       installPhase = ''
