@@ -106,9 +106,51 @@
   ###########################################################################
   # Firefox
   ###########################################################################
-  programs.firefox.enable = true;
-  # Stylix sets a Firefox profile name "default"; declare it so Stylix's firefox
-  # target applies cleanly (silences the profileNames warning).
+  programs.firefox = {
+    enable = true;
+    profiles.default = {
+      id = 0;
+      settings = {
+        "toolkit.legacyUserProfileCustomizations.stylesheets" = true; # enable userChrome
+        "browser.uidensity" = 1;                  # compact toolbar (Zabooby vibe)
+        "browser.tabs.drawInTitlebar" = true;
+        "svg.context-properties.content.enabled" = true;
+        "browser.newtabpage.activity-stream.feeds.topsites" = true;
+        "browser.compactmode.show" = true;
+      };
+      # Gruvbox userChrome — minimal Zabooby-style chrome in OUR colors (not blue).
+      userChrome = ''
+        :root {
+          --gb-bg: #1d2021; --gb-bg2: #282828; --gb-fg: #ebdbb2;
+          --gb-accent: #fe8019; --gb-dim: #3c3836;
+        }
+        /* toolbar + tabs gruvbox */
+        #navigator-toolbox { background: var(--gb-bg) !important; border: none !important; }
+        #nav-bar, #PersonalToolbar { background: var(--gb-bg) !important; box-shadow: none !important; }
+        .tabbrowser-tab .tab-background { border-radius: 8px !important; }
+        .tabbrowser-tab[selected] .tab-background {
+          background: var(--gb-dim) !important;
+          box-shadow: inset 0 -2px 0 var(--gb-accent) !important;
+        }
+        .tab-label { color: var(--gb-fg) !important; }
+        /* URL bar */
+        #urlbar { background: var(--gb-bg2) !important; border: 1px solid var(--gb-dim) !important; border-radius: 10px !important; }
+        #urlbar[focused] { border-color: var(--gb-accent) !important; }
+        #urlbar-input { color: var(--gb-fg) !important; }
+        /* toolbar buttons */
+        toolbarbutton { color: var(--gb-fg) !important; }
+        /* trim window controls clutter */
+        .titlebar-spacer { display: none !important; }
+      '';
+      userContent = ''
+        /* gruvbox the new-tab + about: pages background */
+        @-moz-document url("about:home"), url("about:newtab"), url("about:blank") {
+          body, html { background: #1d2021 !important; }
+        }
+      '';
+    };
+  };
+  # Stylix firefox target colors the content (silences profileNames warning).
   stylix.targets.firefox.profileNames = [ "default" ];
 
   ###########################################################################
@@ -167,6 +209,51 @@
       .item-text .description { color: alpha(@theme_fg_color, 0.6); font-size: 12px; }
     '';
   };
+
+  ###########################################################################
+  # Vesktop (Discord) — gruvbox QuickCSS. Enables custom CSS + writes a gruvbox
+  # palette that recolors the whole client to match the system.
+  ###########################################################################
+  xdg.configFile."vesktop/settings/quickCss.css".text = ''
+    /* Gruvbox dark-hard for Discord/Vesktop */
+    :root {
+      --background-primary: #1d2021;
+      --background-secondary: #282828;
+      --background-secondary-alt: #32302f;
+      --background-tertiary: #1b1b1b;
+      --background-accent: #3c3836;
+      --background-floating: #1d2021;
+      --channeltextarea-background: #282828;
+      --text-normal: #ebdbb2;
+      --text-muted: #a89984;
+      --header-primary: #fbf1c7;
+      --header-secondary: #d5c4a1;
+      --interactive-normal: #d5c4a1;
+      --interactive-hover: #fe8019;
+      --interactive-active: #fe8019;
+      --brand-experiment: #fe8019;
+      --brand-experiment-560: #d65d0e;
+      --button-background: #fe8019;
+      --link: #83a598;
+      --mention-foreground: #fe8019;
+    }
+    .theme-dark {
+      --background-primary: #1d2021;
+      --background-secondary: #282828;
+      --background-tertiary: #1b1b1b;
+    }
+    /* accent the selected channel + send button gruvbox-orange */
+    [class*="selected"] [class*="link"] { background: alpha(#fe8019, 0.15) !important; }
+  '';
+
+  # Enable QuickCSS in vesktop's settings WITHOUT clobbering the rest (account,
+  # prefs live there too). Flip useQuickCss=true in place via jq, only if needed.
+  home.activation.vesktopQuickCss = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    vf="${config.home.homeDirectory}/.config/vesktop/settings/settings.json"
+    if [ -f "$vf" ]; then
+      run ${pkgs.jq}/bin/jq '.useQuickCss = true' "$vf" > "$vf.tmp" && run mv "$vf.tmp" "$vf"
+    fi
+  '';
 
   ###########################################################################
   # VSCode — declarative port of your customized Windows look
