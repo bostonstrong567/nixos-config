@@ -412,19 +412,24 @@
         disable_splash_rendering = true;
       };
 
-      # ---- autostart: bar, widgets, animated wallpaper, notifications ----
-      exec-once = [
-        "waybar"
-        "awww-daemon"
-        # animated gruvbox wallpaper (swap path to your own video/gif/image):
-        # "mpvpaper -o 'no-audio --loop' '*' ~/Videos/wallpaper.mp4"
-        "dunst"
-        "eww daemon && eww open hud"        # floating glass system-monitor HUD
-        "wl-paste --watch cliphist store"  # clipboard history daemon
-        "nm-applet --indicator"             # network tray icon
-        "blueman-applet"                    # bluetooth tray icon
-      ];
+      # NOTE: autostart (exec-once) is NOT here — the HM Lua generator emits a
+      # broken `hl.exec-once(...)` (hyphen parsed as minus → syntax error,
+      # HM issue #9341). It's done in extraConfig below via the Lua event API.
     };
+
+    # Autostart via Lua event API (correct Lua-mode way; sidesteps the exec-once
+    # hyphen bug). Runs each command when the Hyprland session starts.
+    extraConfig = ''
+      hl.on("hyprland.start", function()
+        hl.exec_cmd("waybar")
+        hl.exec_cmd("awww-daemon")
+        hl.exec_cmd("dunst")
+        hl.exec_cmd("eww daemon && eww open hud")
+        hl.exec_cmd("wl-paste --watch cliphist store")
+        hl.exec_cmd("nm-applet --indicator")
+        hl.exec_cmd("blueman-applet")
+      end)
+    '';
   };
 
   # Waybar — clickable status bar (workspaces, clock, audio, net, tray).
