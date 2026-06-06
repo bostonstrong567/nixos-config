@@ -544,7 +544,57 @@
       };
       cpu.format = " {usage}%";
       memory.format = " {}%";
+      # cava audio-wave bars in the bar (the Sly-Harvey sound-wave look).
+      cava = {
+        framerate = 30;
+        bars = 12;
+        method = "pipewire";
+        source = "auto";
+        bar_delimiter = 0;
+        format-icons = [ "▁" "▂" "▃" "▄" "▅" "▆" "▇" "█" ];
+        actions.on-click-right = "mode";
+      };
     };
+
+    # Modern Sly-Harvey-style waybar — floating gruvbox pills, glow, rounded.
+    style = ''
+      * {
+        font-family: "JetBrainsMono Nerd Font";
+        font-size: 12px;
+        min-height: 0;
+      }
+      window#waybar {
+        background: transparent;
+      }
+      /* floating pill container per module group */
+      .modules-left, .modules-center, .modules-right {
+        background: alpha(#1d2021, 0.85);
+        border-radius: 14px;
+        border: 1px solid alpha(#fe8019, 0.35);
+        margin: 6px 8px;
+        padding: 2px 8px;
+      }
+      #custom-ws1, #custom-ws2, #custom-ws3 {
+        padding: 0 12px; margin: 3px 2px;
+        border-radius: 10px;
+        color: #a89984;
+        background: alpha(#3c3836, 0.0);
+      }
+      #custom-ws1:hover, #custom-ws2:hover, #custom-ws3:hover {
+        background: alpha(#fe8019, 0.18); color: #fe8019;
+      }
+      #clock { color: #fe8019; font-weight: bold; padding: 0 10px; }
+      #cava  { color: #b8bb26; padding: 0 8px; }
+      #pulseaudio { color: #fabd2f; padding: 0 8px; }
+      #network    { color: #83a598; padding: 0 8px; }
+      #cpu        { color: #8ec07c; padding: 0 8px; }
+      #memory     { color: #d3869b; padding: 0 8px; }
+      #tray       { padding: 0 8px; }
+      tooltip {
+        background: #1d2021; border: 1px solid #fe8019; border-radius: 10px;
+      }
+      tooltip label { color: #ebdbb2; }
+    '';
   };
 
   # Stylix themes waybar/wofi/dunst automatically (gruvbox) via its targets.
