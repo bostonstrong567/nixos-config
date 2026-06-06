@@ -297,7 +297,7 @@
     # nixpkgs build = ABI-matched to our Hyprland 0.55, no source flake.
     plugins = [
       pkgs.hyprlandPlugins.hyprbars
-      pkgs.hyprlandPlugins.hyprwinwrap  # pin glava as the desktop background
+      pkgs.hyprlandPlugins.hyprwinwrap  # glava audio-waves as desktop bg
     ];
   };
 

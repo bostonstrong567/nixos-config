@@ -4,31 +4,30 @@ final: prev: {
   # (hyprbars fork removed — using stock nixpkgs hyprbars. Grabbing the bar
   #  drags from the window middle, which is the behavior the user wants back.)
 
-  # hyprwinwrap — pin any window (e.g. glava) as the desktop background.
-  # Not in nixpkgs 26.05, so build it with mkHyprlandPlugin (ABI-matched to our
-  # Hyprland) from the official hyprland-plugins source.
+  # hyprwinwrap — pin a window (glava audio-waves) as the desktop background.
+  # Upstream DROPPED it from hyprland-plugins (commit 3aa21f2). We build the last
+  # commit that still had it (22de29b, "winwrap: fix for 0.54.3") against our
+  # Hyprland 0.55.2 via mkHyprlandPlugin. Close enough ABI; rebuilt if it breaks.
   hyprlandPlugins = prev.hyprlandPlugins // {
     hyprwinwrap =
       let
         pluginSrc = prev.fetchFromGitHub {
           owner = "hyprwm";
           repo = "hyprland-plugins";
-          tag = "v0.55.0";
-          hash = "sha256-WMUJ7tyw/9QbKUyRzLndEQSqX05fQLmFlRdMAmPD7tI=";
+          rev = "22de29bc1cf4126202df52691d0bc9a065089cba";
+          hash = "sha256-hwtKSJcroZ++QAb9rI9L6Sp3XJlDIyWZN7UOVMiN8jY=";
         };
       in
       prev.hyprlandPlugins.mkHyprlandPlugin {
         pluginName = "hyprwinwrap";
-        version = "0.55.0";
-        # Mirror nixpkgs exactly: point src straight at the subdir, add cmake.
+        version = "0.54.3-unstable-2026";
         src = "${pluginSrc}/hyprwinwrap";
         nativeBuildInputs = [ prev.cmake ];
-        # src is a plain directory, not an archive — copy it in ourselves.
         unpackPhase = ''
           runHook preUnpack
-          cp -r ${pluginSrc}/hyprwinwrap ./source
-          chmod -R u+w ./source
-          cd ./source
+          cp -r ${pluginSrc}/hyprwinwrap ./src
+          chmod -R u+w ./src
+          cd ./src
           runHook postUnpack
         '';
         meta.description = "Pin a window as the desktop background";
