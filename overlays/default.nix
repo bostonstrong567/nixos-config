@@ -20,11 +20,9 @@ final: prev: {
       prev.hyprlandPlugins.mkHyprlandPlugin {
         pluginName = "hyprwinwrap";
         version = "0.55.0";
-        src = pluginSrc;
-        # fetchFromGitHub unpacks to a dir named "source"; the plugin lives in
-        # source/hyprwinwrap. setSourceRoot picks it explicitly (sourceRoot alone
-        # was relative-resolving wrong).
-        setSourceRoot = "sourceRoot=$(echo */hyprwinwrap)";
+        # Mirror nixpkgs exactly: point src straight at the subdir, add cmake.
+        src = "${pluginSrc}/hyprwinwrap";
+        nativeBuildInputs = [ prev.cmake ];
         meta.description = "Pin a window as the desktop background";
       };
   };
