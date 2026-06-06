@@ -96,9 +96,8 @@
 
           # Stylix — system-wide unified theming
           stylix.nixosModules.stylix
-
-          # Walker launcher backend: elephant service (provides app/calc/etc data)
-          elephant.nixosModules.default
+          # (elephant service module already exists in nixpkgs 26.05 as
+          #  services.elephant — no flake module needed, just enable it.)
 
           # Overlays: claude-code (always-fresh) + our custom pkgs (cliamp, opcode)
           { nixpkgs.overlays = [

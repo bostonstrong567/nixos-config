@@ -19,6 +19,10 @@
     xwayland.enable = true; # run X11 apps (Steam games etc.) under Hyprland
   };
 
+  # elephant — data backend for the walker launcher (apps/calc/files providers).
+  # nixpkgs 26.05 ships services.elephant; walker's HM module starts the client.
+  services.elephant.enable = true;
+
   # NVIDIA + Hyprland environment (4080, Wayland-safe).
   environment.sessionVariables = {
     NIXOS_OZONE_WL = "1";           # Electron/Chromium apps go Wayland
