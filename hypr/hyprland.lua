@@ -14,9 +14,11 @@ hl.config({
     general = {
         -- No "container" look: no gaps between windows, no border boxes.
         -- Windows sit flush/seamless; the hyprbars titlebar is the only chrome.
-        border_size = 0,
-        gaps_in = 0,
-        gaps_out = 0,
+        -- Small gaps so you can grab the edge between windows to resize.
+        -- (gaps_in=0 left no grab space → couldn't resize tiled windows.)
+        border_size = 1,
+        gaps_in = 4,
+        gaps_out = 6,
         layout = "dwindle",
         resize_on_border = true,
         extend_border_grab_area = 15,

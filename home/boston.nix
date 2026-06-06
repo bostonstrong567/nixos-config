@@ -200,10 +200,9 @@
       window-padding-x = 12;
       window-padding-y = 12;
       cursor-style = "block";
+      cursor-style-blink = false;   # no blinking cursor
       mouse-hide-while-typing = true;
-      # Animated cursor shader (file installed below). 'always' = keep animating.
-      custom-shader = "${config.home.homeDirectory}/.config/ghostty/shaders/cursor_smear.glsl";
-      custom-shader-animation = "always";
+      # (Removed the animated cursor shader — it drew the blinking blue trail.)
       # Windows/PowerShell-style clipboard: Ctrl+C copies, Ctrl+V pastes.
       # (When text is selected, Ctrl+C copies; with nothing selected it still
       #  sends SIGINT to cancel a command — best of both, like Windows Terminal.)
@@ -217,21 +216,6 @@
     };
   };
 
-  # Pull sahaj-b/ghostty-cursor-shaders into place. Swap the file for any shader
-  # from the repo (cursor_smear / cursor_blaze / ripple, etc.).
-  # We vendor ONE shader inline so first boot has a working animated cursor with
-  # no network fetch. Replace/extend by dropping more .glsl files in that dir.
-  xdg.configFile."ghostty/shaders/cursor_smear.glsl".text = ''
-    // Minimal animated cursor trail. Replace with a full shader from
-    // https://github.com/sahaj-b/ghostty-cursor-shaders for fancier effects.
-    void mainImage(out vec4 fragColor, in vec2 fragCoord) {
-        vec2 uv = fragCoord / iResolution.xy;
-        vec4 base = texture(iChannel0, uv);
-        float d = distance(iCurrentCursor.xy / iResolution.xy, uv);
-        float glow = smoothstep(0.05, 0.0, d) * (0.5 + 0.5 * sin(iTime * 6.0));
-        fragColor = base + vec4(0.20, 0.60, 1.0, 0.0) * glow;
-    }
-  '';
 
   ###########################################################################
   # Shell — zsh + zoxide (smart cd) + fastfetch greeting
