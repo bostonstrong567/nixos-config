@@ -118,7 +118,6 @@
     git vim wget curl
     htop btop
     pciutils usbutils
-    nvtopPackages.nvidia # GPU monitor
     ntfs3g                # read Windows NTFS drives if you want to mount them
   ];
 

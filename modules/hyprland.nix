@@ -22,8 +22,10 @@
   # NVIDIA + Hyprland environment (4080, Wayland-safe).
   environment.sessionVariables = {
     NIXOS_OZONE_WL = "1";           # Electron/Chromium apps go Wayland
-    # Explicit-sync is default in current drivers; these help edge cases:
-    __GL_GSYNC_ALLOWED = "1";
+    __GL_GSYNC_ALLOWED = "1";       # explicit-sync edge cases
+    # Prefer server-side decorations so hyprbars titlebars show instead of each
+    # app drawing its own. GTK/libadwaita apps honor this; Chromium/Electron too.
+    GTK_CSD = "0";
     # If you ever see cursor flicker on Hyprland+NVIDIA, uncomment:
     # WLR_NO_HARDWARE_CURSORS = "1";
   };
@@ -33,11 +35,9 @@
     waybar          # status bar (CSS-styled, clickable)
     eww             # widgets (glass HUD tiles)
     wofi            # mouse-driven app launcher
-    rofi            # alt launcher (rofi-wayland merged into rofi)
     dunst           # notifications
     awww            # animated wallpaper daemon (swww renamed → awww)
     mpvpaper        # video wallpaper (galaxy/matrix loop behind desktop)
-    hyprpaper       # simple static wallpaper fallback
     hyprlock        # lockscreen (blurred, themed)
     hypridle        # idle daemon
     hyprpicker      # color picker (mouse eyedropper)
@@ -51,8 +51,8 @@
     pavucontrol     # click volume control
     networkmanagerapplet # click wifi menu
     wlogout         # mouse-driven power menu (logout/reboot/shutdown buttons)
-    nwg-look        # GTK theme settings GUI (mouse)
-    nwg-displays    # monitor arrangement GUI (mouse drag displays)
+    # removed: rofi (wofi covers it), hyprpaper (awww covers wallpaper),
+    # nwg-look + nwg-displays (Stylix themes; Hyprland handles displays)
   ];
 
   # XDG portal for screenshare/file dialogs under Hyprland.

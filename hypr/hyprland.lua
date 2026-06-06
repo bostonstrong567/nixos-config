@@ -73,29 +73,53 @@ hl.animation({ leaf = "border",     enabled = true, speed = 10, bezier = "defaul
 hl.monitor({ output = "DP-1", mode = "2560x1440@239.96", position = "0x0", scale = 1 })
 
 -- ---------------------------------------------------------------------------
--- Keybinds (mouse-first)
+-- Keybinds — WOOTING 60HE friendly (no F-keys, no Print, no arrow/nav cluster).
+-- Everything reachable on a 60% board: letters, numbers, Enter, Space.
 -- ---------------------------------------------------------------------------
-hl.bind(mainMod .. " + Return", hl.dsp.exec_cmd("ghostty"))
-hl.bind(mainMod .. " + Q",      hl.dsp.window.close())
-hl.bind(mainMod .. " + E",      hl.dsp.exec_cmd("dolphin"))
-hl.bind(mainMod .. " + R",      hl.dsp.exec_cmd("wofi --show drun"))
-hl.bind(mainMod .. " + F",      hl.dsp.window.fullscreen())
-hl.bind(mainMod .. " + Space",  hl.dsp.window.float())
-hl.bind(mainMod .. " + P",      hl.dsp.window.pseudo())
-hl.bind(mainMod .. " + V",      hl.dsp.exec_cmd("cliphist list | wofi --dmenu | cliphist decode | wl-copy"))
-hl.bind(mainMod .. " + L",      hl.dsp.exec_cmd("hyprlock"))
-hl.bind(mainMod .. " + X",      hl.dsp.exec_cmd("wlogout"))
+-- Apps / launchers
+hl.bind(mainMod .. " + Return", hl.dsp.exec_cmd("ghostty"))                       -- terminal
+hl.bind(mainMod .. " + R",      hl.dsp.exec_cmd("wofi --show drun"))              -- app launcher
+hl.bind(mainMod .. " + E",      hl.dsp.exec_cmd("dolphin"))                       -- file manager
+hl.bind(mainMod .. " + B",      hl.dsp.exec_cmd("firefox"))                       -- browser
+hl.bind(mainMod .. " + C",      hl.dsp.exec_cmd("code"))                          -- vscode
+
+-- Window control
+hl.bind(mainMod .. " + Q",      hl.dsp.window.close())                            -- close window
+hl.bind(mainMod .. " + F",      hl.dsp.window.fullscreen())                       -- fullscreen
+hl.bind(mainMod .. " + T",      hl.dsp.window.float())                            -- toggle float (T=Tile/floaT)
+hl.bind(mainMod .. " + P",      hl.dsp.window.pseudo())                           -- pseudotile
+
+-- Screenshots (NO Print key on 60% → use SUPER+S region, SUPER+SHIFT+S full)
+hl.bind(mainMod .. " + S",          hl.dsp.exec_cmd("grim -g \"$(slurp)\" - | swappy -f -"))   -- region → annotate
+hl.bind(mainMod .. " + SHIFT + S",  hl.dsp.exec_cmd("grim - | swappy -f -"))                   -- whole screen
+
+-- Utilities
+hl.bind(mainMod .. " + V",          hl.dsp.exec_cmd("cliphist list | wofi --dmenu | cliphist decode | wl-copy")) -- clipboard history
+hl.bind(mainMod .. " + Escape",     hl.dsp.exec_cmd("hyprlock"))                  -- lock screen
+hl.bind(mainMod .. " + SHIFT + Escape", hl.dsp.exec_cmd("wlogout"))              -- power menu
+
+-- Workspaces 1-4 by number
 hl.bind(mainMod .. " + 1",      hl.dsp.focus({ workspace = 1 }))
 hl.bind(mainMod .. " + 2",      hl.dsp.focus({ workspace = 2 }))
 hl.bind(mainMod .. " + 3",      hl.dsp.focus({ workspace = 3 }))
 hl.bind(mainMod .. " + 4",      hl.dsp.focus({ workspace = 4 }))
-hl.bind("Print",                hl.dsp.exec_cmd("grim -g \"$(slurp)\" - | swappy -f -"))
+-- Move active window to workspace N (SHIFT)
+hl.bind(mainMod .. " + SHIFT + 1", hl.dsp.window.move({ workspace = 1 }))
+hl.bind(mainMod .. " + SHIFT + 2", hl.dsp.window.move({ workspace = 2 }))
+hl.bind(mainMod .. " + SHIFT + 3", hl.dsp.window.move({ workspace = 3 }))
+hl.bind(mainMod .. " + SHIFT + 4", hl.dsp.window.move({ workspace = 4 }))
 
--- scroll wheel over desktop = switch workspace
+-- Focus move WITHOUT arrows: SUPER + H/J/K/L (vim-style, all on 60%)
+hl.bind(mainMod .. " + H", hl.dsp.focus({ direction = "left" }))
+hl.bind(mainMod .. " + J", hl.dsp.focus({ direction = "down" }))
+hl.bind(mainMod .. " + K", hl.dsp.focus({ direction = "up" }))
+hl.bind(mainMod .. " + L", hl.dsp.focus({ direction = "right" }))
+
+-- scroll wheel over desktop = switch workspace (pure mouse)
 hl.bind(mainMod .. " + mouse_down", hl.dsp.focus({ workspace = "e+1" }))
 hl.bind(mainMod .. " + mouse_up",   hl.dsp.focus({ workspace = "e-1" }))
 
--- mouse drag move/resize
+-- mouse drag move/resize (also: grab hyprbars titlebar to move, no key)
 hl.bind(mainMod .. " + mouse:272", hl.dsp.window.drag(),   { mouse = true })
 hl.bind(mainMod .. " + mouse:273", hl.dsp.window.resize(), { mouse = true })
 
