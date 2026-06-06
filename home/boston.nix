@@ -362,23 +362,42 @@
   xdg.configFile."eww/eww.yuck".text = ''
     ;; ---- data pollers ----
     (defpoll TIME   :interval "5s"  "TZ='America/New_York' date '+%I:%M %p'")
-    (defpoll DATE   :interval "60s" "TZ='America/New_York' date '+%a %d %b'")
+    (defpoll DATE   :interval "60s" "TZ='America/New_York' date '+%a, %b %d'")
+    (defpoll GREET  :interval "300s" "h=$(date +%H); if [ $h -lt 12 ]; then echo 'Good morning'; elif [ $h -lt 18 ]; then echo 'Good afternoon'; else echo 'Good evening'; fi")
     (defpoll CPU    :interval "2s"  "LC_ALL=C top -bn1 | awk '/Cpu/{printf \"%d\", 100-$8}'")
     (defpoll MEM    :interval "3s"  "free | awk '/Mem/{printf \"%d\", $3/$2*100}'")
     (defpoll DISK   :interval "30s" "df / | awk 'END{print $5}' | tr -d '%'")
+    (defpoll GPU    :interval "3s"  "nvidia-smi --query-gpu=utilization.gpu --format=csv,noheader,nounits 2>/dev/null | tr -d ' ' || echo 0")
+    (defpoll TEMP   :interval "5s"  "nvidia-smi --query-gpu=temperature.gpu --format=csv,noheader,nounits 2>/dev/null | tr -d ' ' || echo 0")
+    (defpoll UPTIME :interval "60s" "uptime -p | sed 's/up //'")
+    (defpoll NOWPLAY :interval "2s" "playerctl metadata --format '{{artist}} - {{title}}' 2>/dev/null | cut -c1-32 || echo 'nothing playing'")
 
     ;; ---- the HUD window ----
     (defwidget hud []
-      (box :class "hud" :orientation "v" :space-evenly false :spacing 8
+      (box :class "hud" :orientation "v" :space-evenly false :spacing 10
+        (label :class "greet" :text GREET)
         (label :class "clock" :text TIME)
         (label :class "date"  :text DATE)
-        (box :class "stats" :orientation "v" :space-evenly false :spacing 6
-          (metric :name "CPU" :val CPU)
-          (metric :name "RAM" :val MEM)
-          (metric :name "DISK" :val DISK))))
+        (box :class "sep")
+        (box :class "stats" :orientation "v" :space-evenly false :spacing 8
+          (metric :name "CPU"  :val CPU)
+          (metric :name "RAM"  :val MEM)
+          (metric :name "GPU"  :val GPU)
+          (metric :name "DISK" :val DISK))
+        (box :class "sep")
+        (box :orientation "h" :space-evenly false :spacing 8
+          (label :class "ico" :text "")
+          (label :class "info" :text "''${TEMP}°C"))
+        (box :orientation "h" :space-evenly false :spacing 8
+          (label :class "ico" :text "")
+          (label :class "info" :text UPTIME))
+        (box :class "sep")
+        (box :orientation "h" :space-evenly false :spacing 8
+          (label :class "ico" :text "")
+          (label :class "media" :text NOWPLAY))))
 
     (defwidget metric [name val]
-      (box :class "metric" :orientation "h" :space-evenly false :spacing 8
+      (box :class "metric" :orientation "h" :space-evenly false :spacing 10
         (label :class "mname" :text name)
         (progress :class "mbar" :value val :orientation "h")
         (label :class "mval" :text "''${val}%")))
@@ -386,30 +405,33 @@
     (defwindow hud
       :monitor 0
       :geometry (geometry :x "18px" :y "52px" :anchor "top right"
-                          :width "230px" :height "200px")
-      :stacking "bg" :exclusive false :focusable false
+                          :width "300px" :height "440px")
+      :stacking "fg" :exclusive false :focusable false
       (hud))
   '';
 
   xdg.configFile."eww/eww.scss".text = ''
     * { all: unset; font-family: "JetBrainsMono Nerd Font"; }
     .hud {
-      background-color: rgba(29,32,33,0.78);
+      background-color: rgba(29,32,33,0.86);
       border: 2px solid #fe8019;
-      border-radius: 16px;
-      padding: 14px 16px;
+      border-radius: 18px;
+      padding: 18px 20px;
     }
-    .clock { color: #fe8019; font-size: 30px; font-weight: bold; }
-    .date  { color: #ebdbb2; font-size: 13px; margin-bottom: 6px; }
-    .metric { margin: 2px 0; }
-    .mname { color: #fabd2f; font-size: 11px; min-width: 38px; }
-    .mval  { color: #ebdbb2; font-size: 11px; min-width: 36px; }
+    .greet { color: #fabd2f; font-size: 14px; }
+    .clock { color: #fe8019; font-size: 38px; font-weight: bold; }
+    .date  { color: #ebdbb2; font-size: 14px; }
+    .sep   { background-color: rgba(254,128,25,0.35); min-height: 2px; margin: 6px 0; }
+    .metric { margin: 1px 0; }
+    .mname { color: #fabd2f; font-size: 12px; min-width: 44px; }
+    .mval  { color: #ebdbb2; font-size: 12px; min-width: 40px; }
     .mbar trough {
-      background-color: rgba(60,56,54,0.8);
-      border-radius: 8px; min-height: 8px; min-width: 90px;
+      background-color: rgba(60,56,54,0.9);
+      border-radius: 8px; min-height: 10px; min-width: 120px;
     }
-    .mbar progress {
-      background-color: #fe8019; border-radius: 8px; min-height: 8px;
-    }
+    .mbar progress { background-color: #fe8019; border-radius: 8px; min-height: 10px; }
+    .ico   { color: #fe8019; font-size: 15px; min-width: 22px; }
+    .info  { color: #ebdbb2; font-size: 13px; }
+    .media { color: #b8bb26; font-size: 12px; }
   '';
 }
