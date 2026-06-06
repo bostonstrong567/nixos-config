@@ -90,6 +90,63 @@
   stylix.targets.firefox.profileNames = [ "default" ];
 
   ###########################################################################
+  # Walker — modern Wayland app launcher (replaces wofi). Gruvbox themed.
+  # Runs as a service (elephant backend auto-managed) for instant open.
+  # SUPER+R launches it (hypr/hyprland.lua).
+  ###########################################################################
+  programs.walker = {
+    enable = true;
+    runAsService = true;
+    config = {
+      close_when_open = true;
+      click_to_close = true;
+      single_click_activation = true;
+      theme = "gruvbox";
+    };
+    themes.gruvbox.style = ''
+      /* Gruvbox dark-hard palette */
+      @define-color window_bg_color #1d2021;
+      @define-color accent_bg_color #fe8019;
+      @define-color theme_fg_color  #ebdbb2;
+      @define-color error_bg_color  #fb4934;
+      @define-color error_fg_color  #1d2021;
+
+      * { all: unset; font-family: "JetBrainsMono Nerd Font"; font-size: 14px; }
+
+      .box-wrapper {
+        background: alpha(@window_bg_color, 0.92);
+        padding: 18px;
+        border-radius: 18px;
+        border: 2px solid @accent_bg_color;
+        box-shadow: 0 18px 50px rgba(0,0,0,0.45);
+      }
+      .search-container {
+        background: alpha(#3c3836, 0.6);
+        border-radius: 12px;
+        padding: 10px 14px;
+        margin-bottom: 12px;
+        border: 1px solid alpha(@accent_bg_color, 0.5);
+      }
+      .input { color: @theme_fg_color; font-size: 16px; }
+      .input placeholder { color: alpha(@theme_fg_color, 0.45); }
+      scrollbar { opacity: 0; }
+      .normal-icons { -gtk-icon-size: 20px; }
+      .large-icons  { -gtk-icon-size: 36px; }
+      child {
+        padding: 8px 12px;
+        border-radius: 10px;
+        color: @theme_fg_color;
+      }
+      child:selected, child:hover {
+        background: alpha(@accent_bg_color, 0.22);
+        color: #fe8019;
+      }
+      .item-text .title { color: @theme_fg_color; font-weight: bold; }
+      .item-text .description { color: alpha(@theme_fg_color, 0.6); font-size: 12px; }
+    '';
+  };
+
+  ###########################################################################
   # VSCode — declarative port of your customized Windows look
   # (Dracula Soft + Material Icons + FiraCode + minimal chrome).
   ###########################################################################

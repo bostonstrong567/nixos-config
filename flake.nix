@@ -53,9 +53,18 @@
       url = "github:nix-community/nix-vscode-extensions";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    # Walker — modern Wayland app launcher (+ its elephant backend). Official
+    # flake handles the elephant service + providers correctly (nixpkgs split is
+    # immature). Replaces wofi.
+    elephant.url = "github:abenz1267/elephant";
+    walker = {
+      url = "github:abenz1267/walker";
+      inputs.elephant.follows = "elephant";
+    };
   };
 
-  outputs = { self, nixpkgs, home-manager, claude-code, spicetify-nix, stylix, nix-alien, disko, ... }@inputs:
+  outputs = { self, nixpkgs, home-manager, claude-code, spicetify-nix, stylix, nix-alien, disko, walker, elephant, ... }@inputs:
     let
       system = "x86_64-linux";
     in {
@@ -88,6 +97,9 @@
           # Stylix — system-wide unified theming
           stylix.nixosModules.stylix
 
+          # Walker launcher backend: elephant service (provides app/calc/etc data)
+          elephant.nixosModules.default
+
           # Overlays: claude-code (always-fresh) + our custom pkgs (cliamp, opcode)
           { nixpkgs.overlays = [
               claude-code.overlays.default
@@ -105,6 +117,7 @@
             home-manager.extraSpecialArgs = { inherit inputs; };
             home-manager.sharedModules = [
               spicetify-nix.homeManagerModules.default
+              walker.homeManagerModules.default
             ];
             home-manager.users.boston = import ./home/boston.nix;
           }

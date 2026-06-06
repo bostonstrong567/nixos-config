@@ -92,7 +92,7 @@ hl.monitor({ output = "DP-1", mode = "2560x1440@239.96", position = "0x0", scale
 -- ---------------------------------------------------------------------------
 -- Apps / launchers
 hl.bind(mainMod .. " + Return", hl.dsp.exec_cmd("ghostty"))                       -- terminal
-hl.bind(mainMod .. " + R",      hl.dsp.exec_cmd("wofi --show drun"))              -- app launcher
+hl.bind(mainMod .. " + R",      hl.dsp.exec_cmd("walker"))                        -- app launcher (walker)
 hl.bind(mainMod .. " + E",      hl.dsp.exec_cmd("dolphin"))                       -- file manager
 hl.bind(mainMod .. " + B",      hl.dsp.exec_cmd("firefox"))                       -- browser
 hl.bind(mainMod .. " + C",      hl.dsp.exec_cmd("code"))                          -- vscode
@@ -114,7 +114,7 @@ hl.bind(mainMod .. " + SHIFT + S",  hl.dsp.exec_cmd("mkdir -p ~/Pictures/Screens
 hl.bind(mainMod .. " + CTRL + S",   hl.dsp.exec_cmd("grim -g \"$(slurp)\" - | swappy -f -"))  -- region → annotate editor
 
 -- Utilities
-hl.bind(mainMod .. " + V",          hl.dsp.exec_cmd("cliphist list | wofi --dmenu | cliphist decode | wl-copy")) -- clipboard history
+hl.bind(mainMod .. " + V",          hl.dsp.exec_cmd("cliphist list | walker --dmenu | cliphist decode | wl-copy")) -- clipboard history (walker dmenu)
 hl.bind(mainMod .. " + Escape",     hl.dsp.exec_cmd("hyprlock"))                  -- lock screen
 hl.bind(mainMod .. " + SHIFT + Escape", hl.dsp.exec_cmd("wlogout"))              -- power menu
 

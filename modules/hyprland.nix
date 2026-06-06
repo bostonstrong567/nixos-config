@@ -33,7 +33,7 @@
   # Showpiece toolset (system-wide so the session always has them).
   environment.systemPackages = with pkgs; [
     waybar          # status bar (CSS-styled, clickable)
-    wofi            # mouse-driven app launcher
+    # wofi removed — replaced by walker (programs.walker in home/boston.nix)
     dunst           # notifications
     awww            # animated wallpaper daemon (swww renamed → awww)
     mpvpaper        # video wallpaper (galaxy/matrix loop behind desktop)
