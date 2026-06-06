@@ -311,11 +311,9 @@
         ", XF86MonBrightnessDown, exec, brightnessctl s 5%-"
       ];
 
-      # Touchpad/mouse gestures: 3-finger swipe to change workspace (if touchpad).
-      gestures = {
-        workspace_swipe = true;
-        workspace_swipe_fingers = 3;
-      };
+      # (Gestures removed — Hyprland 0.51 reworked them into a new `gesture =`
+      #  syntax, and this is a desktop with no touchpad anyway. Mouse scroll-wheel
+      #  workspace switching is bound in `bind` above.)
 
       # ---- THE SHOWPIECE LOOK ----
       general = {
@@ -368,7 +366,8 @@
       };
 
       dwindle = {
-        pseudotile = true;
+        # pseudotile removed — no longer a dwindle config option in Hyprland 0.55
+        # (it's a runtime dispatcher: bind SUPER,P,pseudo if you want it).
         preserve_split = true;
       };
 
