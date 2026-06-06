@@ -169,10 +169,6 @@ hl.config({
             bar_precedence_over_border = true,
             bar_padding = 12,
         },
-        hyprwinwrap = {
-            -- Window class to pin as the desktop background (glava's class).
-            class = "GLava",
-        },
     },
 })
 
@@ -195,10 +191,9 @@ hl.on("hyprland.start", function()
     hl.exec_cmd("wl-paste --watch cliphist store")
     hl.exec_cmd("nm-applet --indicator")
     hl.exec_cmd("blueman-applet")
-    -- Wallpaper: start daemon, then set the gruvbox wallpaper with a fade.
+    -- Wallpaper (static gruvbox image, safe + Wayland-native via awww).
     hl.exec_cmd("awww-daemon & sleep 1.5; awww img ~/.config/wallpaper.png --transition-type grow --transition-fps 60")
-    -- GLava audio waves AS the desktop background via hyprwinwrap.
-    -- glava is an X11/GLX app → needs DISPLAY=:0 (XWayland) or it core-dumps.
-    -- hyprwinwrap (class=GLava) then pins glava's window onto the bg layer.
-    hl.exec_cmd("sleep 2; [ -d ~/.config/glava ] || glava --copy-config; DISPLAY=:0 glava &")
+    -- (glava-as-background removed — the hyprwinwrap plugin crashed Hyprland at
+    --  boot. Audio waves can run as a normal window via cava in a terminal, or
+    --  we add mpvpaper video wallpaper later — neither risks the session.)
 end)

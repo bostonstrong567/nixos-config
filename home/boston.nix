@@ -297,7 +297,9 @@
     # nixpkgs build = ABI-matched to our Hyprland 0.55, no source flake.
     plugins = [
       pkgs.hyprlandPlugins.hyprbars
-      pkgs.hyprlandPlugins.hyprwinwrap  # glava audio-waves as desktop bg
+      # hyprwinwrap REMOVED — the 0.54.3 plugin crashed Hyprland at session start
+      # on 0.55.2 (loaded fine live, but autoload-at-boot = ABI crash). Using a
+      # safer bg method below instead (mpvpaper video wallpaper).
     ];
   };
 
