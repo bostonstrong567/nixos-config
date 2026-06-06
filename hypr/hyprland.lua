@@ -157,11 +157,8 @@ hl.config({
     },
 })
 
--- Window buttons (right-aligned, added right-to-left): close, fullscreen, float.
--- Plain text icons (nerd-font glyphs were rendering as empty boxes).
-hl.plugin.hyprbars.add_button({ bg_color = "rgb(fb4934)", fg_color = "rgb(1d2021)", size = 12, icon = "x", action = "hyprctl dispatch killactive" })       -- red close
-hl.plugin.hyprbars.add_button({ bg_color = "rgb(fabd2f)", fg_color = "rgb(1d2021)", size = 12, icon = "+", action = "hyprctl dispatch fullscreen 1" })       -- yellow fullscreen
-hl.plugin.hyprbars.add_button({ bg_color = "rgb(b8bb26)", fg_color = "rgb(1d2021)", size = 12, icon = "-", action = "hyprctl dispatch togglefloating" })      -- green float
+-- No buttons — just a clean draggable bar. (Window control is on keybinds:
+-- SUPER+Q close, SUPER+F fullscreen, SUPER+T float.)
 
 -- Hide OUR titlebar on apps that draw their OWN (avoids the double-bar look).
 -- These use client-side decorations; let them keep theirs.
