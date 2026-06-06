@@ -252,61 +252,12 @@
           display: none !important;
         }
       '';
+      # Only the new-tab background. about:preferences/addons are left to
+      # Firefox's NATIVE dark theme (forced via ui.systemUsesDarkTheme pref) —
+      # custom CSS there broke the layout (skinny/misaligned). Native = clean.
       userContent = ''
-        :root {
-          --gb-bg: #1d2021; --gb-bg2: #282828; --gb-fg: #ebdbb2;
-          --gb-accent: #fe8019; --gb-dim: #3c3836; --gb-yellow: #fabd2f;
-        }
-        /* gruvbox the new-tab + about: pages background */
         @-moz-document url("about:home"), url("about:newtab"), url("about:blank") {
           body, html { background: #1d2021 !important; }
-        }
-
-        /* ---- about:addons (Extensions) — gruvbox + rounded cards + search ---- */
-        @-moz-document url-prefix("about:addons") {
-          :root, body { background: var(--gb-bg) !important; color: var(--gb-fg) !important; }
-          #sidebar, .main-search { background: var(--gb-bg2) !important; }
-          /* rounded search box at the top */
-          search-textbox, .main-search input {
-            background: var(--gb-bg2) !important;
-            border: 1px solid var(--gb-dim) !important;
-            border-radius: 12px !important;
-            color: var(--gb-fg) !important;
-          }
-          /* extension cards: rounded, gruvbox, orange hover */
-          addon-card {
-            background: var(--gb-bg2) !important;
-            border: 1px solid var(--gb-dim) !important;
-            border-radius: 14px !important;
-            margin: 8px 0 !important;
-          }
-          addon-card:hover { border-color: var(--gb-accent) !important; }
-          .addon-name, .addon-description { color: var(--gb-fg) !important; }
-          /* debloat: hide recommendation/discover spam */
-          .discopane-notice, recommended-addon-card, taar-notice,
-          .discopane-intro, [config*="discovery"] { display: none !important; }
-        }
-
-        /* ---- about:preferences (Settings) — gruvbox + debloat ---- */
-        @-moz-document url-prefix("about:preferences") {
-          :root, body { background: var(--gb-bg) !important; color: var(--gb-fg) !important; }
-          #categories { background: var(--gb-bg2) !important; }
-          .category[selected], .category:hover {
-            background: rgba(254,128,25,0.15) !important;
-            border-radius: 10px !important;
-          }
-          /* rounded search */
-          #searchInput {
-            background: var(--gb-bg2) !important;
-            border: 1px solid var(--gb-dim) !important;
-            border-radius: 12px !important;
-            color: var(--gb-fg) !important;
-          }
-          /* debloat: hide Mozilla account ads, Pocket, sponsored, telemetry promos */
-          #firefoxAccountCategory, #category-sync,
-          [data-category="paneSync"], #pocketLearnMore,
-          #dataCollectionGroup .sponsored, .sponsoredStories,
-          #showSponsoredCheckbox, #showRecommendations { display: none !important; }
         }
       '';
     };
@@ -680,11 +631,13 @@
       modules-right = [ "pulseaudio" "network" "cpu" "memory" "tray" ];
       # Sound-wave spectrum in the bar (Sly-Harvey look), gruvbox via stylix.
       cava = {
-        framerate = 60;
-        bars = 16;
-        sensitivity = 80;      # calmer (was 130 = too jumpy)
-        lower_cutoff_freq = 30;
-        higher_cutoff_freq = 18000;
+        framerate = 30;            # calmer refresh (was 60)
+        bars = 12;
+        # waybar's cava ignores `sensitivity`; jumpiness is controlled by these:
+        noise_reduction = 0.77;    # higher = smoother/less twitchy (0..1)
+        autosens = 1;              # auto-tame peaks so it doesn't max out
+        lower_cutoff_freq = 50;
+        higher_cutoff_freq = 10000;
         method = "pulse";
         bar_delimiter = 0;
         format-icons = [ "▁" "▂" "▃" "▄" "▅" "▆" "▇" "█" ];
