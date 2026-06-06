@@ -289,7 +289,11 @@
     # Hyprland 0.55 + HM stateVersion 26.05 defaults to a Lua config backend whose
     # translator mis-handles values like `e-1`, `5%-`, `mouse:272` (syntax errors).
     # Pin the stable native hyprlang (conf) backend — our settings translate cleanly.
-    configType = "lua";
+    # NOTE: configType "lua" is BROKEN in home-manager (issue #9341, closed
+    # not-planned): its settings→Lua translator emits non-existent API calls
+    # like hl.animations()/hl.exec-once() instead of the real hl.config(...).
+    # hyprlang works flawlessly + identical result. Revisit Lua if HM fixes it.
+    configType = "hyprlang";
     settings = {
       # ---- monitors (auto; tweak refresh per your display) ----
       # Samsung LC32G7xT (Odyssey G7) on DP-1: native 2560x1440, max 239.96Hz.
@@ -412,24 +416,19 @@
         disable_splash_rendering = true;
       };
 
-      # NOTE: autostart (exec-once) is NOT here — the HM Lua generator emits a
-      # broken `hl.exec-once(...)` (hyphen parsed as minus → syntax error,
-      # HM issue #9341). It's done in extraConfig below via the Lua event API.
+      # ---- autostart: bar, widgets, animated wallpaper, notifications ----
+      exec-once = [
+        "waybar"
+        "awww-daemon"
+        # animated gruvbox wallpaper (swap path to your own video/gif/image):
+        # "mpvpaper -o 'no-audio --loop' '*' ~/Videos/wallpaper.mp4"
+        "dunst"
+        "eww daemon && eww open hud"        # floating glass system-monitor HUD
+        "wl-paste --watch cliphist store"  # clipboard history daemon
+        "nm-applet --indicator"             # network tray icon
+        "blueman-applet"                    # bluetooth tray icon
+      ];
     };
-
-    # Autostart via Lua event API (correct Lua-mode way; sidesteps the exec-once
-    # hyphen bug). Runs each command when the Hyprland session starts.
-    extraConfig = ''
-      hl.on("hyprland.start", function()
-        hl.exec_cmd("waybar")
-        hl.exec_cmd("awww-daemon")
-        hl.exec_cmd("dunst")
-        hl.exec_cmd("eww daemon && eww open hud")
-        hl.exec_cmd("wl-paste --watch cliphist store")
-        hl.exec_cmd("nm-applet --indicator")
-        hl.exec_cmd("blueman-applet")
-      end)
-    '';
   };
 
   # Waybar — clickable status bar (workspaces, clock, audio, net, tray).
