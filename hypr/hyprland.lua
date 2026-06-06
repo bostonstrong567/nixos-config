@@ -12,11 +12,13 @@ local mainMod = "SUPER"
 -- ---------------------------------------------------------------------------
 hl.config({
     general = {
-        -- No "container" look: no gaps between windows, no border boxes.
-        -- Windows sit flush/seamless; the hyprbars titlebar is the only chrome.
-        -- Small gaps so you can grab the edge between windows to resize.
-        -- (gaps_in=0 left no grab space → couldn't resize tiled windows.)
-        border_size = 1,
+        -- Glowing gruvbox-orange gradient border on the active window (the cool
+        -- themed outline). Small gaps so you can grab the edge to resize.
+        border_size = 3,
+        col = {
+            active_border   = { colors = { "rgba(fe8019ff)", "rgba(d65d0eff)", "rgba(fabd2fff)" }, angle = 45 },
+            inactive_border = "rgba(3c3836aa)",
+        },
         gaps_in = 4,
         gaps_out = 6,
         layout = "dwindle",
