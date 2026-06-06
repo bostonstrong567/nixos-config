@@ -166,10 +166,10 @@ hl.gesture({ fingers = 3, direction = "up",         action = "fullscreen" })
 hl.config({
     plugin = {
         hyprbars = {
-            bar_height = 32,                    -- taller, easier to grab
+            bar_height = 24,                    -- slim titlebar (was 32)
             bar_color = "rgb(1d2021)",          -- gruvbox dark bg
             ["col.text"] = "rgb(fe8019)",       -- gruvbox ORANGE title (pops)
-            bar_text_size = 15,                 -- bigger
+            bar_text_size = 12,                 -- fits the slim 24px bar
             bar_text_font = "CaskaydiaCove Nerd Font",  -- family name (bold via weight)
             bar_title_enabled = true,
             bar_part_of_window = true,

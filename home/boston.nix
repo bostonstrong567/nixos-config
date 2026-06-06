@@ -140,6 +140,12 @@
         #urlbar[focused] { border-color: var(--gb-accent) !important; }
         #urlbar-input { color: var(--gb-fg) !important; }
         toolbarbutton { color: var(--gb-fg) !important; }
+        /* hide Firefox's own window-control buttons (min/max/X) — hyprbars
+           provides the window controls, so Firefox's are redundant. */
+        .titlebar-buttonbox-container,
+        .titlebar-min, .titlebar-max, .titlebar-restore, .titlebar-close {
+          display: none !important;
+        }
       '';
       userContent = ''
         /* gruvbox the new-tab + about: pages background */
