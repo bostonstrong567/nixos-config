@@ -24,6 +24,7 @@
       name = "CLIAMP";
       comment = "Terminal music player";
       exec = "ghostty -e cliamp";
+      icon = "multimedia-player";   # media icon (was blank in walker)
       terminal = false;
       categories = [ "AudioVideo" "Audio" ];
     };
@@ -31,10 +32,31 @@
       name = "GLava";
       comment = "OpenGL audio spectrum visualizer";
       exec = "env DISPLAY=:0 glava";   # needs XWayland DISPLAY or it crashes
+      icon = "multimedia-volume-control";
       terminal = false;
       categories = [ "AudioVideo" "Audio" ];
     };
   };
+
+  # Hide junk .desktop entries from walker (apps you'll never click; shipped by
+  # transitively-pulled packages). NoDisplay hides them from the launcher.
+  xdg.dataFile = lib.genAttrs [
+    "applications/gvim.desktop"
+    "applications/vim.desktop"
+    "applications/nvim.desktop"
+    "applications/cmake-gui.desktop"
+    "applications/avahi-discover.desktop"
+    "applications/bssh.desktop"
+    "applications/bvnc.desktop"
+    "applications/qv4l2.desktop"
+    "applications/qvidcap.desktop"
+    "applications/nixos-manual.desktop"
+    "applications/org.freedesktop.IBus.Setup.desktop"
+  ] (_: { text = ''
+    [Desktop Entry]
+    Type=Application
+    NoDisplay=true
+  ''; });
 
   # Fix "gtk-xft-dpi has invalid value (-1)" spam from GTK apps (ghostty etc.).
   # Set a real Xft DPI. 96 = standard 1x. Bump to 144 for 1.5x or 192 for 2x
@@ -65,8 +87,8 @@
     peazip               # archive manager
     # flameshot — home-manager service below (programs.flameshot), grim adapter.
     fsearch              # instant file search (Everything-like; angrysearch not in nixpkgs)
-    collector            # mijorus — file collection tray (also on Flathub)
     easyeffects          # PipeWire EQ + RNNoise mic denoise (> NoiseTorch on PipeWire)
+    cava                 # terminal audio spectrum (the sound-wave look)
     # stremio — plain `stremio` REMOVED from nixpkgs (qt5 webengine vuln) and the
     # replacement `stremio-linux-shell` currently has build issues (#503024).
     # Install via Flatpak instead (flatpak enabled in desktop.nix):

@@ -13,6 +13,7 @@
 {
   # XWayland glue + driver plumbing (Steam games, X11 apps under Hyprland).
   services.xserver.enable = true;
+  services.xserver.excludePackages = [ pkgs.xterm ];  # don't pull xterm (we have ghostty)
 
   # greetd + tuigreet — minimal Wayland greeter.
   # The Hyprland package ships TWO session files (hyprland + hyprland-uwsm).

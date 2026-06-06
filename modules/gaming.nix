@@ -43,7 +43,6 @@
   environment.systemPackages = with pkgs; [
     mangohud         # FPS/temp/usage overlay
     protonplus       # Proton-GE manager (GTK4/libadwaita — replaces protonup-qt)
-    lutris           # non-Steam games / launchers
     heroic           # Epic / GOG
     bottles          # Wine prefix manager (Windows apps/games)
     vkbasalt         # post-processing (sharpening, etc.)
