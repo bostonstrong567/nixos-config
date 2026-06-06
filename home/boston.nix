@@ -283,6 +283,7 @@
         "SUPER, R, exec, wofi --show drun"   # app launcher (mouse-driven)
         "SUPER, F, fullscreen"
         "SUPER, Space, togglefloating"
+        "SUPER, P, pseudo"                   # pseudotile (moved to dispatcher in 0.55)
         "SUPER, V, exec, cliphist list | wofi --dmenu | cliphist decode | wl-copy" # clipboard history (mouse-pick)
         "SUPER, L, exec, hyprlock"
         "SUPER, X, exec, wlogout"            # power menu (mouse buttons)
@@ -311,9 +312,19 @@
         ", XF86MonBrightnessDown, exec, brightnessctl s 5%-"
       ];
 
-      # (Gestures removed — Hyprland 0.51 reworked them into a new `gesture =`
-      #  syntax, and this is a desktop with no touchpad anyway. Mouse scroll-wheel
-      #  workspace switching is bound in `bind` above.)
+      # Gestures — Hyprland 0.51+ reworked syntax (`gesture = fingers, dir, action`).
+      # Touchscreen + touchpad ready (works if you ever move to a touch device):
+      #   3-finger horizontal swipe = switch workspace
+      #   4-finger pinch            = toggle floating
+      #   3-finger swipe up         = fullscreen
+      gestures = {
+        gesture = [
+          "3, horizontal, workspace"
+          "4, pinch, float"
+          "3, up, fullscreen"
+        ];
+        workspace_swipe_invert = false;
+      };
 
       # ---- THE SHOWPIECE LOOK ----
       general = {
@@ -366,8 +377,7 @@
       };
 
       dwindle = {
-        # pseudotile removed — no longer a dwindle config option in Hyprland 0.55
-        # (it's a runtime dispatcher: bind SUPER,P,pseudo if you want it).
+        # pseudotile is now a dispatcher (bound to SUPER+P above), not a config key.
         preserve_split = true;
       };
 
