@@ -261,32 +261,31 @@
       monitor = ",preferred,auto,1";
 
       # ---- MOUSE-FIRST window management ----
-      "$mod" = "SUPER";
       bindm = [
-        "$mod, mouse:272, movewindow"   # Super + LMB drag = move
-        "$mod, mouse:273, resizewindow" # Super + RMB drag = resize
+        "SUPER, mouse:272, movewindow"   # Super + LMB drag = move
+        "SUPER, mouse:273, resizewindow" # Super + RMB drag = resize
       ];
 
       # Mouse-only workspace switching: scroll wheel over empty desktop area.
       bind = [
-        "$mod, Return, exec, ghostty"
-        "$mod, Q, killactive"
-        "$mod, E, exec, dolphin"
-        "$mod, R, exec, wofi --show drun"   # app launcher (mouse-driven)
-        "$mod, F, fullscreen"
-        "$mod, Space, togglefloating"
-        "$mod, V, exec, cliphist list | wofi --dmenu | cliphist decode | wl-copy" # clipboard history (mouse-pick)
-        "$mod, L, exec, hyprlock"
-        "$mod, X, exec, wlogout"            # power menu (mouse buttons)
+        "SUPER, Return, exec, ghostty"
+        "SUPER, Q, killactive"
+        "SUPER, E, exec, dolphin"
+        "SUPER, R, exec, wofi --show drun"   # app launcher (mouse-driven)
+        "SUPER, F, fullscreen"
+        "SUPER, Space, togglefloating"
+        "SUPER, V, exec, cliphist list | wofi --dmenu | cliphist decode | wl-copy" # clipboard history (mouse-pick)
+        "SUPER, L, exec, hyprlock"
+        "SUPER, X, exec, wlogout"            # power menu (mouse buttons)
         # workspace switch by number (also clickable on waybar)
-        "$mod, 1, workspace, 1"
-        "$mod, 2, workspace, 2"
-        "$mod, 3, workspace, 3"
-        "$mod, 4, workspace, 4"
+        "SUPER, 1, workspace, 1"
+        "SUPER, 2, workspace, 2"
+        "SUPER, 3, workspace, 3"
+        "SUPER, 4, workspace, 4"
         ", Print, exec, grim -g \"$(slurp)\" - | swappy -f -"  # region screenshot + annotate (mouse)
         # scroll wheel over desktop = switch workspace (pure mouse)
-        "$mod, mouse_down, workspace, e+1"
-        "$mod, mouse_up, workspace, e-1"
+        "SUPER, mouse_down, workspace, e+1"
+        "SUPER, mouse_up, workspace, e-1"
       ];
 
       # Media keys → playerctl (controls cliamp/Spotify/browsers via MPRIS)
